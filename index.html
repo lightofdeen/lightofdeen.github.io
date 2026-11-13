@@ -120,6 +120,31 @@ section{padding:26px 16px 0}
 @media (min-width:600px){.grid{gap:18px 14px}.m{font-size:14px}}
 @media (max-width:360px){.m{font-size:12px}.times{gap:3px}.t{font-size:12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Qibla compass */
+.qibla-wrap{padding:16px}
+.qibla-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.qibla-top h3{font-size:17px}
+.qibla-back{background:var(--blue);color:#fff;border:0;padding:8px 14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit}
+.qibla-card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:24px 16px;text-align:center;position:relative}
+.qibla-dial{width:min(78vw,300px);aspect-ratio:1;margin:8px auto 0;border-radius:50%;border:3px solid var(--line);background:var(--bg);position:relative;transition:transform .15s linear}
+.qibla-ticks{position:absolute;inset:6px;border-radius:50%;background:repeating-conic-gradient(var(--muted) 0 .6deg,transparent .6deg 10deg);-webkit-mask:radial-gradient(circle,transparent 90%,#000 91%);mask:radial-gradient(circle,transparent 90%,#000 91%);opacity:.55}
+.qd{position:absolute;font-weight:700;font-size:15px;color:var(--muted)}
+.qd.n{top:12%;left:50%;transform:translateX(-50%);color:#e53935}
+.qd.s{bottom:12%;left:50%;transform:translateX(-50%)}
+.qd.e{right:12%;top:50%;transform:translateY(-50%)}
+.qd.w{left:12%;top:50%;transform:translateY(-50%)}
+.qibla-pointer{position:absolute;inset:0;transform:rotate(0deg)}
+.qibla-pointer .kaaba{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:30px;background:var(--card);border-radius:50%;line-height:1}
+.qibla-pointer i{position:absolute;top:34px;left:50%;width:4px;height:calc(50% - 34px);margin-left:-2px;background:linear-gradient(var(--blue),transparent);border-radius:4px}
+.qibla-fixed-mark{position:absolute;left:50%;top:6px;margin-left:-9px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid #e53935}
+.qibla-info{display:flex;justify-content:space-around;margin-top:20px}
+.qibla-info small{display:block;color:var(--muted);font-size:12px}
+.qibla-info b{font-size:22px;color:var(--blue)}
+.qibla-status{margin:14px 0 4px;font-size:14px;color:var(--text);min-height:22px}
+.qibla-start{background:var(--blue);color:#fff;border:0;padding:12px 24px;border-radius:16px;font-size:16px;font-family:inherit;cursor:pointer;margin-top:8px}
+.qibla-hint{font-size:12px;color:var(--muted);margin-top:14px}
+.qibla-card.aligned{box-shadow:0 0 0 3px #43a047,var(--shadow)}
 </style>
 </head>
 <body>
@@ -181,7 +206,7 @@ section{padding:26px 16px 0}
         <a class="m" href="#dua"><div class="ic"><svg class="i"><use href="#dua"/></svg></div>দোয়া<small>Dua</small></a>
         <a class="m" href="#amal"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></a>
         <a class="m" href="#history"><div class="ic"><svg class="i"><use href="#history"/></svg></div>ইসলামিক ইতিহাস<small>History</small></a>
-        <a class="m" href="#qibla"><div class="ic"><svg class="i"><use href="#qibla"/></svg></div>ক্বিবলা<small>Qibla</small></a>
+        <button class="m" onclick="switchView('qibla')"><div class="ic"><svg class="i"><use href="#qibla"/></svg></div>ক্বিবলা<small>Qibla</small></button>
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
         <a class="m" href="#hijri"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></a>
       </nav>
@@ -384,6 +409,35 @@ section{padding:26px 16px 0}
       </div>
     </div>
   </div>
+
+  <!-- ক্বিবলা কম্পাস ভিউ -->
+  <div id="qibla-view" class="view-section">
+    <div class="qibla-wrap">
+      <div class="qibla-top">
+        <button onclick="switchView('home')" class="qibla-back">← হোম</button>
+        <h3>ক্বিবলা কম্পাস</h3>
+        <span style="width:60px"></span>
+      </div>
+
+      <div class="qibla-card">
+        <div class="qibla-dial" id="qiblaDial">
+          <div class="qibla-ticks"></div>
+          <span class="qd n">N</span><span class="qd e">E</span><span class="qd s">S</span><span class="qd w">W</span>
+          <!-- কাবার দিক নির্দেশক (ডায়ালের সাথে ঘোরে) -->
+          <div class="qibla-pointer" id="qiblaPointer"><span class="kaaba">🕋</span><i></i></div>
+        </div>
+        <div class="qibla-fixed-mark"></div>
+
+        <div class="qibla-info">
+          <div><small>ক্বিবলার দিক</small><b id="qiblaDeg">--°</b></div>
+          <div><small>আপনার মুখ</small><b id="qiblaHeading">--°</b></div>
+        </div>
+        <p class="qibla-status" id="qiblaStatus">ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন</p>
+        <button class="qibla-start" id="qiblaStart" onclick="startQibla()">📍 ক্বিবলা খুঁজুন</button>
+        <p class="qibla-hint">ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।</p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <nav class="nav" aria-label="নিচের নেভিগেশন">
@@ -434,14 +488,81 @@ items.forEach(li=>{
 // View Switching Function (Home <-> Quran <-> Tasbih)
 function switchView(viewName) {
   document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-  if(viewName === 'quran') {
-    document.getElementById('quran-view').classList.add('active');
-  } else if(viewName === 'tasbih') {
-    document.getElementById('tasbih-view').classList.add('active');
-  } else {
-    document.getElementById('home-view').classList.add('active');
-  }
+  const target = document.getElementById(viewName + '-view');
+  (target || document.getElementById('home-view')).classList.add('active');
+  if (viewName !== 'qibla') stopQibla();
   window.scrollTo(0, 0);
+}
+
+// ===== Qibla Compass =====
+const KAABA = { lat: 21.422487, lng: 39.826206 };
+let qiblaBearing = null, qiblaWatching = false, lastHeading = 0;
+
+function calcQibla(lat, lng) {
+  const r = Math.PI / 180;
+  const dL = (KAABA.lng - lng) * r;
+  const y = Math.sin(dL);
+  const x = Math.cos(lat * r) * Math.tan(KAABA.lat * r) - Math.sin(lat * r) * Math.cos(dL);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+
+function setQiblaStatus(t) { document.getElementById('qiblaStatus').textContent = t; }
+
+async function startQibla() {
+  if (!navigator.geolocation) { setQiblaStatus('আপনার ব্রাউজার লোকেশন সাপোর্ট করে না'); return; }
+  setQiblaStatus('লোকেশন নেওয়া হচ্ছে...');
+
+  // iOS-এ সেন্সর পারমিশন ইউজারের ট্যাপের ভেতরেই চাইতে হয়
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    try {
+      const res = await DeviceOrientationEvent.requestPermission();
+      if (res !== 'granted') { setQiblaStatus('কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি'); return; }
+    } catch (e) { setQiblaStatus('সেন্সরের অনুমতি পাওয়া যায়নি'); return; }
+  }
+
+  navigator.geolocation.getCurrentPosition(pos => {
+    qiblaBearing = calcQibla(pos.coords.latitude, pos.coords.longitude);
+    document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
+    document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)';
+    listenCompass();
+  }, () => {
+    setQiblaStatus('লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)');
+  }, { enableHighAccuracy: true, timeout: 15000 });
+}
+
+function listenCompass() {
+  if (qiblaWatching) return;
+  qiblaWatching = true;
+  window.addEventListener('deviceorientationabsolute', onOrient, true);
+  window.addEventListener('deviceorientation', onOrient, true);
+  setQiblaStatus('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন');
+  document.getElementById('qiblaStart').style.display = 'none';
+  setTimeout(() => { if (qiblaWatching && !gotHeading) setQiblaStatus('কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ' + bn(Math.round(qiblaBearing)) + '° ডানে'); }, 3000);
+}
+
+let gotHeading = false;
+function onOrient(e) {
+  let h = null;
+  if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;           // iOS
+  else if (e.absolute === true && e.alpha !== null) h = (360 - e.alpha) % 360;          // Android absolute
+  else if (e.type === 'deviceorientation' && e.alpha !== null && !('ondeviceorientationabsolute' in window)) h = (360 - e.alpha) % 360;
+  if (h === null) return;
+  gotHeading = true;
+  lastHeading = h;
+  document.getElementById('qiblaDial').style.transform = 'rotate(' + (-h) + 'deg)';
+  document.getElementById('qiblaHeading').textContent = bn(Math.round(h)) + '°';
+  const diff = Math.abs(((qiblaBearing - h + 540) % 360) - 180);
+  const aligned = diff < 5;
+  document.getElementById('qiblaDial').parentElement.classList.toggle('aligned', aligned);
+  if (aligned) { setQiblaStatus('✅ আপনি ক্বিবলার দিকে মুখ করে আছেন'); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} }
+  else setQiblaStatus('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন');
+}
+
+function stopQibla() {
+  window.removeEventListener('deviceorientationabsolute', onOrient, true);
+  window.removeEventListener('deviceorientation', onOrient, true);
+  qiblaWatching = false; gotHeading = false;
+  const b = document.getElementById('qiblaStart'); if (b) b.style.display = '';
 }
 
 // Surah Toggle Function
