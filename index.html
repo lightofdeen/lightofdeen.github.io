@@ -168,6 +168,24 @@ section{padding:26px 16px 0}
 .ayah.playing{outline:2px solid var(--blue);outline-offset:-2px}
 .rd-status{text-align:center;color:var(--muted);font-size:14px;padding:16px}
 .rd-more{background:var(--blue);color:#fff;border:0;padding:12px 22px;border-radius:14px;font-size:15px;font-family:inherit;cursor:pointer}
+
+/* Hadith */
+.hd-wrap{padding:16px}
+.hd-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.hd-top button{background:var(--blue);color:#fff;border:0;padding:8px 14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit;flex:none}
+.hd-top h3{font-size:17px;line-height:1.3}
+.hd-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:8px;cursor:pointer;width:100%;text-align:left;font-family:inherit;font-size:15.5px;color:var(--text)}
+.hd-row:hover{background:var(--blue-l)}
+.hd-row .no{flex:none;min-width:34px;height:34px;border-radius:50%;background:var(--blue-l);color:var(--blue);display:grid;place-items:center;font-weight:600;font-size:13.5px;padding:0 6px}
+.hd-row .nm{flex:1;line-height:1.4}
+.hd-row small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.hd-row.off{opacity:.55}
+.hd-item{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+.hd-num{display:inline-block;background:var(--blue);color:#fff;border-radius:10px;padding:2px 12px;font-size:13.5px;font-weight:600;margin-bottom:10px}
+.hd-ar{font-family:'Amiri','Scheherazade New',serif;font-size:25px;line-height:2.1;direction:rtl;text-align:right;color:var(--blue-d)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hd-ar{color:#7fc1fb}}
+.hd-bn{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:16px;line-height:1.8;white-space:pre-line}
+.hd-msg{text-align:center;color:var(--muted);font-size:14px;padding:18px 8px}
 </style>
 </head>
 <body>
@@ -225,7 +243,7 @@ section{padding:26px 16px 0}
       <div class="sh"><h2>সব সেবা</h2><span>Services</span></div>
       <nav class="grid" aria-label="প্রধান মেনু">
         <button class="m" onclick="switchView('quran')"><div class="ic"><svg class="i"><use href="#quran"/></svg></div>আল-কুরআন<small>Al-Quran</small></button>
-        <a class="m" href="#hadith"><div class="ic"><svg class="i"><use href="#hadith"/></svg></div>হাদিস<small>Hadith</small></a>
+        <button class="m" onclick="switchView('hadith')"><div class="ic"><svg class="i"><use href="#hadith"/></svg></div>হাদিস<small>Hadith</small></button>
         <a class="m" href="#dua"><div class="ic"><svg class="i"><use href="#dua"/></svg></div>দোয়া<small>Dua</small></a>
         <a class="m" href="#amal"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></a>
         <a class="m" href="#history"><div class="ic"><svg class="i"><use href="#history"/></svg></div>ইসলামিক ইতিহাস<small>History</small></a>
@@ -462,6 +480,18 @@ section{padding:26px 16px 0}
     </div>
   </div>
 
+  <!-- হাদিস ভিউ: কিতাব → পরিচ্ছেদ → হাদিস -->
+  <div id="hadith-view" class="view-section">
+    <div class="hd-wrap">
+      <div class="hd-top">
+        <button onclick="hadithBack()">← ফিরুন</button>
+        <h3 id="hdTitle">হাদিস গ্রন্থসমূহ</h3>
+      </div>
+      <div id="hdBody"></div>
+      <div style="text-align:center;padding:8px 0 24px"><button class="rd-more" id="hdMore" onclick="hadithMore()" style="display:none">আরও হাদিস দেখুন</button></div>
+    </div>
+  </div>
+
   <!-- সূরা পড়ার ভিউ (শব্দে শব্দে অর্থ + অনুবাদ) -->
   <div id="surah-view" class="view-section">
     <div class="rd-bar">
@@ -529,6 +559,7 @@ function switchView(viewName) {
   document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
   const target = document.getElementById(viewName + '-view');
   (target || document.getElementById('home-view')).classList.add('active');
+  if (viewName === 'hadith') showHadithBooks();
   if (viewName !== 'qibla') stopQibla();
   if (viewName !== 'surah' && typeof player !== 'undefined') player.pause();
   window.scrollTo(0, 0);
@@ -708,6 +739,138 @@ function buildAyah(v) {
     e.currentTarget.textContent = on ? '★' : '☆';
   };
   return el;
+}
+
+// ===== Hadith (কিতাব → পরিচ্ছেদ → হাদিস) =====
+// ডেটা সোর্স: fawazahmed0/hadith-api (jsDelivr CDN)। ara = আরবি, ben = বাংলা।
+// ara/ben null মানে ওই কিতাবের ডেটা এই সোর্সে নেই।
+const HD_CDN = 'https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/';
+const HADITH_BOOKS = [
+  { id: 1,  name: 'সহীহ বুখারী',            ara: 'ara-bukhari',  ben: 'ben-bukhari'  },
+  { id: 2,  name: 'সহীহ মুসলিম',            ara: 'ara-muslim',   ben: 'ben-muslim'   },
+  { id: 3,  name: 'সুনান আত-তিরমিযী',       ara: 'ara-tirmidhi', ben: 'ben-tirmidhi' },
+  { id: 4,  name: 'সুনান আন-নাসায়ী',        ara: 'ara-nasai',    ben: 'ben-nasai'    },
+  { id: 5,  name: 'সুনান আবু দাউদ',         ara: 'ara-abudawud', ben: 'ben-abudawud' },
+  { id: 6,  name: 'সুনান ইবনে মাজাহ',       ara: 'ara-ibnmajah', ben: 'ben-ibnmajah' },
+  { id: 7,  name: 'মুয়াত্তা ইমাম মালিক',    ara: 'ara-malik',    ben: 'ben-malik'    },
+  { id: 8,  name: 'সুনান আদ-দারেমী',        ara: null, ben: null },
+  { id: 9,  name: 'মুসনাদ আহমদ',            ara: null, ben: null },
+  { id: 10, name: 'সহীহ ইবনে হিব্বান',       ara: null, ben: null },
+  { id: 11, name: 'মুসতাদরাক আল-হাকিম',     ara: null, ben: null },
+  { id: 12, name: 'রিয়াদুস সালেহীন',        ara: null, ben: null },
+  { id: 13, name: 'মিশকাতুল মাসাবীহ',       ara: null, ben: null },
+  { id: 14, name: 'বুলুগুল মারাম',           ara: null, ben: null },
+  { id: 15, name: 'আল-আদাবুল মুফরাদ',       ara: null, ben: null }
+];
+const hd = { level: 'books', book: null, data: null, chapter: null, list: [], shown: 0, token: 0, cache: {} };
+const HD_PAGE = 30;
+
+function hdEl(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function hdBody() { const b = document.getElementById('hdBody'); b.innerHTML = ''; return b; }
+function hdSetTitle(t) { document.getElementById('hdTitle').textContent = t; }
+function hdMoreBtn(show) { document.getElementById('hdMore').style.display = show ? 'inline-block' : 'none'; }
+
+function showHadithBooks() {
+  hd.level = 'books'; hd.token++;
+  hdSetTitle('হাদিস গ্রন্থসমূহ'); hdMoreBtn(false);
+  const body = hdBody();
+  HADITH_BOOKS.forEach(b => {
+    const row = hdEl('button', 'hd-row' + (b.ara || b.ben ? '' : ' off'));
+    row.appendChild(hdEl('span', 'no', bn(b.id)));
+    const nm = hdEl('span', 'nm', b.name);
+    if (!b.ara && !b.ben) nm.appendChild(hdEl('small', '', 'শীঘ্রই আসছে'));
+    row.appendChild(nm);
+    row.onclick = () => openHadithBook(b);
+    body.appendChild(row);
+  });
+}
+
+async function fetchEdition(slug) {
+  if (!slug) return null;
+  if (hd.cache[slug]) return hd.cache[slug];
+  const r = await fetch(HD_CDN + slug + '.min.json');
+  if (!r.ok) throw new Error('http ' + r.status);
+  const j = await r.json();
+  hd.cache[slug] = j;
+  return j;
+}
+
+async function openHadithBook(b) {
+  if (!b.ara && !b.ben) {
+    const body = hdBody(); hd.level = 'books';
+    body.appendChild(hdEl('div', 'hd-msg', '"' + b.name + '"-এর ডেটা এখনো যোগ করা হয়নি।'));
+    const back = hdEl('button', 'hd-row'); back.appendChild(hdEl('span', 'nm', '← কিতাবের তালিকায় ফিরুন')); back.onclick = showHadithBooks; body.appendChild(back);
+    return;
+  }
+  hd.level = 'chapters'; hd.book = b; const token = ++hd.token;
+  hdSetTitle(b.name); hdMoreBtn(false);
+  const body = hdBody(); body.appendChild(hdEl('div', 'hd-msg', 'লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)'));
+  let ara = null, ben = null;
+  try { ara = await fetchEdition(b.ara); } catch (e) {}
+  try { ben = await fetchEdition(b.ben); } catch (e) {}
+  if (token !== hd.token) return;
+  if (!ara && !ben) {
+    const bd = hdBody();
+    bd.appendChild(hdEl('div', 'hd-msg', 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।'));
+    const again = hdEl('button', 'hd-row'); again.appendChild(hdEl('span', 'nm', '🔄 আবার চেষ্টা করুন')); again.onclick = () => openHadithBook(b); bd.appendChild(again);
+    return;
+  }
+  hd.data = { ara, ben };
+  const base = ben || ara;                         // পরিচ্ছেদের নাম: বাংলা থাকলে বাংলা
+  const names = (base.metadata && base.metadata.section) || {};
+  const details = (base.metadata && base.metadata.section_details) || {};
+  // পরিচ্ছেদ অনুযায়ী হাদিস গ্রুপ
+  const groups = {};
+  base.hadiths.forEach(h => { const k = (h.reference && h.reference.book) != null ? h.reference.book : 0; (groups[k] = groups[k] || []).push(h); });
+  const keys = Object.keys(groups).sort((x, y) => Number(x) - Number(y));
+  hd.groups = groups;
+  const bd = hdBody();
+  keys.forEach(k => {
+    const row = hdEl('button', 'hd-row');
+    row.appendChild(hdEl('span', 'no', bn(k)));
+    const nm = hdEl('span', 'nm', (names[k] || '').trim() || ('পরিচ্ছেদ ' + bn(k)));
+    nm.appendChild(hdEl('small', '', bn(groups[k].length) + 'টি হাদিস'));
+    row.appendChild(nm);
+    row.onclick = () => openHadithChapter(k, nm.firstChild.textContent);
+    bd.appendChild(row);
+  });
+}
+
+function openHadithChapter(k, name) {
+  hd.level = 'list'; hd.chapter = k; hd.token++;
+  hdSetTitle(name);
+  const arr = hd.groups[k] || [];
+  // আরবি টেক্সট hadithnumber দিয়ে মিলিয়ে নেওয়া
+  const araMap = {};
+  if (hd.data.ara && hd.data.ara !== (hd.data.ben || null)) hd.data.ara.hadiths.forEach(h => { araMap[h.hadithnumber] = h.text; });
+  const benMap = {};
+  if (hd.data.ben) hd.data.ben.hadiths.forEach(h => { benMap[h.hadithnumber] = h.text; });
+  hd.list = arr.map(h => ({ no: h.hadithnumber, ar: araMap[h.hadithnumber] || '', bn: benMap[h.hadithnumber] || '' }));
+  hd.shown = 0;
+  hdBody();
+  window.scrollTo(0, 0);
+  hadithMore();
+}
+
+function hadithMore() {
+  const body = document.getElementById('hdBody');
+  const next = hd.list.slice(hd.shown, hd.shown + HD_PAGE);
+  next.forEach(h => {
+    const card = hdEl('div', 'hd-item');
+    card.appendChild(hdEl('span', 'hd-num', 'হাদিস নং ' + bn(h.no)));
+    if (h.ar) { const a = hdEl('p', 'hd-ar', h.ar); a.lang = 'ar'; card.appendChild(a); }
+    if (h.bn) card.appendChild(hdEl('p', 'hd-bn', h.bn));
+    body.appendChild(card);
+  });
+  hd.shown += next.length;
+  hdMoreBtn(hd.shown < hd.list.length);
+  if (!hd.list.length) body.appendChild(hdEl('div', 'hd-msg', 'এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।'));
+}
+
+function hadithBack() {
+  if (hd.level === 'list') { openHadithBook(hd.book); }
+  else if (hd.level === 'chapters') { showHadithBooks(); }
+  else { switchView('home'); }
 }
 
 // Surah Toggle Function
