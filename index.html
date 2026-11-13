@@ -142,7 +142,8 @@ section{padding:26px 16px 0}
         </div>
         <button class="iconbtn" aria-label="নোটিফিকেশন"><svg class="i"><use href="#bell"/></svg></button>
       </div>
-      <p class="date">আসসালামু আলাইকুম<b>শুক্রবার, ১৩ নভেম্বর ২০২৬ · ৩ জুমাদাস সানি ১৪৪৮</b></p>
+      <!-- এখানে ৬১ নম্বর লাইনে আইডি যুক্ত করা হয়েছে -->
+      <p class="date">আসসালামু আলাইকুম<b id="live-date">লোড হচ্ছে...</b></p>
     </header>
 
     <div class="prayer" aria-label="নামাজের সময়">
@@ -462,6 +463,27 @@ section{padding:26px 16px 0}
 
 <script>
 const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+
+// রিয়েল-টাইম বাংলা তারিখ ও বার দেখানোর ফাংশন
+function updateRealTimeDate() {
+    const days = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+    const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+    
+    const now = new Date();
+    const dayName = days[now.getDay()];
+    const dayNum = bn(now.getDate());
+    const monthName = months[now.getMonth()];
+    const yearNum = bn(now.getFullYear());
+
+    const fullDateText = `${dayName}, ${dayNum} ${monthName} ${yearNum}`;
+    
+    const dateElement = document.getElementById('live-date');
+    if(dateElement) {
+        dateElement.textContent = fullDateText;
+    }
+}
+updateRealTimeDate();
+
 const items=[...document.querySelectorAll('#amalList li')];
 function upd(){
   const d=items.filter(i=>i.classList.contains('done')).length;
