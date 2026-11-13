@@ -18,7 +18,7 @@
   --bg:#0c1622; --card:#14212f; --text:#e8f1fa; --muted:#93a8bd; --line:#223447; --blue-l:#17304a;
   --shadow:0 6px 22px rgba(0,0,0,.35); color-scheme:dark;}}
 :root[data-theme="dark"]{--bg:#0c1622; --card:#14212f; --text:#e8f1fa; --muted:#93a8bd; --line:#223447; --blue-l:#17304a; --shadow:0 6px 22px rgba(0,0,0,.35); color-scheme:dark;}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,20px); scroll-behavior: smooth;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
 .app{max-width:720px;margin:0 auto;padding-bottom:96px}
@@ -60,7 +60,6 @@ section{padding:26px 16px 0}
 .m .ic{width:100%;max-width:76px;aspect-ratio:1;border-radius:22px;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:30px;color:var(--blue);transition:transform .15s,background .15s}
 .m:active .ic,.m:hover .ic{transform:translateY(-2px);background:var(--blue-l)}
 .m small{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
-.m:focus-visible,.nav a:focus-visible,.amal li:focus-visible,.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:14px}
 
 .card{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:6px 16px}
 .amal{list-style:none}
@@ -73,6 +72,12 @@ section{padding:26px 16px 0}
 .tx span{font-size:13px;color:var(--muted)}
 .prog{margin:0 0 12px;height:8px;background:var(--blue-l);border-radius:8px;overflow:hidden}
 .prog i{display:block;height:100%;width:0;background:var(--blue);border-radius:8px;transition:width .3s}
+
+/* Quran List Styling */
+.surah-item-box { background: var(--card); margin-bottom: 8px; border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--line); }
+.surah-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: var(--card); }
+.surah-header:hover { background: var(--blue-l); }
+.surah-details { display: none; padding: 14px 16px; background: var(--bg); border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
 
 .dua{background:linear-gradient(160deg,var(--blue-l),var(--card));border-radius:24px;box-shadow:var(--shadow);padding:22px 20px;text-align:center}
 .ar{font-family:'Amiri',serif;font-size:27px;line-height:2;color:var(--blue-d);direction:rtl}
@@ -163,6 +168,357 @@ section{padding:26px 16px 0}
     </nav>
   </section>
 
+  <!-- আল-কুরআন সেকশন (১১৪ সূরার তালিকা) -->
+  <section id="quran">
+    <div class="sh"><h2>আল-কুরআন</h2><span>Al-Quran (১১৪ সূরা)</span></div>
+    <p style="text-align: center; color: var(--muted); font-size: 13.5px; margin-bottom: 14px;">যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন</p>
+    
+    <div id="surahListContainer">
+      <!-- ১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-1')"><div><b>১. আল-ফাতিহা (الفاتحة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-1" class="surah-details"><p><strong>অর্থ:</strong> সূচনাকারী</p><p style="margin-top: 4px;"><strong>বিস্তারিত:</strong> কুরআনের প্রথম সূরা।</p></div></div>
+
+      <!-- ২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-2')"><div><b>২. আল-বাকারা (البقرة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২৮৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-2" class="surah-details"><p><strong>অর্থ:</strong> গাভী</p><p style="margin-top: 4px;"><strong>বিস্তারিত:</strong> কুরআনের সবচেয়ে বড় সূরা।</p></div></div>
+
+      <!-- ৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-3')"><div><b>৩. আলে ইমরান (آل عمران)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২০০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-3" class="surah-details"><p><strong>অর্থ:</strong> ইমরানের পরিবার</p></div></div>
+
+      <!-- ৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-4')"><div><b>৪. আন-নিসা (النساء)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১৭৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-4" class="surah-details"><p><strong>অর্থ:</strong> নারী</p></div></div>
+
+      <!-- ৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-5')"><div><b>৫. আল-মায়েদাহ (المائدة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১২০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-5" class="surah-details"><p><strong>অর্থ:</strong> খাদ্য পরিবেশিত টেবিল</p></div></div>
+
+      <!-- ৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-6')"><div><b>৬. আল-আনআম (الأنعام)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৬৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-6" class="surah-details"><p><strong>অর্থ:</strong> গবাদিপশু</p></div></div>
+
+      <!-- ৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-7')"><div><b>৭. আল-আরাফ (الأعراف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২০৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-7" class="surah-details"><p><strong>অর্থ:</strong> উঁচু প্রাচীর</p></div></div>
+
+      <!-- ৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-8')"><div><b>৮. আল-আনফাল (الأنفال)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৭৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-8" class="surah-details"><p><strong>অর্থ:</strong> যুদ্ধলব্ধ সম্পদ</p></div></div>
+
+      <!-- ৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-9')"><div><b>৯. আত-তওবা (التوبة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১২৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-9" class="surah-details"><p><strong>অর্থ:</strong> ক্ষমা বা অনুতাপ</p></div></div>
+
+      <!-- ১০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-10')"><div><b>১০. ইউনুস (يونس)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১০৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-10" class="surah-details"><p><strong>অর্থ:</strong> নবী ইউনুস (আ:)</p></div></div>
+
+      <!-- ১১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-11')"><div><b>১১. হুদ (هود)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১২৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-11" class="surah-details"><p><strong>অর্থ:</strong> নবী হুদ (আ:)</p></div></div>
+
+      <!-- ১২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-12')"><div><b>১২. ইউসুফ (يوسف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-12" class="surah-details"><p><strong>অর্থ:</strong> নবী ইউসুফ (আ:)</p></div></div>
+
+      <!-- ১৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-13')"><div><b>১৩. আর-রাদ (الرعد)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৪৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-13" class="surah-details"><p><strong>অর্থ:</strong> বজ্রপাত</p></div></div>
+
+      <!-- ১৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-14')"><div><b>১৪. ইব্রাহিম (إراهيم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-14" class="surah-details"><p><strong>অর্থ:</strong> নবী ইব্রাহিম (আ:)</p></div></div>
+
+      <!-- ১৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-15')"><div><b>১৫. আল-হিজর (الحجر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৯৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-15" class="surah-details"><p><strong>অর্থ:</strong> পাথুরে উপত্যকা</p></div></div>
+
+      <!-- ১৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-16')"><div><b>১৬. আন-নহল (النحل)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১২৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-16" class="surah-details"><p><strong>অর্থ:</strong> মৌমাছি</p></div></div>
+
+      <!-- ১৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-17')"><div><b>১৭. বনি ইসরাইল / আল-ইসরা (الإسراء)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-17" class="surah-details"><p><strong>অর্থ:</strong> ইসরাইল সন্তান / রাতের ভ্রমণ</p></div></div>
+
+      <!-- ১৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-18')"><div><b>১৮. আল-কাহফ (الكهف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-18" class="surah-details"><p><strong>অর্থ:</strong> গুহা</p></div></div>
+
+      <!-- ১৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-19')"><div><b>১৯. মারিয়াম (مريم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৯৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-19" class="surah-details"><p><strong>অর্থ:</strong> মারিয়াম (আ:)</p></div></div>
+
+      <!-- ২০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-20')"><div><b>২০. তায়হা (طه)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৩৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-20" class="surah-details"><p><strong>অর্থ:</strong> হরুফে মুকাত্তাআত (তা-হা)</p></div></div>
+
+      <!-- ২১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-21')"><div><b>২১. আল-আম্বিয়া (الأنبياء)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-21" class="surah-details"><p><strong>অর্থ:</strong> নবীগণ</p></div></div>
+
+      <!-- ২২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-22')"><div><b>২২. আল-হজ (الحج)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৭৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-22" class="surah-details"><p><strong>অর্থ:</strong> হজ</p></div></div>
+
+      <!-- ২৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-23')"><div><b>২৩. আল-মুমিনুন (المؤمنون)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-23" class="surah-details"><p><strong>অর্থ:</strong> মুমিনগণ</p></div></div>
+
+      <!-- ২৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-24')"><div><b>২৪. আন-নূর (النور)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৬৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-24" class="surah-details"><p><strong>অর্থ:</strong> জ্যোতি</p></div></div>
+
+      <!-- ২৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-25')"><div><b>২৫. আল-ফুরকান (الفرقان)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৭৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-25" class="surah-details"><p><strong>অর্থ:</strong> সত্য-মিথ্যা পার্থক্যকারী</p></div></div>
+
+      <!-- ২৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-26')"><div><b>২৬. আশ-শুআরা (الشعراء)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২২৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-26" class="surah-details"><p><strong>অর্থ:</strong> কবিগণ</p></div></div>
+
+      <!-- ২৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-27')"><div><b>২৭. আন-নামল (النمل)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৯৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-27" class="surah-details"><p><strong>অর্থ:</strong> পিপীলিকা</p></div></div>
+
+      <!-- ২৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-28')"><div><b>২৮. আল-কাসাস (القصص)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-28" class="surah-details"><p><strong>অর্থ:</strong> ঘটনাবলী</p></div></div>
+
+      <!-- ২৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-29')"><div><b>২৯. আল-আনকাবুত (العنكبوت)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-29" class="surah-details"><p><strong>অর্থ:</strong> মাকড়সা</p></div></div>
+
+      <!-- ৩০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-30')"><div><b>৩০. আর-রুম (الروم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-30" class="surah-details"><p><strong>অর্থ:</strong> রোমান সাম্রাজ্য</p></div></div>
+
+      <!-- ৩১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-31')"><div><b>৩১. লুকমান (لقمان)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-31" class="surah-details"><p><strong>অর্থ:</strong> হেকিম লুকমান</p></div></div>
+
+      <!-- ৩২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-32')"><div><b>৩২. আস-সাজদা (السجدة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-32" class="surah-details"><p><strong>অর্থ:</strong> সিজদা</p></div></div>
+
+      <!-- ৩৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-33')"><div><b>৩৩. আল-আহজাব (الأحزاب)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৭৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-33" class="surah-details"><p><strong>অর্থ:</strong> দলসমূহ</p></div></div>
+
+      <!-- ৩৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-34')"><div><b>৩৪. সাবা (سبأ)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-34" class="surah-details"><p><strong>অর্থ:</strong> সাবা জাতি</p></div></div>
+
+      <!-- ৩৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-35')"><div><b>৩৫. ফাতির (فاطر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-35" class="surah-details"><p><strong>অর্থ:</strong> সৃষ্টিকর্তা</p></div></div>
+
+      <!-- ৩৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-36')"><div><b>৩৬. ইয়াছিন (يس)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-36" class="surah-details"><p><strong>অর্থ:</strong> ইয়া-সিন</p></div></div>
+
+      <!-- ৩৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-37')"><div><b>৩৭. আস-সাফফাত (الصافات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৮২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-37" class="surah-details"><p><strong>অর্থ:</strong> সারিবদ্ধভাবে দাঁড়ানো</p></div></div>
+
+      <!-- ৩৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-38')"><div><b>৩৮. সোয়াদ (ص)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-38" class="surah-details"><p><strong>অর্থ:</strong> সদ (হরফ)</p></div></div>
+
+      <!-- ৩৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-39')"><div><b>৩৯. আজ-জুমার (الزمر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৭৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-39" class="surah-details"><p><strong>অর্থ:</strong> দলবদ্ধ জনস্রোত</p></div></div>
+
+      <!-- ৪০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-40')"><div><b>৪০. আল-মুমিন (غافر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-40" class="surah-details"><p><strong>অর্থ:</strong> বিশ্বাসী / ক্ষমাশীল</p></div></div>
+
+      <!-- ৪১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-41')"><div><b>৪১. ফুসসিলাত (فصلت)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-41" class="surah-details"><p><strong>অর্থ:</strong> বিস্তারিত বর্ণনা করা হয়েছে</p></div></div>
+
+      <!-- ৪২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-42')"><div><b>৪২. আশ-শুরা (الشورى)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-42" class="surah-details"><p><strong>অর্থ:</strong> পরামর্শ</p></div></div>
+
+      <!-- ৪৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-43')"><div><b>৪৩. আজ-যুখরুফ (الزخرف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-43" class="surah-details"><p><strong>অর্থ:</strong> স্বর্ণালংকার</p></div></div>
+
+      <!-- ৪৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-44')"><div><b>৪৪. আদ-দুখান (الدخان)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-44" class="surah-details"><p><strong>অর্থ:</strong> ধোঁয়া</p></div></div>
+
+      <!-- ৪৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-45')"><div><b>৪৫. আল-জাসিয়া (الجاثية)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-45" class="surah-details"><p><strong>অর্থ:</strong> হাঁটু গেড়ে বসা</p></div></div>
+
+      <!-- ৪৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-46')"><div><b>৪৬. আল-আহকাফ (الأحقاف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-46" class="surah-details"><p><strong>অর্থ:</strong> বালিয়ারি</p></div></div>
+
+      <!-- ৪৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-47')"><div><b>৪৭. মুহাম্মদ (محمد)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৩৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-47" class="surah-details"><p><strong>অর্থ:</strong> নবী মুহাম্মদ (সা:)</p></div></div>
+
+      <!-- ৪৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-48')"><div><b>৪৮. আল-ফাতহ (الفتح)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-48" class="surah-details"><p><strong>অর্থ:</strong> বিজয়</p></div></div>
+
+      <!-- ৪৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-49')"><div><b>৪৯. আল-হুজুরাত (الحجرات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-49" class="surah-details"><p><strong>অর্থ:</strong> বাসগৃহসমূহ</p></div></div>
+
+      <!-- ৫০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-50')"><div><b>৫০. ক্বাফ (ق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-50" class="surah-details"><p><strong>অর্থ:</strong> ক্বাফ অক্ষর</p></div></div>
+
+      <!-- ৫১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-51')"><div><b>৫১. আজ-জারিয়াত (الذاريات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-51" class="surah-details"><p><strong>অর্থ:</strong> বিচ্ছুরণকারী বাতাস</p></div></div>
+
+      <!-- ৫২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-52')"><div><b>৫২. আত-তূর (الطور)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-52" class="surah-details"><p><strong>অর্থ:</strong> তূর পাহাড়</p></div></div>
+
+      <!-- ৫৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-53')"><div><b>৫৩. আন-নাজম (النجم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-53" class="surah-details"><p><strong>অর্থ:</strong> তারা</p></div></div>
+
+      <!-- ৫৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-54')"><div><b>৫৪. আল-কামার (القمر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-54" class="surah-details"><p><strong>অর্থ:</strong> চন্দ্র</p></div></div>
+
+      <!-- ৫৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-55')"><div><b>৫৫. আর-রহমান (الرحمن)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৭৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-55" class="surah-details"><p><strong>অর্থ:</strong> পরম করুণাময়</p></div></div>
+
+      <!-- ৫৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-56')"><div><b>৫৬. আল-ওয়াকিয়াহ (واقعة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৯৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-56" class="surah-details"><p><strong>অর্থ:</strong> অবশ্যম্ভাবী ঘটনা</p></div></div>
+
+      <!-- ৫৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-57')"><div><b>৫৭. আল-হাদিদ (الحديد)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-57" class="surah-details"><p><strong>অর্থ:</strong> লোহা</p></div></div>
+
+      <!-- ৫৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-58')"><div><b>৫৮. আল-মুজাদালাহ (المجادلة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-58" class="surah-details"><p><strong>অর্থ:</strong> বিতর্ককারিণী</p></div></div>
+
+      <!-- ৫৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-59')"><div><b>৫৯. আল-হাশর (الحشر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ২৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-59" class="surah-details"><p><strong>অর্থ:</strong> দেশান্তর বা সমবেত করা</p></div></div>
+
+      <!-- ৬০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-60')"><div><b>৬০. আল-মুমতাহানাহ (الممتحنة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-60" class="surah-details"><p><strong>অর্থ:</strong> পরীক্ষিতা নারী</p></div></div>
+
+      <!-- ৬১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-61')"><div><b>৬১. আস-সাফ (الصف)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-61" class="surah-details"><p><strong>অর্থ:</strong> সুদৃঢ় সারি</p></div></div>
+
+      <!-- ৬২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-62')"><div><b>৬২. আল-জুমুআহ (الجمعة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-62" class="surah-details"><p><strong>অর্থ:</strong> জুমুআহ বার</p></div></div>
+
+      <!-- ৬৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-63')"><div><b>৬৩. আল-মুনাফিকুন (المنافقون)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-63" class="surah-details"><p><strong>অর্থ:</strong> মুনাফিকগণ</p></div></div>
+
+      <!-- ৬৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-64')"><div><b>৬৪. আত-তাগাবুন (التغابن)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-64" class="surah-details"><p><strong>অর্থ:</strong> ক্ষতি স্বীকার করা</p></div></div>
+
+      <!-- ৬৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-65')"><div><b>৬৫. আত-তালাক (الطلاق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-65" class="surah-details"><p><strong>অর্থ:</strong> তালাক</p></div></div>
+
+      <!-- ৬৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-66')"><div><b>৬৬. আত-তাহরিম (التحريم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ১২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-66" class="surah-details"><p><strong>অর্থ:</strong> নিষিদ্ধকরণ</p></div></div>
+
+      <!-- ৬৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-67')"><div><b>৬৭. আল-মুলক (الملك)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-67" class="surah-details"><p><strong>অর্থ:</strong> সার্বভৌমত্ব</p></div></div>
+
+      <!-- ৬৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-68')"><div><b>৬৮. আল-কলম (القلم)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-68" class="surah-details"><p><strong>অর্থ:</strong> কলম</p></div></div>
+
+      <!-- ৬৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-69')"><div><b>৬৯. আল-হাক্কাহ (الحاقة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-69" class="surah-details"><p><strong>অর্থ:</strong> নিশ্চিত সত্য</p></div></div>
+
+      <!-- ৭০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-70')"><div><b>৭০. আল-মাআরিজ (المعارج)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-70" class="surah-details"><p><strong>অর্থ:</strong> উন্নয়নের সিঁড়ি</p></div></div>
+
+      <!-- ৭১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-71')"><div><b>৭১. নূহ (نوح)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-71" class="surah-details"><p><strong>অর্থ:</strong> নবী নূহ (আ:)</p></div></div>
+
+      <!-- ৭২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-72')"><div><b>৭২. আল-জিন্ন (الجن)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-72" class="surah-details"><p><strong>অর্থ:</strong> জিন জাতি</p></div></div>
+
+      <!-- ৭৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-73')"><div><b>৭৩. আল-মুজাম্মিল (المزمل)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-73" class="surah-details"><p><strong>অর্থ:</strong> চাদরে আবৃত ব্যক্তি</p></div></div>
+
+      <!-- ৭৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-74')"><div><b>৭৪. আল-মুদ্দাসসির (المدثر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-74" class="surah-details"><p><strong>অর্থ:</strong> কম্বলাবৃত ব্যক্তি</p></div></div>
+
+      <!-- ৭৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-75')"><div><b>৭৫. আল-কিয়ামাহ (القيامة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-75" class="surah-details"><p><strong>অর্থ:</strong> পুনরুত্থান</p></div></div>
+
+      <!-- ৭৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-76')"><div><b>৭৬. আদ-দাহর / আল-ইনসান (الإنسان)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৩১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-76" class="surah-details"><p><strong>অর্থ:</strong> মানুষ</p></div></div>
+
+      <!-- ৭৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-77')"><div><b>৭৭. আল-মুরসালাত (المرسلات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-77" class="surah-details"><p><strong>অর্থ:</strong> প্রেরিত পুরুষগণ</p></div></div>
+
+      <!-- ৭৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-78')"><div><b>৭৮. আন-নাবা (النبأ)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-78" class="surah-details"><p><strong>অর্থ:</strong> মহা সংবাদ</p></div></div>
+
+      <!-- ৭৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-79')"><div><b>৭৯. আন-নাসিয়াত (النازعات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-79" class="surah-details"><p><strong>অর্থ:</strong> আত্মাকে ছিনিয়ে নেওয়া</p></div></div>
+
+      <!-- ৮০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-80')"><div><b>৮০. আবাসা (عبس)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-80" class="surah-details"><p><strong>অর্থ:</strong> তিনি মুখ ফিরিয়ে নিলেন</p></div></div>
+
+      <!-- ৮১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-81')"><div><b>৮১. আত-তাকভীর (التكوير)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-81" class="surah-details"><p><strong>অর্থ:</strong> অন্ধকারাচ্ছন্ন করা</p></div></div>
+
+      <!-- ৮২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-82')"><div><b>৮২. আল-ইনফিতার (الانفطار)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-82" class="surah-details"><p><strong>অর্থ:</strong> বিদীর্ণ হওয়া</p></div></div>
+
+      <!-- ৮৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-83')"><div><b>৮৩. আল-মুতাফফিফিন (المطففين)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-83" class="surah-details"><p><strong>অর্থ:</strong> মাপে কম দেওয়া</p></div></div>
+
+      <!-- ৮৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-84')"><div><b>৮৪. আল-ইনশিকাক (الانشقاق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-84" class="surah-details"><p><strong>অর্থ:</strong> দ্বিখণ্ডিত হওয়া</p></div></div>
+
+      <!-- ৮৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-85')"><div><b>৮৫. আল-বুরুজ (البروج)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২২ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-85" class="surah-details"><p><strong>অর্থ:</strong> নক্ষত্রপুঞ্জ</p></div></div>
+
+      <!-- ৮৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-86')"><div><b>৮৬. আত-তারিক (الطارق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-86" class="surah-details"><p><strong>অর্থ:</strong> রাতের আগন্তুক</p></div></div>
+
+      <!-- ৮৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-87')"><div><b>৮৭. আল-আলা (الأعلى)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-87" class="surah-details"><p><strong>অর্থ:</strong> সর্বোচ্চ</p></div></div>
+
+      <!-- ৮৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-88')"><div><b>৮৮. আল-গাথিয়াহ (الغاشية)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-88" class="surah-details"><p><strong>অর্থ:</strong> সর্বগ্রাসী ঘটনা</p></div></div>
+
+      <!-- ৮৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-89')"><div><b>৮৯. আল-ফজর (الفجر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-89" class="surah-details"><p><strong>অর্থ:</strong> ভোরবেলা</p></div></div>
+
+      <!-- ৯০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-90')"><div><b>৯০. আল-বালাদ (البلد)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২০ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-90" class="surah-details"><p><strong>অর্থ:</strong> নগর</p></div></div>
+
+      <!-- ৯১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-91')"><div><b>৯১. আশ-শামস (الشمس)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-91" class="surah-details"><p><strong>অর্থ:</strong> সূর্য</p></div></div>
+
+      <!-- ৯২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-92')"><div><b>৯২. আল-লাইল (الليل)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ২১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-92" class="surah-details"><p><strong>অর্থ:</strong> রাত</p></div></div>
+
+      <!-- ৯৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-93')"><div><b>৯৩. আদ-দুহা (الضحى)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-93" class="surah-details"><p><strong>অর্থ:</strong> পূর্বাহ্নের সূর্যকিরণ</p></div></div>
+
+      <!-- ৯৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-94')"><div><b>৯৪. আল-ইনশিরাহ (الشرح)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-94" class="surah-details"><p><strong>অর্থ:</strong> হৃদয় উন্মুক্তকরণ</p></div></div>
+
+      <!-- ৯৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-95')"><div><b>৯৫. আত-তীন (التين)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-95" class="surah-details"><p><strong>অর্থ:</strong> ডুমুর ফল</p></div></div>
+
+      <!-- ৯৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-96')"><div><b>৯৬. আল-আলাক (العلق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-96" class="surah-details"><p><strong>অর্থ:</strong> রক্তপিণ্ড</p></div></div>
+
+      <!-- ৯৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-97')"><div><b>৯৭. আল-কদর (القدر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-97" class="surah-details"><p><strong>অর্থ:</strong> সম্মান বা নির্ধারণ</p></div></div>
+
+      <!-- ৯৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-98')"><div><b>৯৮. আল-বাইয়িনাহ (البينة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-98" class="surah-details"><p><strong>অর্থ:</strong> সুস্পষ্ট প্রমাণ</p></div></div>
+
+      <!-- ৯৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-99')"><div><b>৯৯. আজ-যিলজালের (الزلزال)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-99" class="surah-details"><p><strong>অর্থ:</strong> ভূকম্পন</p></div></div>
+
+      <!-- ১০০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-100')"><div><b>১০০. আল-আদিয়াত (العاديات)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-100" class="surah-details"><p><strong>অর্থ:</strong> দ্রুত ধাবমান ঘোড়া</p></div></div>
+
+      <!-- ১০১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-101')"><div><b>১০১. আল-কারিয়াহ (القارعة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ১১ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-101" class="surah-details"><p><strong>অর্থ:</strong> মহাবিপর্যয়</p></div></div>
+
+      <!-- ১০২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-102')"><div><b>১০২. আত-তাকাসুর (التكاثر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৮ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-102" class="surah-details"><p><strong>অর্থ:</strong> প্রাচুর্যের প্রতিযোগিতা</p></div></div>
+
+      <!-- ১০৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-103')"><div><b>১০৩. আল-আস্র (العصر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-103" class="surah-details"><p><strong>অর্থ:</strong> কাল বা সময়</p></div></div>
+
+      <!-- ১০৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-104')"><div><b>১০৪. আল-হুমাযাহ (الهمزة)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৯ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-104" class="surah-details"><p><strong>অর্থ:</strong> ত্রুটিচর্চাকারী বা পরনিন্দাকারী</p></div></div>
+
+      <!-- ১০৫ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-105')"><div><b>১০৫. আল-ফিল (الفيل)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-105" class="surah-details"><p><strong>অর্থ:</strong> হস্তীবাহিনী</p></div></div>
+
+      <!-- ১০৬ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-106')"><div><b>১০৬. কুরাইশ (قريش)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-106" class="surah-details"><p><strong>অর্থ:</strong> কুরাইশ গোত্র</p></div></div>
+
+      <!-- ১০৭ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-107')"><div><b>১০৭. আল-মাউন (الماعون)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৭ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-107" class="surah-details"><p><strong>অর্থ:</strong> সাহায্য-সহযোগিতা</p></div></div>
+
+      <!-- ১০৮ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-108')"><div><b>১০৮. আল-কাউসার (الكوثر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-108" class="surah-details"><p><strong>অর্থ:</strong> অফুরন্ত কল্যাণ / কাউসার ঝরনা</p></div></div>
+
+      <!-- ১০৯ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-109')"><div><b>১০৯. আল-কাফিরুন (الكافرون)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-109" class="surah-details"><p><strong>অর্থ:</strong> কাফিরগণ</p></div></div>
+
+      <!-- ১১০ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-110')"><div><b>১১০. আন-নাসর (النصر)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাদানী • ৩ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-110" class="surah-details"><p><strong>অর্থ:</strong> সাহায্য বা বিজয়</p></div></div>
+
+      <!-- ১১১ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-111')"><div><b>১১১. আল-লাহাব / আল-মাসাদ (المسد)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-111" class="surah-details"><p><strong>অর্থ:</strong> জ্বলন্ত অঙ্গার / পাকানো দড়ি</p></div></div>
+
+      <!-- ১১২ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-112')"><div><b>১১২. আল-ইখলাস (الإخلاص)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৪ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-112" class="surah-details"><p><strong>অর্থ:</strong> একত্ববাদ</p></div></div>
+
+      <!-- ১১৩ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-113')"><div><b>১১৩. আল-ফালাক (الفلق)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৫ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-113" class="surah-details"><p><strong>অর্থ:</strong> ঊষা / ভোরের আলো</p></div></div>
+
+      <!-- ১১৪ -->
+      <div class="surah-item-box"><div class="surah-header" onclick="toggleSurah('s-114')"><div><b>১১৪. আন-নাস (الناس)</b><div style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">মাক্কী • ৬ আয়াত</div></div><span style="color: var(--blue);">▾</span></div><div id="s-114" class="surah-details"><p><strong>অর্থ:</strong> মানবজাতি</p></div></div>
+
+    </div>
+  </section>
+
   <section id="amal">
     <div class="sh"><h2>আজকের আমল</h2><span id="pc">০/৪ সম্পন্ন</span></div>
     <div class="card" style="padding-top:16px">
@@ -180,7 +536,7 @@ section{padding:26px 16px 0}
     <div class="sh"><h2>দৈনন্দিন দোয়া</h2><span>Daily Dua</span></div>
     <div class="dua">
       <p class="ar" lang="ar">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</p>
-      <p class="tr">রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার।</p>
+      <p class="tr">রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.</p>
       <p class="mean">“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”</p>
       <p class="ref">সূরা আল-বাকারা, আয়াত ২০১</p>
     </div>
@@ -218,11 +574,24 @@ items.forEach(li=>{
   li.addEventListener('click',t);
   li.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();t();}});
 });
+
+// Surah Toggle Function
+function toggleSurah(id) {
+  const el = document.getElementById(id);
+  if (el.style.display === "block") {
+    el.style.display = "none";
+  } else {
+    document.querySelectorAll('.surah-details').forEach(d => d.style.display = "none");
+    el.style.display = "block";
+  }
+}
+
 let c=0;const ring=document.getElementById('ring');
 ring.addEventListener('click',()=>{c=c>=33?1:c+1;ring.textContent=bn(c);if(navigator.vibrate)try{navigator.vibrate(12)}catch(e){}});
 document.getElementById('reset').addEventListener('click',()=>{c=0;ring.textContent=bn(0);});
+
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>{
   document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('act'));a.classList.add('act');}));
 </script>
 </body>
-</html>
+  </html>
