@@ -817,21 +817,26 @@ async function openHadithBook(b) {
   }
   hd.data = { ara, ben };
   const base = ben || ara;                         // পরিচ্ছেদের নাম: বাংলা থাকলে বাংলা
-  const names = (base.metadata && base.metadata.section) || {};
-  const details = (base.metadata && base.metadata.section_details) || {};
+  // পরিচ্ছেদের নাম: বাংলা থাকলে বাংলা, না থাকলে আরবি নাম
+  const nameBn = (ben && ben.metadata && ben.metadata.section) || {};
+  const nameAr = (ara && ara.metadata && ara.metadata.section) || {};
+  const chName = k => (String(nameBn[k] || '').trim()) || (String(nameAr[k] || '').trim()) || ('পরিচ্ছেদ ' + bn(k));
   // পরিচ্ছেদ অনুযায়ী হাদিস গ্রুপ
   const groups = {};
   base.hadiths.forEach(h => { const k = (h.reference && h.reference.book) != null ? h.reference.book : 0; (groups[k] = groups[k] || []).push(h); });
   const keys = Object.keys(groups).sort((x, y) => Number(x) - Number(y));
-  hd.groups = groups;
+  // প্রতিটি পরিচ্ছেদের হাদিস সংখ্যা অনুযায়ী সিরিয়ালে সাজানো
+  keys.forEach(k => groups[k].sort((a, b) => Number(a.hadithnumber) - Number(b.hadithnumber)));
+  hd.groups = groups; hd.chName = chName;
   const bd = hdBody();
   keys.forEach(k => {
     const row = hdEl('button', 'hd-row');
     row.appendChild(hdEl('span', 'no', bn(k)));
-    const nm = hdEl('span', 'nm', (names[k] || '').trim() || ('পরিচ্ছেদ ' + bn(k)));
-    nm.appendChild(hdEl('small', '', bn(groups[k].length) + 'টি হাদিস'));
+    const nm = hdEl('span', 'nm', chName(k));
+    const first = groups[k][0].hadithnumber, last = groups[k][groups[k].length - 1].hadithnumber;
+    nm.appendChild(hdEl('small', '', 'হাদিস ' + bn(first) + (first !== last ? ' – ' + bn(last) : '') + ' · মোট ' + bn(groups[k].length) + 'টি'));
     row.appendChild(nm);
-    row.onclick = () => openHadithChapter(k, nm.firstChild.textContent);
+    row.onclick = () => openHadithChapter(k, chName(k));
     bd.appendChild(row);
   });
 }
@@ -847,7 +852,9 @@ function openHadithChapter(k, name) {
   if (hd.data.ben) hd.data.ben.hadiths.forEach(h => { benMap[h.hadithnumber] = h.text; });
   hd.list = arr.map(h => ({ no: h.hadithnumber, ar: araMap[h.hadithnumber] || '', bn: benMap[h.hadithnumber] || '' }));
   hd.shown = 0;
-  hdBody();
+  const b0 = hdBody();
+  const head = hdEl('div', 'hd-msg', 'পরিচ্ছেদ ' + bn(k) + ' · ' + hd.book.name);
+  head.style.padding = '0 0 12px'; b0.appendChild(head);
   window.scrollTo(0, 0);
   hadithMore();
 }
@@ -857,7 +864,7 @@ function hadithMore() {
   const next = hd.list.slice(hd.shown, hd.shown + HD_PAGE);
   next.forEach(h => {
     const card = hdEl('div', 'hd-item');
-    card.appendChild(hdEl('span', 'hd-num', 'হাদিস নং ' + bn(h.no)));
+    card.appendChild(hdEl('span', 'hd-num', hd.book.name + ' · হাদিস নং ' + bn(h.no)));
     if (h.ar) { const a = hdEl('p', 'hd-ar', h.ar); a.lang = 'ar'; card.appendChild(a); }
     if (h.bn) card.appendChild(hdEl('p', 'hd-bn', h.bn));
     body.appendChild(card);
