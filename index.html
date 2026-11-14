@@ -8,6 +8,7 @@
 <title>Light of Deen – ঈমানের আলোয় আলোকিত জীবন</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Katibeh&display=swap" rel="stylesheet">
 <style>
 :root{
   --blue:#1e88e5; --blue-d:#1565c0; --blue-l:#e3f1fd; --bg:#f2f7fc; --card:#ffffff;
@@ -225,27 +226,104 @@ section{padding:18px 16px 0}
 .qibla-card.aligned{box-shadow:0 0 0 3px #43a047,var(--shadow)}
 
 /* Surah reader */
-.rd-bar{display:flex;align-items:center;gap:12px;padding:14px 16px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+.rd-bar{display:flex;align-items:center;gap:10px;padding:12px 14px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
 .rd-back{background:none;border:0;color:var(--text);font-size:24px;cursor:pointer;line-height:1;padding:0 6px}
-.rd-bar h3{font-size:18px}
-.rd-head{text-align:center;padding:18px 16px 6px}
-.rd-ar{font-family:'Amiri','Scheherazade New',serif;font-size:30px;color:var(--blue)}
-.rd-meta{font-size:13px;color:var(--muted);margin-top:2px}
-.rd-bismillah{font-family:'Amiri','Scheherazade New',serif;font-size:30px;text-align:center;color:var(--blue);padding:14px 0 18px;direction:rtl}
-.ayah{background:var(--card);margin-bottom:10px;padding:20px 14px 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.rd-bar h3{font-size:18px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-tf{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--blue);border-radius:999px;padding:6px 12px;font:inherit;font-size:13.5px;cursor:pointer;flex:none}
+.rd-tf svg{width:17px;height:17px}
+
+/* হিরো ব্যানার */
+.rd-hero{position:relative;display:flex;align-items:center;gap:14px;margin:12px 12px 0;padding:16px 14px;border-radius:20px;color:var(--on-blue);overflow:hidden;
+  background:radial-gradient(circle at 12% 0%,rgba(255,255,255,.20),transparent 55%),
+  repeating-conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.055) 0 25%,transparent 0 50%) 0 0/30px 30px,
+  linear-gradient(135deg,var(--blue-d),var(--blue))}
+.rd-kaaba{width:64px;height:64px;flex:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.rd-hero-t{flex:1;min-width:0}
+.rd-ar{font-family:'Aref Ruqaa','Amiri','Scheherazade New',serif;font-size:32px;font-weight:700;line-height:1.35;color:inherit}
+.rd-bn{font-size:14.5px;opacity:.92;margin-top:1px}
+.rd-meta{font-size:12.5px;opacity:.85;margin-top:3px}
+.rd-info{flex:none;display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.14);color:inherit;border-radius:14px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer}
+.rd-info svg{width:16px;height:16px}
+
+/* ক্যালিগ্রাফি বিসমিল্লাহ */
+.rd-bism{text-align:center;padding:18px 10px 6px}
+.bism-ar{font-family:'Aref Ruqaa','Katibeh','Amiri','Scheherazade New',serif;font-weight:700;direction:rtl;
+  font-size:clamp(34px,11vw,60px);line-height:1.7;padding:4px 6px;color:var(--blue);
+  background:linear-gradient(175deg,var(--blue) 15%,var(--arc,var(--blue-d)) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 5px color-mix(in srgb,var(--blue) 28%,transparent))}
+.bism-orn{display:block;width:min(260px,70%);height:14px;margin:0 auto;color:var(--gold)}
+
+.rd-tools{display:flex;justify-content:center;padding:10px 14px 0}
+.tf-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow)}
+.tf-chip b{font-weight:600;color:var(--blue);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tf-chip .tf-k{color:var(--muted)}
+.rd-hint{text-align:center;color:var(--muted);font-size:12.5px;padding:8px 16px 12px}
+
+/* আয়াত কার্ড */
+.ayah{background:var(--card);margin-bottom:10px;padding:20px 14px 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .15s}
+.ayah:active{background:color-mix(in srgb,var(--blue-l) 55%,var(--card))}
+.ayah:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 .words{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:14px 16px;direction:rtl}
 .w{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:110px}
 .w .a{font-family:'Amiri','Scheherazade New',serif;font-size:28px;line-height:1.7;color:var(--text)}
 .w .m{font-size:12.5px;color:var(--muted);line-height:1.3;direction:ltr;margin-top:2px}
 .w.end .a{width:36px;height:36px;border:2px solid var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--blue);line-height:1;font-family:inherit}
 .tr-bn{margin-top:16px;font-size:16px;line-height:1.7;color:var(--text)}
-.ayah-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;color:var(--muted);font-size:14px}
-.ayah-foot .ac{display:flex;gap:18px}
-.ayah-foot button{background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;padding:4px}
+.copy-row{display:flex;gap:8px;margin-top:14px}
+.cp{flex:1 1 0;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 8px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
+.cp svg{width:15px;height:15px}
+.cp.done{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.ayah-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:var(--muted);font-size:14px}
+.ayah-foot .ac{display:flex;gap:16px;align-items:center}
+.ayah-foot button{background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;padding:4px;display:inline-flex;align-items:center}
+.ayah-foot button svg{width:21px;height:21px}
 .ayah-foot button.on{color:var(--blue)}
 .ayah.playing{outline:2px solid var(--blue);outline-offset:-2px}
 .rd-status{text-align:center;color:var(--muted);font-size:14px;padding:16px}
 .rd-more{background:var(--blue);color:#fff;border:0;padding:12px 22px;border-radius:14px;font-size:15px;font-family:inherit;cursor:pointer}
+
+/* বটম শিট (তাফসীর / তথ্য / তাফসীর নির্বাচন) */
+.sh-bg{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .22s}
+.sh-bg.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:720px;z-index:81;display:flex;flex-direction:column;max-height:86vh;max-height:86dvh;background:var(--bg);color:var(--text);border-radius:22px 22px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.3);transform:translateY(105%);visibility:hidden;transition:transform .26s ease,visibility .26s;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet.open{transform:none;visibility:visible}
+#pkSheet{z-index:82;height:80vh;height:80dvh}
+.sh-grab{width:42px;height:4px;border-radius:4px;background:var(--line);margin:9px auto 2px;flex:none}
+.sh-head{display:flex;align-items:center;gap:10px;padding:8px 16px 10px;flex:none}
+.sh-t{flex:1;min-width:0;font-size:16.5px;font-weight:600;line-height:1.35}
+.sh-x{background:var(--card);border:1px solid var(--line);color:var(--text);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;flex:none}
+.sh-bar{display:flex;gap:8px;padding:0 16px 10px;flex:none;align-items:center}
+.sh-bar .tf-chip{flex:1;justify-content:space-between;border-radius:14px;box-shadow:none}
+.sh-nav{display:flex;gap:6px;flex:none}
+.sh-nav button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:19px;cursor:pointer;line-height:1}
+.sh-nav button:disabled{opacity:.35;cursor:default}
+.sh-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px 18px;flex:1;min-height:0}
+.sh-foot{padding:8px 16px 12px;border-top:1px solid var(--line);flex:none;display:flex;gap:8px}
+.sh-quote{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.sh-quote .q-ar{font-family:'Amiri','Scheherazade New',serif;font-size:24px;line-height:1.9;direction:rtl;text-align:right}
+.sh-quote .q-tr{font-size:14px;color:var(--muted);line-height:1.65;margin-top:6px}
+.tf-text{font-size:16px;line-height:1.9}
+.tf-text p,.tf-text div,.tf-text li,.tf-text blockquote{unicode-bidi:plaintext;text-align:start;margin-bottom:12px}
+.tf-text ul,.tf-text ol{padding-inline-start:22px;margin-bottom:12px}
+.tf-text h4{font-size:16.5px;color:var(--blue);margin:14px 0 8px}
+.tf-text blockquote{border-inline-start:3px solid var(--blue);padding-inline-start:12px;color:var(--muted)}
+.tf-text.rtl{direction:rtl;font-family:'Amiri','Noto Naskh Arabic','Scheherazade New',serif;font-size:21px;line-height:2.1}
+.tf-note{background:var(--blue-l);color:var(--muted);border-radius:12px;padding:9px 12px;font-size:13px;line-height:1.6;margin-bottom:12px}
+.tf-msg{text-align:center;color:var(--muted);padding:28px 12px;font-size:14.5px}
+.tf-msg button{margin-top:12px;background:var(--blue);color:var(--on-blue);border:0;border-radius:12px;padding:9px 18px;font:inherit;cursor:pointer}
+.pk-search{display:block;width:calc(100% - 32px);margin:0 16px 10px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:15px;flex:none}
+.pk-h{position:sticky;top:0;background:var(--bg);color:var(--blue);font-size:13.5px;font-weight:600;padding:10px 2px 6px;z-index:1}
+.pk-i{display:flex;align-items:center;gap:10px;width:100%;text-align:start;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:14px;padding:11px 14px;margin-bottom:7px;font:inherit;font-size:15px;line-height:1.4;cursor:pointer}
+.pk-i span{flex:1;min-width:0}
+.pk-i small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.pk-i.on{border-color:var(--blue);background:var(--blue-l)}
+.pk-i.on::after{content:'✓';color:var(--blue);font-weight:700}
+.info-row{padding:10px 0;border-bottom:1px dashed var(--line);font-size:15px;line-height:1.7}
+.info-row:last-child{border:0}
+.info-row b{color:var(--blue);font-weight:600}
+.lod-toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);z-index:95;background:var(--text);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:86vw;text-align:center}
+.lod-toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.sheet,.sh-bg,.lod-toast,.ayah,.cp{transition:none}}
 
 /* Hadith */
 .hd-wrap{padding:16px}
@@ -803,20 +881,74 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
     <div class="hd-wrap" id="topicBody"></div>
   </div>
 
-  <!-- সূরা পড়ার ভিউ (শব্দে শব্দে অর্থ + অনুবাদ) -->
+  <!-- সূরা পড়ার ভিউ (ক্যালিগ্রাফি বিসমিল্লাহ + শব্দে শব্দে অর্থ + তাফসীর) -->
   <div id="surah-view" class="view-section">
     <div class="rd-bar">
       <button class="rd-back" onclick="switchView('quran')" aria-label="ফিরে যান">←</button>
       <h3 id="rdTitle">সূরা</h3>
+      <button class="rd-tf" onclick="openPicker()" aria-label="তাফসীর নির্বাচন করুন"><svg class="i" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7.5h7M8 11.5h7"/></svg><span>তাফসীর</span></button>
     </div>
-    <div class="rd-head">
-      <div class="rd-ar" id="rdAr"></div>
-      <div class="rd-meta" id="rdMeta"></div>
+
+    <div class="rd-hero">
+      <svg class="rd-kaaba" viewBox="0 0 72 72" aria-hidden="true">
+        <path d="M12 22 36 12l24 10v38H12z" fill="#16181c"/>
+        <path d="M12 22 36 12l24 10-24 10z" fill="#2a2d33"/>
+        <path d="M12 30h48v7H12z" fill="#d9a93a"/>
+        <path d="M12 30h48" stroke="#f3d37a" stroke-width="1"/>
+        <path d="M30 42h12v18H30z" fill="#d9a93a"/>
+        <path d="M33 45h6v15h-6z" fill="#8a6414"/>
+        <path d="M12 60h48" stroke="#444" stroke-width="2"/>
+      </svg>
+      <div class="rd-hero-t">
+        <div class="rd-ar" id="rdAr"></div>
+        <div class="rd-bn" id="rdBn"></div>
+        <div class="rd-meta" id="rdMeta"></div>
+      </div>
+      <button class="rd-info" onclick="openInfo()"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg><span>তথ্য</span></button>
     </div>
-    <div class="rd-bismillah" id="rdBism">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+
+    <div class="rd-bism" id="rdBism">
+      <div class="bism-ar" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+      <svg class="bism-orn" viewBox="0 0 260 14" aria-hidden="true"><path d="M0 7h104M156 7h104" stroke="currentColor" stroke-width="1.2" opacity=".7"/><path d="M130 1l6 6-6 6-6-6z" fill="currentColor"/><circle cx="112" cy="7" r="2" fill="currentColor"/><circle cx="148" cy="7" r="2" fill="currentColor"/></svg>
+    </div>
+
+    <div class="rd-tools"><button class="tf-chip" onclick="openPicker()"><span class="tf-k">তাফসীর:</span><b id="tfChipName"></b><span aria-hidden="true">▾</span></button></div>
+    <p class="rd-hint">যেকোনো আয়াতে ট্যাপ করলে তাফসীর দেখা যাবে</p>
+
     <div id="rdAyahs"></div>
     <div class="rd-status" id="rdStatus"></div>
     <div style="text-align:center;padding:8px 0 24px"><button class="rd-more" id="rdMore" onclick="loadMoreAyahs()" style="display:none">আরও আয়াত দেখুন</button></div>
+
+    <div class="sh-bg" id="shBg" onclick="closeTopSheet()"></div>
+
+    <!-- তাফসীর শিট -->
+    <div class="sheet" id="tfSheet" role="dialog" aria-modal="true" aria-labelledby="tfTitle">
+      <div class="sh-grab"></div>
+      <div class="sh-head"><div class="sh-t" id="tfTitle"></div><button class="sh-x" onclick="lodSheetClose('tfSheet')" aria-label="বন্ধ করুন">✕</button></div>
+      <div class="sh-bar">
+        <button class="tf-chip" onclick="openPicker()"><b id="tfSheetName"></b><span aria-hidden="true">▾</span></button>
+        <div class="sh-nav"><button id="tfPrev" aria-label="আগের আয়াত">‹</button><button id="tfNext" aria-label="পরের আয়াত">›</button></div>
+      </div>
+      <div class="sh-body" id="tfBody"></div>
+      <div class="sh-foot"><button class="cp" id="tfCopy"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>তাফসীর কপি</span></button></div>
+    </div>
+
+    <!-- তাফসীর নির্বাচন শিট -->
+    <div class="sheet" id="pkSheet" role="dialog" aria-modal="true" aria-labelledby="pkTitle">
+      <div class="sh-grab"></div>
+      <div class="sh-head"><div class="sh-t" id="pkTitle">তাফসীর নির্বাচন করুন</div><button class="sh-x" onclick="lodSheetClose('pkSheet')" aria-label="বন্ধ করুন">✕</button></div>
+      <input class="pk-search" id="pkSearch" type="search" placeholder="তাফসীর খুঁজুন..." autocomplete="off">
+      <div class="sh-body" id="pkBody"></div>
+    </div>
+
+    <!-- সূরার তথ্য শিট -->
+    <div class="sheet" id="infoSheet" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+      <div class="sh-grab"></div>
+      <div class="sh-head"><div class="sh-t" id="infoTitle"></div><button class="sh-x" onclick="lodSheetClose('infoSheet')" aria-label="বন্ধ করুন">✕</button></div>
+      <div class="sh-body" id="infoBody"></div>
+    </div>
+
+    <div class="lod-toast" id="lodToast" role="status" aria-live="polite"></div>
   </div>
 </main>
 
@@ -911,6 +1043,7 @@ Object.assign(D,{
 Object.assign(D,{'আসমাউল হুসনা':['Asma ul-Husna','الأسماء الحسنى'],'আল্লাহর ৯৯টি নাম':['The 99 Names of Allah','أسماء الله الحسنى'],'কুরআনে উল্লেখ':['Mentioned in the Quran','ورود الاسم في القرآن'],'Asmaul Husna':['Asmaul Husna','الأسماء الحسنى'],'এই নামটি সরাসরি কুরআনে নাম হিসেবে আসেনি; বিষয়ের সাথে সম্পর্কিত আয়াত দেওয়া হলো।':['This name does not appear as a divine name in the Quran; related verses are given.','لم يرد هذا الاسم صراحةً في القرآن؛ وهذه آيات متعلقة بمعناه.']});
 Object.assign(D,{'হিজরি ক্যালেন্ডার':['Hijri Calendar','التقويم الهجري'],'আজ':['Today','اليوم'],'এই মাসের গুরুত্বপূর্ণ দিন':['Important days this month','أيام مهمة في هذا الشهر'],'বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।':['Dates may differ by a day depending on moon sighting in Bangladesh.','قد يختلف التاريخ بيوم حسب رؤية الهلال في بنغلاديش.']});
 Object.assign(D,{'দৈনন্দিন আমল':['Daily Amal','الأعمال اليومية'],'রাতের ঘুমানোর আগের আমল':['Deeds before sleeping at night','أعمال قبل النوم'],'আজকের অগ্রগতি':["Today's progress",'تقدم اليوم'],'ফজিলত':['Virtue','الفضل'],'সূরা মূলক পড়ুন':['Read Surah Al-Mulk','اقرأ سورة الملك'],'প্রতিদিন নতুন করে শুরু হয়। আপনার অগ্রগতি শুধু এই ডিভাইসে সংরক্ষিত থাকে।':['Resets every day. Your progress is saved only on this device.','يبدأ من جديد كل يوم. يُحفظ تقدمك على هذا الجهاز فقط.']});
+Object.assign(D,{'তাফসীর':['Tafsir','التفسير'],'তাফসীর:':['Tafsir:','التفسير:'],'তাফসীর নির্বাচন করুন':['Choose a tafsir','اختر التفسير'],'তাফসীর খুঁজুন...':['Search tafsir...','ابحث عن تفسير...'],'যেকোনো আয়াতে ট্যাপ করলে তাফসীর দেখা যাবে':['Tap any verse to read its tafsir','اضغط على أي آية لقراءة تفسيرها'],'আয়াত কপি':['Copy verse','نسخ الآية'],'অর্থ কপি':['Copy meaning','نسخ المعنى'],'দুটোই কপি':['Copy both','نسخ الكل'],'কপি হয়েছে':['Copied','تم النسخ'],'কপি করা যায়নি':['Could not copy','تعذّر النسخ'],'তাফসীর কপি':['Copy tafsir','نسخ التفسير'],'তথ্য':['Info','معلومات'],'আগের আয়াত':['Previous verse','الآية السابقة'],'পরের আয়াত':['Next verse','الآية التالية'],'তাফসীর পরিবর্তন হয়েছে':['Tafsir changed','تم تغيير التفسير'],'কোনো তাফসীর পাওয়া যায়নি।':['No tafsir found.','لم يتم العثور على تفسير.'],'এই তাফসীরে এই আয়াতের ব্যাখ্যা পাওয়া যায়নি। অন্য তাফসীর বেছে নিন।':['No explanation for this verse in this tafsir. Choose another tafsir.','لا يوجد شرح لهذه الآية في هذا التفسير. اختر تفسيرًا آخر.'],'এই তাফসীরে আয়াত':['In this tafsir, the explanation from verse','في هذا التفسير شرح مشترك من الآية'],'থেকে কয়েকটি আয়াতের ব্যাখ্যা একসাথে দেওয়া আছে।':['covers several verses together.','يشمل عدة آيات معًا.'],'সূরা নং':['Surah no.','رقم السورة'],'আরবি নাম':['Arabic name','الاسم العربي'],'অবতীর্ণের স্থান':['Revealed in','مكان النزول'],'আয়াত সংখ্যা':['Number of verses','عدد الآيات'],'বন্ধ করুন':['Close','إغلاق']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -1289,8 +1422,8 @@ function stopQibla() {
 }
 
 
-// ===== Surah Reader (শব্দে শব্দে অর্থ + বাংলা অনুবাদ + অডিও) =====
-const rd = { n: 0, page: 1, hasMore: false, loading: false, trans: [], audio: [], token: 0 };
+// ===== Surah Reader (ক্যালিগ্রাফি বিসমিল্লাহ + শব্দে শব্দে অর্থ + অনুবাদ + অডিও + তাফসীর + কপি) =====
+const rd = { n: 0, page: 1, hasMore: false, loading: false, trans: [], audio: [], ar: {}, token: 0 };
 const player = new Audio();
 let playingEl = null;
 player.addEventListener('ended', () => { if (playingEl) { playingEl.classList.remove('playing'); playingEl = null; } });
@@ -1298,25 +1431,328 @@ player.addEventListener('ended', () => { if (playingEl) { playingEl.classList.re
 function getBookmarks() { try { return JSON.parse(localStorage.getItem('quranBookmarks') || '[]'); } catch (e) { return []; } }
 function saveBookmarks(a) { try { localStorage.setItem('quranBookmarks', JSON.stringify(a)); } catch (e) {} }
 
-async function openSurah(n) {
-  const box = document.getElementById('s-' + n).closest('.surah-item-box');
-  const bnName = surahName(n), arName = SURAH_INFO[n].ar, meta = surahMeta(n);
+// ---------- ছোট ইউটিলিটি ----------
+const SVG_COPY = '<svg class="i" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+const SVG_BOOK = '<svg class="i" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7.5h7M8 11.5h7"/></svg>';
+let toastTimer = null;
+function lodToast(msg) {
+  const t = document.getElementById('lodToast'); if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+async function copyText(text) {
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; } } catch (e) {}
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove(); return ok;
+}
+async function doCopy(btn, text) {
+  const ok = await copyText(text);
+  lodToast(ok ? T('কপি হয়েছে') : T('কপি করা যায়নি'));
+  if (ok && btn) {
+    const sp = btn.querySelector('span'), old = sp ? sp.textContent : '';
+    btn.classList.add('done'); if (sp) sp.textContent = T('কপি হয়েছে') + ' ✓';
+    setTimeout(() => { btn.classList.remove('done'); if (sp) sp.textContent = old; }, 1500);
+  }
+}
+const ayahRef = (s, a) => T('সূরা') + ' ' + surahName(s) + ' (' + bn(s) + ':' + bn(a) + ')';
 
-  Object.assign(rd, { n, page: 1, hasMore: false, loading: false, trans: [], audio: [], token: rd.token + 1 });
+// ---------- তাফসীর ডেটা সোর্স (ফ্রি, ওপেন: spa5k/tafsir_api — jsDelivr CDN) ----------
+const TF_CDNS = [
+  'https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir',
+  'https://cdn.statically.io/gh/spa5k/tafsir_api/main/tafsir',
+  'https://raw.githubusercontent.com/spa5k/tafsir_api/main/tafsir'
+];
+const TF_LANG_BN = { bengali: 'বাংলা', arabic: 'আরবি', english: 'ইংরেজি', urdu: 'উর্দু', indonesian: 'ইন্দোনেশীয়', turkish: 'তুর্কি', russian: 'রুশ', persian: 'ফারসি', hindi: 'হিন্দি', french: 'ফরাসি', spanish: 'স্প্যানিশ', italian: 'ইতালিয়', japanese: 'জাপানি', chinese: 'চীনা', albanian: 'আলবেনীয়', bosnian: 'বসনীয়', malayalam: 'মালায়ালাম', tamil: 'তামিল', telugu: 'তেলুগু', assamese: 'অসমীয়া', sinhala: 'সিংহলি', thai: 'থাই', vietnamese: 'ভিয়েতনামি', tagalog: 'ফিলিপিনো', uzbek: 'উজবেক', azeri: 'আজেরি', pashto: 'পশতু', kurdish: 'কুর্দি', kyrgyz: 'কিরগিজ', uighur: 'উইঘুর', serbian: 'সার্বিয়ান', fulah: 'ফুলা', 'central khmer': 'খমের' };
+const TF_LANG_ORDER = ['bengali', 'arabic', 'english', 'urdu'];
+const TF_RTL = ['arabic', 'urdu', 'persian', 'pashto', 'kurdish', 'uighur'];
+const TF_SKIP = ['ayah-dependency-graphs', 'tafisr-fathul-majid-bn', 'ar-tafsir-al-tha-alibi-527'];
+// slug : [বাংলা নাম, ভাষা]
+const TF_NAMES = {
+  'bn-tafsir-ahsanul-bayaan': ['তাফসীর আহসানুল বায়ান', 'bengali'],
+  'bn-tafsir-abu-bakr-zakaria': ['তাফসীর আবু বকর জাকারিয়া', 'bengali'],
+  'bn-tafseer-ibn-e-kaseer': ['তাফসীর ইবনে কাসীর (তাওহীদ পাবলিকেশন্স)', 'bengali'],
+  'bn-tafisr-fathul-majid': ['তাফসীর ফাতহুল মাজীদ', 'bengali'],
+  'bengali-mokhtasar': ['সংক্ষিপ্ত তাফসীর (বাংলা আল-মুখতাসার)', 'bengali'],
+  'ar-tafsir-muyassar': ['আত-তাফসীরুল মুয়াস্সার', 'arabic'],
+  'ar-tafsir-ibn-kathir': ['তাফসীর ইবনে কাসীর (আরবি)', 'arabic'],
+  'ar-tafseer-al-qurtubi': ['তাফসীর আল-কুরতুবী', 'arabic'],
+  'ar-tafsir-al-tabari': ['তাফসীর আত-তাবারী', 'arabic'],
+  'ar-tafsir-al-baghawi': ['তাফসীর আল-বাগাবী', 'arabic'],
+  'ar-tafseer-al-saddi': ['তাফসীর আস-সা’দী', 'arabic'],
+  'ar-tafsir-al-wasit': ['আত-তাফসীরুল ওয়াসীত', 'arabic'],
+  'ar-tafsir-al-jalalayn': ['তাফসীর জালালাইন (আরবি)', 'arabic'],
+  'ar-tafseer-tahrir-al-tanwir': ['আত-তাহরীর ওয়াত-তানওয়ীর (ইবনে আশুর)', 'arabic'],
+  'ar-tafseer-tanwir-al-miqbas': ['তানবীরুল মিকবাস (আরবি)', 'arabic'],
+  'tafsir-al-razi': ['তাফসীর আর-রাযী (মাফাতীহুল গায়ব)', 'arabic'],
+  'tafsir-al-baydawi': ['তাফসীর আল-বায়যাভী', 'arabic'],
+  'tafsir-al-alusi': ['রূহুল মা’আনী (আলূসী)', 'arabic'],
+  'tafsir-al-nasafi': ['তাফসীর আন-নাসাফী', 'arabic'],
+  'al-kashshaf-al-zamakhshari': ['আল-কাশশাফ (যামাখশারী)', 'arabic'],
+  'fath-al-qadir-al-shawkani': ['ফাতহুল কাদীর (শাওকানী)', 'arabic'],
+  'tafsir-ibn-uthaymeen': ['তাফসীর ইবনে উসাইমীন', 'arabic'],
+  'al-bahr-al-muhit': ['আল-বাহরুল মুহীত', 'arabic'],
+  'al-durr-al-manthur': ['আদ-দুররুল মানসূর (সুয়ূতী)', 'arabic'],
+  'tafsir-ibn-abi-hatim': ['তাফসীর ইবনে আবী হাতিম', 'arabic'],
+  'tafsir-al-mawardi': ['তাফসীর আল-মাওয়ারদী', 'arabic'],
+  'tafsir-al-samarqandi': ['তাফসীর আস-সামারকান্দী', 'arabic'],
+  'en-tafisr-ibn-kathir': ['Tafsir Ibn Kathir (English)', 'english'],
+  'en-tafsir-maarif-ul-quran': ['Maarif-ul-Quran (Mufti Shafi)', 'english'],
+  'en-al-jalalayn': ['Tafsir al-Jalalayn (English)', 'english'],
+  'en-tafsir-ibn-abbas': ['Tanwir al-Miqbas (Ibn Abbas)', 'english'],
+  'en-tafsir-al-mukhtasar': ['Al-Mukhtasar (English)', 'english'],
+  'en-tazkirul-quran': ['Tazkirul Quran (Wahiduddin Khan)', 'english'],
+  'ur-tafseer-ibn-e-kaseer': ['تفسیر ابن کثیر (اردو)', 'urdu'],
+  'ur-tafsir-bayan-ul-quran': ['بیان القرآن (ڈاکٹر اسرار احمد)', 'urdu'],
+  'ur-tafsir-as-saadi-urdu': ['تفسیر السعدی (اردو)', 'urdu']
+};
+const tfCap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+const tfFallback = () => Object.keys(TF_NAMES).map(k => ({ slug: k, name: TF_NAMES[k][0], lang: TF_NAMES[k][1], author: '' }));
+const tf = { list: tfFallback(), loaded: false, cur: null, cache: new Map(), token: 0, s: 0, a: 0, text: '', loadingList: null };
+try { tf.cur = localStorage.getItem('lodTafsir'); } catch (e) {}
+if (!tf.cur) tf.cur = 'bn-tafsir-ahsanul-bayaan';
+
+function tfLoadEditions() {
+  if (tf.loaded) return Promise.resolve(tf.list);
+  if (tf.loadingList) return tf.loadingList;
+  tf.loadingList = (async () => {
+    let arr = null;
+    for (const base of TF_CDNS) {
+      try {
+        const r = await fetch(base + '/editions.json'); if (!r.ok) continue;
+        const j = await r.json(); arr = Array.isArray(j) ? j : (j.data || j.editions || []);
+        if (arr && arr.length) break;
+      } catch (e) {}
+    }
+    if (arr && arr.length) {
+      const seen = new Set();
+      const out = [];
+      arr.forEach(e => {
+        const slug = e.slug || e.id; if (!slug || seen.has(slug) || TF_SKIP.includes(slug)) return;
+        seen.add(slug);
+        const lang = String(e.language_name || e.languageName || e.language || e.lang || (TF_NAMES[slug] || [])[1] || '').toLowerCase();
+        const known = TF_NAMES[slug];
+        out.push({ slug, name: known ? known[0] : (e.name || slug), lang: lang || (known ? known[1] : 'other'), author: e.author_name || e.authorName || '' });
+      });
+      if (out.length) { tf.list = out; tf.loaded = true; }
+    }
+    tf.loadingList = null;
+    renderPicker();
+    tfUpdateNames();
+    return tf.list;
+  })();
+  return tf.loadingList;
+}
+const tfFind = slug => tf.list.find(x => x.slug === slug) || (TF_NAMES[slug] ? { slug, name: TF_NAMES[slug][0], lang: TF_NAMES[slug][1] } : { slug, name: slug, lang: '' });
+function tfUpdateNames() {
+  const n = tfFind(tf.cur).name;
+  ['tfChipName', 'tfSheetName'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = n; });
+}
+
+async function tfFetch(slug, s, a) {
+  const key = slug + '/' + s + '/' + a;
+  if (tf.cache.has(key)) return tf.cache.get(key);
+  let txt = null, err = null;
+  for (const base of TF_CDNS) {
+    try {
+      const r = await fetch(base + '/' + slug + '/' + s + '/' + a + '.json');
+      if (r.status === 404) { txt = ''; break; }
+      if (!r.ok) continue;
+      const j = await r.json();
+      const v = j.text != null ? j.text : (j.tafsir && j.tafsir.text != null ? j.tafsir.text : (j.data && j.data.text != null ? j.data.text : (j.content != null ? j.content : '')));
+      txt = String(v); break;
+    } catch (e) { err = e; }
+  }
+  if (txt === null) throw err || new Error('tafsir fetch failed');
+  tf.cache.set(key, txt);
+  return txt;
+}
+// কিছু তাফসীরে কয়েকটি আয়াত একসাথে ব্যাখ্যা থাকে (শুধু প্রথম আয়াতে লেখা) — তাই ফাঁকা হলে পেছনের আয়াত দেখা হয়
+async function tfGet(slug, s, a) {
+  const t = await tfFetch(slug, s, a);
+  if (t.trim()) return { text: t, from: a };
+  for (let k = a - 1; k >= 1 && k >= a - 30; k--) {
+    const p = await tfFetch(slug, s, k);
+    if (p.trim()) return { text: p, from: k };
+  }
+  return { text: '', from: a };
+}
+
+const TF_OK = new Set(['P', 'BR', 'B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'SPAN', 'DIV', 'SUP', 'SUB', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
+function tfRender(box, raw) {
+  box.innerHTML = '';
+  if (!/<[a-z!\/]/i.test(raw)) {
+    raw.split(/\n+/).map(x => x.trim()).filter(Boolean).forEach(p => box.appendChild(hdEl('p', '', p)));
+    return;
+  }
+  const doc = new DOMParser().parseFromString(raw, 'text/html');
+  const walk = (src, dst) => {
+    src.childNodes.forEach(n => {
+      if (n.nodeType === 3) { dst.appendChild(document.createTextNode(n.nodeValue)); return; }
+      if (n.nodeType !== 1) return;
+      const t = n.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'IFRAME' || t === 'OBJECT') return;
+      if (TF_OK.has(t)) {
+        const e = document.createElement(/^H[1-6]$/.test(t) ? 'h4' : t.toLowerCase());   // এট্রিবিউট বাদ — নিরাপদ
+        walk(n, e); dst.appendChild(e);
+      } else walk(n, dst);
+    });
+  };
+  walk(doc.body, box);
+}
+
+// ---------- শিট (বটম-শিট) ব্যবস্থাপনা ----------
+const shStack = [];
+function lodSheetOpen(id) {
+  const el = document.getElementById(id); if (!el) return;
+  if (!shStack.includes(id)) shStack.push(id);
+  el.classList.add('open');
+  document.getElementById('shBg').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function lodSheetClose(id) {
+  const el = document.getElementById(id); if (el) el.classList.remove('open');
+  const i = shStack.indexOf(id); if (i > -1) shStack.splice(i, 1);
+  if (!shStack.length) { document.getElementById('shBg').classList.remove('show'); document.body.style.overflow = ''; }
+}
+function closeTopSheet() { if (shStack.length) lodSheetClose(shStack[shStack.length - 1]); }
+function closeAllSheets() { shStack.slice().forEach(lodSheetClose); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && shStack.length) closeTopSheet(); });
+
+// ---------- তাফসীর শিট ----------
+function openTafsir(s, a) {
+  tf.s = s; tf.a = a;
+  lodSheetOpen('tfSheet');
+  tfLoad();
+  tfLoadEditions();
+}
+async function tfLoad() {
+  const s = tf.s, a = tf.a, tok = ++tf.token, slug = tf.cur;
+  const info = tfFind(slug), cnt = SURAH_INFO[s].cnt;
+  document.getElementById('tfTitle').textContent = T('তাফসীর') + ' • ' + surahName(s) + ' ' + bn(s) + ':' + bn(a);
+  tfUpdateNames();
+  const prev = document.getElementById('tfPrev'), next = document.getElementById('tfNext');
+  prev.disabled = a <= 1; next.disabled = a >= cnt;
+  prev.onclick = () => { if (a > 1) { tf.a = a - 1; tfLoad(); } };
+  next.onclick = () => { if (a < cnt) { tf.a = a + 1; tfLoad(); } };
+
+  const body = document.getElementById('tfBody');
+  body.className = 'sh-body';
+  body.scrollTop = 0;
+  body.innerHTML = '';
+  // আয়াত ও অনুবাদের সংক্ষিপ্ত উদ্ধৃতি
+  const q = hdEl('div', 'sh-quote');
+  if (rd.ar[a] && rd.n === s) q.appendChild(hdEl('div', 'q-ar', rd.ar[a]));
+  if (rd.trans[a - 1] && rd.n === s) q.appendChild(hdEl('div', 'q-tr', rd.trans[a - 1]));
+  if (q.childNodes.length) body.appendChild(q);
+  const out = hdEl('div', 'tf-text' + (TF_RTL.includes(info.lang) ? ' rtl' : ''));
+  out.appendChild(hdEl('div', 'tf-msg', T('লোড হচ্ছে...')));
+  body.appendChild(out);
+  tf.text = '';
+  const cpy = document.getElementById('tfCopy');
+  cpy.onclick = () => { if (tf.text) doCopy(cpy, tfFind(slug).name + '\n' + ayahRef(s, a) + '\n\n' + tf.text); };
+
+  try {
+    const r = await tfGet(slug, s, a);
+    if (tok !== tf.token) return;
+    out.innerHTML = '';
+    if (!r.text.trim()) { out.appendChild(hdEl('div', 'tf-msg', T('এই তাফসীরে এই আয়াতের ব্যাখ্যা পাওয়া যায়নি। অন্য তাফসীর বেছে নিন।'))); return; }
+    if (r.from !== a) out.appendChild(hdEl('div', 'tf-note', T('এই তাফসীরে আয়াত') + ' ' + bn(r.from) + ' ' + T('থেকে কয়েকটি আয়াতের ব্যাখ্যা একসাথে দেওয়া আছে।')));
+    const holder = hdEl('div'); tfRender(holder, r.text);
+    out.appendChild(holder);
+    tf.text = holder.innerText || holder.textContent || '';
+  } catch (e) {
+    if (tok !== tf.token) return;
+    out.innerHTML = '';
+    const m = hdEl('div', 'tf-msg', T('ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।'));
+    const b = hdEl('button', '', T('আবার চেষ্টা করুন')); b.onclick = tfLoad; m.appendChild(b);
+    out.appendChild(m);
+  }
+}
+
+// ---------- তাফসীর নির্বাচন ----------
+function openPicker() {
+  document.getElementById('pkSearch').value = '';
+  renderPicker();
+  lodSheetOpen('pkSheet');
+  tfLoadEditions();
+}
+function renderPicker() {
+  const box = document.getElementById('pkBody'); if (!box) return;
+  const q = (document.getElementById('pkSearch').value || '').trim().toLowerCase();
+  box.innerHTML = '';
+  const groups = {};
+  tf.list.forEach(e => {
+    const hay = (e.name + ' ' + (e.author || '') + ' ' + e.lang + ' ' + (TF_LANG_BN[e.lang] || '')).toLowerCase();
+    if (q && !hay.includes(q)) return;
+    (groups[e.lang || 'other'] = groups[e.lang || 'other'] || []).push(e);
+  });
+  const keys = Object.keys(groups).sort((a, b) => {
+    const ia = TF_LANG_ORDER.indexOf(a), ib = TF_LANG_ORDER.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+  });
+  if (!keys.length) { box.appendChild(hdEl('div', 'tf-msg', T('কোনো তাফসীর পাওয়া যায়নি।'))); return; }
+  keys.forEach(k => {
+    box.appendChild(hdEl('div', 'pk-h', (LANG === 'bn' ? (TF_LANG_BN[k] || tfCap(k)) : tfCap(k)) + ' (' + bn(groups[k].length) + ')'));
+    groups[k].forEach(e => {
+      const b = hdEl('button', 'pk-i' + (e.slug === tf.cur ? ' on' : ''));
+      const sp = hdEl('span', '', e.name);
+      if (e.author && e.author !== e.name) sp.appendChild(hdEl('small', '', e.author));
+      b.appendChild(sp);
+      b.onclick = () => pickTafsir(e.slug);
+      box.appendChild(b);
+    });
+  });
+}
+function pickTafsir(slug) {
+  tf.cur = slug;
+  try { localStorage.setItem('lodTafsir', slug); } catch (e) {}
+  tfUpdateNames();
+  lodSheetClose('pkSheet');
+  if (document.getElementById('tfSheet').classList.contains('open')) tfLoad();
+  else lodToast(T('তাফসীর পরিবর্তন হয়েছে') + ': ' + tfFind(slug).name);
+}
+document.getElementById('pkSearch').addEventListener('input', renderPicker);
+
+// ---------- সূরার তথ্য ----------
+function openInfo() {
+  const n = rd.n; if (!n) return;
+  const i = SURAH_INFO[n];
+  document.getElementById('infoTitle').textContent = T('সূরা') + ' ' + surahName(n);
+  const box = document.getElementById('infoBody'); box.innerHTML = '';
+  const row = (k, v) => { const r = hdEl('div', 'info-row'); r.appendChild(hdEl('b', '', k + ': ')); r.appendChild(document.createTextNode(v)); box.appendChild(r); };
+  row(T('সূরা নং'), bn(n));
+  row(T('আরবি নাম'), i.ar);
+  row(T('অবতীর্ণের স্থান'), T(i.type));
+  row(T('আয়াত সংখ্যা'), bn(i.cnt));
+  const det = document.getElementById('s-' + n);
+  if (LANG === 'bn' && det) det.querySelectorAll('p').forEach(p => { const t = p.textContent.trim(); if (t) { const m = t.match(/^([^:]+):\s*([\s\S]*)$/); if (m) row(m[1], m[2]); else box.appendChild(hdEl('div', 'info-row', t)); } });
+  lodSheetOpen('infoSheet');
+}
+
+// ---------- সূরা খোলা ----------
+async function openSurah(n) {
+  const bnName = surahName(n), arName = SURAH_INFO[n].ar, meta = surahMeta(n);
+  closeAllSheets();
+  Object.assign(rd, { n, page: 1, hasMore: false, loading: false, trans: [], audio: [], ar: {}, token: rd.token + 1 });
   player.pause(); playingEl = null;
   document.getElementById('rdTitle').textContent = T('সূরা') + ' ' + bnName;
   document.getElementById('rdAr').textContent = arName;
+  document.getElementById('rdBn').textContent = T('সূরা') + ' ' + bnName;
   document.getElementById('rdMeta').textContent = meta;
   document.getElementById('rdAyahs').innerHTML = '';
   document.getElementById('rdMore').style.display = 'none';
-  document.getElementById('rdBism').style.display = (n === 1 || n === 9) ? 'none' : 'block';
+  document.getElementById('rdBism').style.display = (n === 9) ? 'none' : 'block';
+  tfUpdateNames();
   switchView('surah');
 
   const st = document.getElementById('rdStatus');
   st.textContent = T('লোড হচ্ছে...');
   const token = rd.token;
   try {
-    // বাংলা অনুবাদ + অডিও (পুরো সূরা একবারে)
+    // অনুবাদ + অডিও (পুরো সূরা একবারে)
     const r = await fetch('https://api.alquran.cloud/v1/surah/' + n + '/editions/' + ({ bn: 'bn.bengali', en: 'en.sahih', ar: 'ar.muyassar' })[LANG] + ',ar.alafasy');
     const j = await r.json();
     if (token !== rd.token) return;
@@ -1334,7 +1770,7 @@ async function loadMoreAyahs() {
   st.textContent = T('লোড হচ্ছে...');
   try {
     const url = 'https://api.quran.com/api/v4/verses/by_chapter/' + rd.n +
-      '?language=' + LANG + '&words=true&word_fields=text_uthmani&per_page=10&page=' + rd.page;
+      '?language=' + LANG + '&words=true&word_fields=text_uthmani&fields=text_uthmani&per_page=10&page=' + rd.page;
     const r = await fetch(url);
     if (!r.ok) throw new Error('http ' + r.status);
     const j = await r.json();
@@ -1353,25 +1789,41 @@ async function loadMoreAyahs() {
 }
 
 function buildAyah(v) {
-  const no = v.verse_number;
+  const no = v.verse_number, sNo = rd.n;
   const el = document.createElement('div');
-  el.className = 'ayah';
+  el.className = 'ayah'; el.tabIndex = 0; el.setAttribute('role', 'button');
+  const arabic = v.text_uthmani || v.words.filter(w => w.char_type_name !== 'end').map(w => w.text_uthmani).join(' ');
+  rd.ar[no] = arabic;
   const words = v.words.map(w => {
     const end = w.char_type_name === 'end';
     const mean = end ? '(' + bn(no) + ')' : ((w.translation && w.translation.text) || '');
     return '<div class="w' + (end ? ' end' : '') + '"><span class="a">' + (end ? bn(no) : w.text_uthmani) + '</span><span class="m">' + mean + '</span></div>';
   }).join('');
   const tr = rd.trans[no - 1] || '';
-  const key = rd.n + ':' + no;
+  const key = sNo + ':' + no;
   const saved = getBookmarks().includes(key);
   el.innerHTML = '<div class="words">' + words + '</div>' +
     (tr ? '<div class="tr-bn"></div>' : '') +
+    '<div class="copy-row">' +
+      '<button class="cp c-ar">' + SVG_COPY + '<span>' + T('আয়াত কপি') + '</span></button>' +
+      (tr ? '<button class="cp c-tr">' + SVG_COPY + '<span>' + T('অর্থ কপি') + '</span></button>' +
+            '<button class="cp c-all">' + SVG_COPY + '<span>' + T('দুটোই কপি') + '</span></button>' : '') +
+    '</div>' +
     '<div class="ayah-foot"><span>' + T('আয়াত:') + ' ' + bn(no) + '</span><span class="ac">' +
     '<button class="b-play" title="' + T('শুনুন') + '">▶</button>' +
+    '<button class="b-tafsir" title="' + T('তাফসীর') + '">' + SVG_BOOK + '</button>' +
     '<button class="b-mark' + (saved ? ' on' : '') + '" title="' + T('বুকমার্ক') + '">' + (saved ? '★' : '☆') + '</button></span></div>';
   if (tr) el.querySelector('.tr-bn').textContent = tr;     // textContent: নিরাপদ
 
-  el.querySelector('.b-play').onclick = () => {
+  const ref = ayahRef(sNo, no);
+  el.querySelector('.c-ar').onclick = e => { e.stopPropagation(); doCopy(e.currentTarget, arabic + '\n— ' + ref); };
+  if (tr) {
+    el.querySelector('.c-tr').onclick = e => { e.stopPropagation(); doCopy(e.currentTarget, tr + '\n— ' + ref); };
+    el.querySelector('.c-all').onclick = e => { e.stopPropagation(); doCopy(e.currentTarget, arabic + '\n\n' + tr + '\n— ' + ref); };
+  }
+  el.querySelector('.b-tafsir').onclick = e => { e.stopPropagation(); openTafsir(sNo, no); };
+  el.querySelector('.b-play').onclick = e => {
+    e.stopPropagation();
     const src = rd.audio[no - 1];
     if (!src) return;
     if (playingEl === el && !player.paused) { player.pause(); el.classList.remove('playing'); playingEl = null; return; }
@@ -1379,7 +1831,8 @@ function buildAyah(v) {
     playingEl = el; el.classList.add('playing');
     player.src = src; player.play().catch(() => {});
   };
-  el.querySelector('.b-mark').onclick = (e) => {
+  el.querySelector('.b-mark').onclick = e => {
+    e.stopPropagation();
     let b = getBookmarks();
     b = b.includes(key) ? b.filter(x => x !== key) : b.concat(key);
     saveBookmarks(b);
@@ -1387,6 +1840,14 @@ function buildAyah(v) {
     e.currentTarget.classList.toggle('on', on);
     e.currentTarget.textContent = on ? '★' : '☆';
   };
+  // আয়াতের যেকোনো জায়গায় ট্যাপ করলে তাফসীর (টেক্সট সিলেক্ট করার সময় নয়)
+  el.addEventListener('click', e => {
+    if (e.target.closest('button')) return;
+    const sel = window.getSelection ? String(window.getSelection()) : '';
+    if (sel) return;
+    openTafsir(sNo, no);
+  });
+  el.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target === el) { e.preventDefault(); openTafsir(sNo, no); } });
   return el;
 }
 
