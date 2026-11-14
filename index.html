@@ -240,9 +240,10 @@ section{padding:18px 16px 0}
 .top-actions{display:flex;align-items:center;gap:8px;flex:none}
 .lang-wrap{position:relative}
 .langbtn{width:auto;padding:0 10px;gap:5px;font-family:inherit;font-size:13px;font-weight:600}
-.lang-menu{display:none;position:absolute;top:46px;inset-inline-end:0;min-width:150px;background:var(--card);color:var(--text);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:6px;z-index:30}
+.lang-menu{display:none;position:fixed;top:0;left:0;direction:ltr;z-index:100;min-width:150px;background:var(--card);color:var(--text);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:6px;}
 .lang-menu.show{display:block}
-.lang-menu button{display:block;width:100%;border:0;background:none;color:inherit;font-family:inherit;font-size:15px;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:start}
+.lang-menu button{display:block;width:100%;border:0;background:none;color:inherit;font-family:inherit;font-size:15px;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:left}
+.lang-menu button[data-l=ar]{text-align:right;font-family:'Noto Sans Arabic',sans-serif}
 .lang-menu button.on{background:var(--blue-l);color:var(--blue);font-weight:600}
 html[lang=ar] body{font-family:'Noto Sans Arabic','Hind Siliguri',system-ui,sans-serif}
 html[lang=en] .m small{display:none}
@@ -287,11 +288,6 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
         <div class="top-actions">
           <div class="lang-wrap">
             <button class="iconbtn langbtn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-label="Language"><svg class="i" style="font-size:17px"><use href="#globe"/></svg><b id="langCode">বাং</b></button>
-            <div class="lang-menu" id="langMenu" role="menu">
-              <button data-l="bn" role="menuitem">বাংলা</button>
-              <button data-l="en" role="menuitem">English</button>
-              <button data-l="ar" role="menuitem">العربية</button>
-            </div>
           </div>
           <button class="iconbtn" aria-label="নোটিফিকেশন"><svg class="i"><use href="#bell"/></svg></button>
         </div>
@@ -611,6 +607,11 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
   </div>
 </nav>
 
+<div class="lang-menu" id="langMenu" role="menu">
+  <button data-l="bn" role="menuitem">বাংলা</button>
+  <button data-l="en" role="menuitem">English</button>
+  <button data-l="ar" role="menuitem">العربية</button>
+</div>
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="locSheet" role="dialog" aria-label="এলাকা নির্বাচন" aria-hidden="true">
   <div class="sheet-h"><h3>নামাজের সময়ের এলাকা</h3><button class="sheet-x" id="sheetX" aria-label="বন্ধ করুন">✕</button></div>
@@ -1292,7 +1293,7 @@ function resetTasbih() {
 
 // ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
 const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
-const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextName,#cdText,#cdMin,#hdBody,#duaList,#rdAyahs,#locList,#surahListContainer,.lang-wrap,script,style';
+const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextName,#cdText,#cdMin,#langMenu,#hdBody,#duaList,#rdAyahs,#locList,#surahListContainer,.lang-wrap,script,style';
 function i18nWalk(){
   const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
   while((x=tw.nextNode()))nodes.push(x);
@@ -1317,7 +1318,7 @@ function applyLang(l){
   const h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
   i18nWalk();
   document.title=TITLES[l];
-  $('langCode').textContent={bn:'বাং',en:'EN',ar:'عربي'}[l];
+  $('langCode').textContent={bn:'বাংলা',en:'English',ar:'العربية'}[l];
   document.querySelectorAll('#langMenu button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
   renderSurahList();tick();upd();
   ring.textContent=bn(c);
@@ -1335,7 +1336,7 @@ function applyLang(l){
 (function(){
   const btn=$('langBtn'),menu=$('langMenu');
   const close=()=>{menu.classList.remove('show');btn.setAttribute('aria-expanded','false');};
-  btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('show');btn.setAttribute('aria-expanded',o);});
+  btn.addEventListener('click',e=>{e.stopPropagation();const o=!menu.classList.contains('show');if(o){const r=btn.getBoundingClientRect();menu.style.top=(r.bottom+6)+'px';menu.style.left=Math.max(8,Math.min(r.left,innerWidth-166))+'px';}menu.classList.toggle('show',o);btn.setAttribute('aria-expanded',o);});
   menu.addEventListener('click',e=>{const b=e.target.closest('button[data-l]');if(!b)return;close();applyLang(b.dataset.l);});
   document.addEventListener('click',close);
 })();
