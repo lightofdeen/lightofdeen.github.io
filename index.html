@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Light of Deen – ঈমানের আলোয় আলোকিত জীবন</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --blue:#1e88e5; --blue-d:#1565c0; --blue-l:#e3f1fd; --bg:#f2f7fc; --card:#ffffff;
@@ -234,6 +234,20 @@ section{padding:18px 16px 0}
 .loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .loc-item{padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:13.5px;cursor:pointer;text-align:center}
 .loc-item.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* language switcher */
+.brand{min-width:0}
+.top-actions{display:flex;align-items:center;gap:8px;flex:none}
+.lang-wrap{position:relative}
+.langbtn{width:auto;padding:0 10px;gap:5px;font-family:inherit;font-size:13px;font-weight:600}
+.lang-menu{display:none;position:absolute;top:46px;inset-inline-end:0;min-width:150px;background:var(--card);color:var(--text);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:6px;z-index:30}
+.lang-menu.show{display:block}
+.lang-menu button{display:block;width:100%;border:0;background:none;color:inherit;font-family:inherit;font-size:15px;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:start}
+.lang-menu button.on{background:var(--blue-l);color:var(--blue);font-weight:600}
+html[lang=ar] body{font-family:'Noto Sans Arabic','Hind Siliguri',system-ui,sans-serif}
+html[lang=en] .m small{display:none}
+html[dir=rtl] .dq-h{text-align:right}
+html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
 </style>
 </head>
 <body>
@@ -257,6 +271,7 @@ section{padding:18px 16px 0}
 <symbol id="pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.2A7 7 0 0 1 19 9.8C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.5"/></symbol>
 <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></symbol>
+<symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></symbol>
 </defs>
 </svg>
 
@@ -269,7 +284,17 @@ section{padding:18px 16px 0}
           <div class="logo" aria-hidden="true">🕌</div>
           <div><h1>Light of Deen</h1><p>ঈমানের আলোয় আলোকিত জীবন</p></div>
         </div>
-        <button class="iconbtn" aria-label="নোটিফিকেশন"><svg class="i"><use href="#bell"/></svg></button>
+        <div class="top-actions">
+          <div class="lang-wrap">
+            <button class="iconbtn langbtn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-label="Language"><svg class="i" style="font-size:17px"><use href="#globe"/></svg><b id="langCode">বাং</b></button>
+            <div class="lang-menu" id="langMenu" role="menu">
+              <button data-l="bn" role="menuitem">বাংলা</button>
+              <button data-l="en" role="menuitem">English</button>
+              <button data-l="ar" role="menuitem">العربية</button>
+            </div>
+          </div>
+          <button class="iconbtn" aria-label="নোটিফিকেশন"><svg class="i"><use href="#bell"/></svg></button>
+        </div>
       </div>
       <p class="date">আসসালামু আলাইকুম<b id="live-date">লোড হচ্ছে...</b></p>
       <div class="clockrow">
@@ -595,7 +620,26 @@ section{padding:18px 16px 0}
   <div class="loc-list" id="locList"></div>
 </div>
 <script>
-const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+let LANG='bn';try{LANG=localStorage.getItem('lang')||'bn'}catch(e){}
+if(!['bn','en','ar'].includes(LANG))LANG='bn';
+const DIG={bn:'০১২৩৪৫৬৭৮৯',en:'0123456789',ar:'٠١٢٣٤٥٦٧٨٩'};
+const bn=n=>String(n).replace(/\d/g,d=>DIG[LANG][d]);
+const D={"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the 🕋 icon lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما تتطابق أيقونة 🕋 مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন": ["Turn your phone until 🕋 points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
+const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
+const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
+const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
+const hn=b=>LANG==='bn'?b.name:HBN[b.id][LANG==='en'?0:1];
+const trSlug=b=>LANG==='bn'?b.ben:(LANG==='en'&&b.ben?b.ben.replace('ben-','eng-'):null);
+function dnm(n){if(LANG==='bn')return n;if(!dnm.m){dnm.m={};DISTRICTS.flatMap(([,a])=>a.map(d=>d[0])).forEach((x,i)=>dnm.m[x]=DIST_EN[i]);}return dnm.m[n]||n;}
+function dvn(d){if(LANG==='bn')return d;const i=DISTRICTS.findIndex(x=>x[0]===d);return (DIV_EN[i]||d)+' Division';}
+const NM=k=>LANG==='bn'?BASE_NM[k]:NAMES[LANG][k];
+function refT(r){if(LANG==='bn')return r;REFS.forEach(x=>{r=r.split(x[0]).join(x[LANG==='en'?1:2]);});return r.replace(/[০-৯]/g,c=>DIG[LANG]['০১২৩৪৫৬৭৮৯'.indexOf(c)]);}
+const duaTitle=(d,i)=>LANG==='bn'?d.t:DUA_T[i][LANG==='en'?0:1];
+const SURAH_INFO={};
+document.querySelectorAll('.surah-item-box').forEach(b=>{const m=b.querySelector('b').textContent.match(/^(.*?)\.\s*(.*?)\s*\((.*)\)\s*$/);const mt=b.querySelector('.surah-header div div').textContent.split('•').map(x=>x.trim());const n=+b.querySelector('.surah-details').id.slice(2);SURAH_INFO[n]={bn:m[2],ar:m[3],type:mt[0],cnt:+mt[1].replace(/[০-৯]/g,c=>'০১২৩৪৫৬৭৮৯'.indexOf(c)).replace(/\D/g,'')};});
+const surahName=n=>LANG==='en'?SURAH_EN[n-1]:(LANG==='ar'?SURAH_INFO[n].ar:SURAH_INFO[n].bn);
+const surahMeta=n=>{const i=SURAH_INFO[n];return T(i.type)+' • '+bn(i.cnt)+' '+T('আয়াত');};
+function renderSurahList(){document.querySelectorAll('.surah-item-box').forEach(b=>{const n=+b.querySelector('.surah-details').id.slice(2),i=SURAH_INFO[n];b.querySelector('b').textContent=bn(n)+'. '+surahName(n)+(LANG==='ar'?'':' ('+i.ar+')');b.querySelector('.surah-header div div').textContent=surahMeta(n);});}
 
 // রিয়েল-টাইম বাংলা তারিখ ও বার দেখানোর ফাংশন
 function updateRealTimeDate() {
@@ -620,7 +664,7 @@ updateRealTimeDate();
 const items=[...document.querySelectorAll('#amalList li')];
 function upd(){
   const d=items.filter(i=>i.classList.contains('done')).length;
-  document.getElementById('pc').textContent=bn(d)+'/'+bn(items.length)+' সম্পন্ন';
+  document.getElementById('pc').textContent=bn(d)+'/'+bn(items.length)+' '+T('সম্পন্ন');
   document.getElementById('bar').style.width=(d/items.length*100)+'%';
 }
 items.forEach(li=>{
@@ -640,6 +684,7 @@ const EN_MONTHS_BN = ['জানুয়ারি','ফেব্রুয়া
 const BANGLA_MONTHS = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
 const HIJRI_MONTHS = ['মুহাররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শা\u2019বান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
 
+const BASE_NM = { days: BN_DAYS, gm: EN_MONTHS_BN, bm: BANGLA_MONTHS, hm: HIJRI_MONTHS };
 // ঢাকার বর্তমান সময় (ডিভাইসের টাইমজোন যাই হোক): UTC+6 শিফট করা Date, getUTC* দিয়ে পড়তে হবে
 function dhakaNow() { return new Date(Date.now() + DHAKA.tz * 3600000); }
 
@@ -655,7 +700,7 @@ function banglaDate(d) { // সংশোধিত বাংলা পঞ্জ�
   const len = [31,31,31,31,31,30,30,30,30,30, leap ? 30 : 29, 30];
   let i = 0;
   while (i < 11 && n >= len[i]) { n -= len[i]; i++; }
-  return bn(n + 1) + ' ' + BANGLA_MONTHS[i] + ' ' + bn(byear) + ' বঙ্গাব্দ';
+  return bn(n + 1) + ' ' + NM('bm')[i] + ' ' + bn(byear) + ' ' + T('বঙ্গাব্দ');
 }
 
 function hijriDate(d) {
@@ -663,15 +708,15 @@ function hijriDate(d) {
     const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + HIJRI_ADJ, 12));
     const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: 'UTC' }).formatToParts(t);
     const g = k => parseInt(parts.find(p => p.type === k).value, 10);
-    return bn(g('day')) + ' ' + HIJRI_MONTHS[g('month') - 1] + ' ' + bn(g('year')) + ' হিজরি';
-  } catch (e) { return 'পাওয়া যায়নি'; }
+    return bn(g('day')) + ' ' + NM('hm')[g('month') - 1] + ' ' + bn(g('year')) + ' ' + T('হিজরি');
+  } catch (e) { return T('পাওয়া যায়নি'); }
 }
 
 function bnTime12(h, m, withSec, s) {
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return bn(h12) + ':' + bn(String(m).padStart(2, '0')) + (withSec ? ':' + bn(String(s).padStart(2, '0')) : '');
 }
-function periodBn(h) { return h < 4 ? 'রাত' : h < 6 ? 'ভোর' : h < 12 ? 'সকাল' : h < 15 ? 'দুপুর' : h < 17 ? 'বিকাল' : h < 19 ? 'সন্ধ্যা' : 'রাত'; }
+function periodBn(h) { if (LANG !== 'bn') return LANG === 'en' ? (h < 12 ? 'AM' : 'PM') : (h < 12 ? 'ص' : 'م'); return h < 4 ? 'রাত' : h < 6 ? 'ভোর' : h < 12 ? 'সকাল' : h < 15 ? 'দুপুর' : h < 17 ? 'বিকাল' : h < 19 ? 'সন্ধ্যা' : 'রাত'; }
 
 // নামাজের সময় গণনা (ঢাকা, হানাফি আসর, ফজর/ইশা ১৮°)
 function calcPrayerTimes(y, m, d) {
@@ -689,7 +734,7 @@ function calcPrayerTimes(y, m, d) {
 }
 const PRAYERS = [['fajr','ফজর'],['dhuhr','যোহর'],['asr','আসর'],['maghrib','মাগরিব'],['isha','ইশা']];
 const hrsToMin = h => Math.round(h * 60);
-function fmtHM(mins) { const h = Math.floor(mins / 60), m = mins % 60; return (h ? bn(h) + ' ঘ ' : '') + bn(m) + ' মি'; }
+function fmtHM(mins) { const h = Math.floor(mins / 60), m = mins % 60; return (h ? bn(h) + ' ' + T('ঘ') + ' ' : '') + bn(m) + ' ' + T('মি'); }
 
 let ptCache = { key: '', t: null };
 function getTimes(dn) {
@@ -701,9 +746,9 @@ function getTimes(dn) {
 function tick() {
   const dn = dhakaNow(), H = dn.getUTCHours(), M = dn.getUTCMinutes(), S = dn.getUTCSeconds();
   const el = id => document.getElementById(id);
-  el('live-date').textContent = BN_DAYS[dn.getUTCDay()] + ', ' + bn(dn.getUTCDate()) + ' ' + EN_MONTHS_BN[dn.getUTCMonth()] + ' ' + bn(dn.getUTCFullYear());
+  el('live-date').textContent = NM('days')[dn.getUTCDay()] + ', ' + bn(dn.getUTCDate()) + ' ' + NM('gm')[dn.getUTCMonth()] + ' ' + bn(dn.getUTCFullYear());
   el('live-clock').innerHTML = bnTime12(H, M, true, S) + '<small>' + periodBn(H) + '</small>';
-  el('locName').textContent = LOC.name; el('noteLoc').textContent = LOC.name + (LOC.mode === 'auto' ? ' (আপনার অবস্থান)' : '');
+  el('locName').textContent = dnm(LOC.name); el('noteLoc').textContent = dnm(LOC.name) + (LOC.mode === 'auto' ? ' ' + T('(আপনার অবস্থান)') : '');
   el('bn-date').textContent = banglaDate(dn);
   el('hj-date').textContent = hijriDate(dn);
 
@@ -719,9 +764,9 @@ function tick() {
     targetSec = 86400 + hrsToMin(tt.fajr) * 60;
   } else targetSec = mins[PRAYERS[nextIdx][0]] * 60;
   const left = Math.max(0, targetSec - nowSec);
-  el('nextName').textContent = PRAYERS[nextIdx][1] + (tomorrow ? ' (আগামীকাল)' : '');
+  el('nextName').textContent = T(PRAYERS[nextIdx][1]) + (tomorrow ? ' (' + T('আগামীকাল') + ')' : '');
   el('cdText').textContent = bn(String(Math.floor(left / 3600)).padStart(2, '0')) + ':' + bn(String(Math.floor(left % 3600 / 60)).padStart(2, '0')) + ':' + bn(String(left % 60).padStart(2, '0'));
-  el('cdMin').textContent = 'বাকি আছে · ' + bn(Math.ceil(left / 60)) + ' মিনিট';
+  el('cdMin').textContent = T('বাকি আছে') + ' · ' + bn(Math.ceil(left / 60)) + ' ' + T('মিনিট');
 
   document.querySelectorAll('#prayerTimes .t').forEach((box, i) => {
     const k = PRAYERS[i][0], pm = mins[k];
@@ -729,9 +774,9 @@ function tick() {
     box.classList.toggle('on', i === nextIdx && !tomorrow || (tomorrow && i === 0));
     const diff = pm - Math.floor(nowSec / 60) - (nowSec % 60 ? 0 : 0);
     const e = box.querySelector('em');
-    if (tomorrow && i === 0) e.textContent = fmtHM(Math.ceil(left / 60)) + ' পর';
-    else if (pm * 60 > nowSec) e.textContent = fmtHM(Math.ceil((pm * 60 - nowSec) / 60)) + ' পর';
-    else e.textContent = 'শেষ';
+    if (tomorrow && i === 0) e.textContent = fmtHM(Math.ceil(left / 60)) + ' ' + T('পর');
+    else if (pm * 60 > nowSec) e.textContent = fmtHM(Math.ceil((pm * 60 - nowSec) / 60)) + ' ' + T('পর');
+    else e.textContent = T('শেষ');
   });
 }
 // ===== এলাকা নির্বাচন (৬৪ জেলা + GPS) =====
@@ -761,12 +806,12 @@ function renderLocList(q) {
   q = (q || '').trim();
   let html = '';
   DISTRICTS.forEach(([div, arr]) => {
-    const items = arr.filter(d => !q || d[0].includes(q));
+    const items = arr.filter(d => !q || d[0].includes(q) || dnm(d[0]).toLowerCase().includes(q.toLowerCase()));
     if (!items.length) return;
-    html += '<div class="loc-div">' + div + '</div><div class="loc-grid">' + items.map(d =>
-      '<button class="loc-item' + (LOC.mode === 'manual' && LOC.name === d[0] ? ' on' : '') + '" data-n="' + d[0] + '" data-la="' + d[1] + '" data-ln="' + d[2] + '">' + d[0] + '</button>').join('') + '</div>';
+    html += '<div class="loc-div">' + dvn(div) + '</div><div class="loc-grid">' + items.map(d =>
+      '<button class="loc-item' + (LOC.mode === 'manual' && LOC.name === d[0] ? ' on' : '') + '" data-n="' + d[0] + '" data-la="' + d[1] + '" data-ln="' + d[2] + '">' + dnm(d[0]) + '</button>').join('') + '</div>';
   });
-  $('locList').innerHTML = html || '<p class="gps-msg" style="display:block;text-align:center;padding:18px 0">কোনো জেলা পাওয়া যায়নি</p>';
+  $('locList').innerHTML = html || '<p class="gps-msg" style="display:block;text-align:center;padding:18px 0">' + T('কোনো জেলা পাওয়া যায়নি') + '</p>';
 }
 function openSheet() {
   renderLocList(''); $('locSearch').value = ''; $('gpsMsg').textContent = '';
@@ -779,18 +824,18 @@ function closeSheet() {
 }
 function locateMe(silent) {
   const msg = t => { if (!silent) $('gpsMsg').textContent = t; };
-  if (!navigator.geolocation) return msg('এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।');
-  const btn = $('gpsBtn'); if (!silent) { btn.disabled = true; msg('আপনার লোকেশন খোঁজা হচ্ছে...'); }
+  if (!navigator.geolocation) return msg(T('এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।'));
+  const btn = $('gpsBtn'); if (!silent) { btn.disabled = true; msg(T('আপনার লোকেশন খোঁজা হচ্ছে...')); }
   navigator.geolocation.getCurrentPosition(pos => {
     btn.disabled = false;
     const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    if (!inBangladesh(lat, lng)) return msg('আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।');
+    if (!inBangladesh(lat, lng)) return msg(T('আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।'));
     const n = nearestDistrict(lat, lng);
     setLoc({ name: n[0], lat: lat, lng: lng, mode: 'auto' });
     if (!silent) closeSheet();
   }, err => {
     btn.disabled = false;
-    msg(err.code === 1 ? 'লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।' : 'লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।');
+    msg(err.code === 1 ? T('লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।') : T('লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।'));
   }, { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 });
 }
 $('locBtn').addEventListener('click', openSheet);
@@ -853,22 +898,21 @@ function renderDuas(q) {
   q = (q || '').trim();
   let shown = 0;
   DUAS.forEach((d, i) => {
-    if (q && !(d.t + ' ' + d.bn + ' ' + d.tr).includes(q)) return;
+    if (q && !(duaTitle(d, i) + ' ' + (LANG === 'bn' ? d.bn + ' ' + d.tr : '')).toLowerCase().includes(q.toLowerCase())) return;
     shown++;
     const card = hdEl('div', 'dq');
     const h = hdEl('button', 'dq-h');
     h.appendChild(hdEl('span', 'no', bn(i + 1)));
-    h.appendChild(hdEl('span', 'nm', d.t));
+    h.appendChild(hdEl('span', 'nm', duaTitle(d, i)));
     h.appendChild(hdEl('span', 'ar-ic', '▾'));
     const b = hdEl('div', 'dq-b');
     b.appendChild(hdEl('p', 'ar', d.ar)).setAttribute('lang', 'ar');
-    b.appendChild(hdEl('p', 'tr', d.tr));
-    b.appendChild(hdEl('p', 'mean', 'অর্থ: ' + d.bn));
-    b.appendChild(hdEl('p', 'ref', 'সূত্র: ' + d.ref));
+    if (LANG === 'bn') { b.appendChild(hdEl('p', 'tr', d.tr)); b.appendChild(hdEl('p', 'mean', 'অর্থ: ' + d.bn)); }
+    b.appendChild(hdEl('p', 'ref', T('সূত্র:') + ' ' + refT(d.ref)));
     h.onclick = () => card.classList.toggle('open');
     card.appendChild(h); card.appendChild(b); box.appendChild(card);
   });
-  if (!shown) box.appendChild(hdEl('div', 'hd-msg', 'কোনো দোয়া পাওয়া যায়নি।'));
+  if (!shown) box.appendChild(hdEl('div', 'hd-msg', T('কোনো দোয়া পাওয়া যায়নি।')));
 }
 
 // View Switching Function (Home <-> Quran <-> Tasbih)
@@ -898,15 +942,15 @@ function calcQibla(lat, lng) {
 function setQiblaStatus(t) { document.getElementById('qiblaStatus').textContent = t; }
 
 async function startQibla() {
-  if (!navigator.geolocation) { setQiblaStatus('আপনার ব্রাউজার লোকেশন সাপোর্ট করে না'); return; }
-  setQiblaStatus('লোকেশন নেওয়া হচ্ছে...');
+  if (!navigator.geolocation) { setQiblaStatus(T('আপনার ব্রাউজার লোকেশন সাপোর্ট করে না')); return; }
+  setQiblaStatus(T('লোকেশন নেওয়া হচ্ছে...'));
 
   // iOS-এ সেন্সর পারমিশন ইউজারের ট্যাপের ভেতরেই চাইতে হয়
   if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
     try {
       const res = await DeviceOrientationEvent.requestPermission();
-      if (res !== 'granted') { setQiblaStatus('কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি'); return; }
-    } catch (e) { setQiblaStatus('সেন্সরের অনুমতি পাওয়া যায়নি'); return; }
+      if (res !== 'granted') { setQiblaStatus(T('কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি')); return; }
+    } catch (e) { setQiblaStatus(T('সেন্সরের অনুমতি পাওয়া যায়নি')); return; }
   }
 
   navigator.geolocation.getCurrentPosition(pos => {
@@ -915,7 +959,7 @@ async function startQibla() {
     document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)';
     listenCompass();
   }, () => {
-    setQiblaStatus('লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)');
+    setQiblaStatus(T('লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)'));
   }, { enableHighAccuracy: true, timeout: 15000 });
 }
 
@@ -924,9 +968,9 @@ function listenCompass() {
   qiblaWatching = true;
   window.addEventListener('deviceorientationabsolute', onOrient, true);
   window.addEventListener('deviceorientation', onOrient, true);
-  setQiblaStatus('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন');
+  setQiblaStatus(T('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন'));
   document.getElementById('qiblaStart').style.display = 'none';
-  setTimeout(() => { if (qiblaWatching && !gotHeading) setQiblaStatus('কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ' + bn(Math.round(qiblaBearing)) + '° ডানে'); }, 3000);
+  setTimeout(() => { if (qiblaWatching && !gotHeading) setQiblaStatus(T('কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ') + bn(Math.round(qiblaBearing)) + T('° ডানে')); }, 3000);
 }
 
 let gotHeading = false;
@@ -943,8 +987,8 @@ function onOrient(e) {
   const diff = Math.abs(((qiblaBearing - h + 540) % 360) - 180);
   const aligned = diff < 5;
   document.getElementById('qiblaDial').parentElement.classList.toggle('aligned', aligned);
-  if (aligned) { setQiblaStatus('✅ আপনি ক্বিবলার দিকে মুখ করে আছেন'); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} }
-  else setQiblaStatus('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন');
+  if (aligned) { setQiblaStatus(T('✅ আপনি ক্বিবলার দিকে মুখ করে আছেন')); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} }
+  else setQiblaStatus(T('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন'));
 }
 
 function stopQibla() {
@@ -966,14 +1010,11 @@ function saveBookmarks(a) { try { localStorage.setItem('quranBookmarks', JSON.st
 
 async function openSurah(n) {
   const box = document.getElementById('s-' + n).closest('.surah-item-box');
-  const full = box.querySelector('b').textContent;                 // "১. আল-ফাতিহা (الفاتحة)"
-  const m = full.match(/^(.*?)\.\s*(.*?)\s*\((.*)\)\s*$/);
-  const bnName = m ? m[2] : full, arName = m ? m[3] : '';
-  const meta = box.querySelector('.surah-header div div').textContent;
+  const bnName = surahName(n), arName = SURAH_INFO[n].ar, meta = surahMeta(n);
 
   Object.assign(rd, { n, page: 1, hasMore: false, loading: false, trans: [], audio: [], token: rd.token + 1 });
   player.pause(); playingEl = null;
-  document.getElementById('rdTitle').textContent = 'সূরা ' + bnName;
+  document.getElementById('rdTitle').textContent = T('সূরা') + ' ' + bnName;
   document.getElementById('rdAr').textContent = arName;
   document.getElementById('rdMeta').textContent = meta;
   document.getElementById('rdAyahs').innerHTML = '';
@@ -982,11 +1023,11 @@ async function openSurah(n) {
   switchView('surah');
 
   const st = document.getElementById('rdStatus');
-  st.textContent = 'লোড হচ্ছে...';
+  st.textContent = T('লোড হচ্ছে...');
   const token = rd.token;
   try {
     // বাংলা অনুবাদ + অডিও (পুরো সূরা একবারে)
-    const r = await fetch('https://api.alquran.cloud/v1/surah/' + n + '/editions/bn.bengali,ar.alafasy');
+    const r = await fetch('https://api.alquran.cloud/v1/surah/' + n + '/editions/' + ({ bn: 'bn.bengali', en: 'en.sahih', ar: 'ar.muyassar' })[LANG] + ',ar.alafasy');
     const j = await r.json();
     if (token !== rd.token) return;
     rd.trans = j.data[0].ayahs.map(a => a.text);
@@ -1000,10 +1041,10 @@ async function loadMoreAyahs() {
   rd.loading = true;
   const token = rd.token, st = document.getElementById('rdStatus'), more = document.getElementById('rdMore');
   more.style.display = 'none';
-  st.textContent = 'লোড হচ্ছে...';
+  st.textContent = T('লোড হচ্ছে...');
   try {
     const url = 'https://api.quran.com/api/v4/verses/by_chapter/' + rd.n +
-      '?language=bn&words=true&word_fields=text_uthmani&per_page=10&page=' + rd.page;
+      '?language=' + LANG + '&words=true&word_fields=text_uthmani&per_page=10&page=' + rd.page;
     const r = await fetch(url);
     if (!r.ok) throw new Error('http ' + r.status);
     const j = await r.json();
@@ -1016,8 +1057,8 @@ async function loadMoreAyahs() {
     more.style.display = rd.hasMore ? 'inline-block' : 'none';
   } catch (e) {
     if (token !== rd.token) return;
-    st.innerHTML = 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।';
-    more.textContent = 'আবার চেষ্টা করুন'; more.style.display = 'inline-block';
+    st.innerHTML = T('ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।');
+    more.textContent = T('আবার চেষ্টা করুন'); more.style.display = 'inline-block';
   } finally { if (token === rd.token) rd.loading = false; }
 }
 
@@ -1035,9 +1076,9 @@ function buildAyah(v) {
   const saved = getBookmarks().includes(key);
   el.innerHTML = '<div class="words">' + words + '</div>' +
     (tr ? '<div class="tr-bn"></div>' : '') +
-    '<div class="ayah-foot"><span>আয়াত: ' + bn(no) + '</span><span class="ac">' +
-    '<button class="b-play" title="শুনুন">▶</button>' +
-    '<button class="b-mark' + (saved ? ' on' : '') + '" title="বুকমার্ক">' + (saved ? '★' : '☆') + '</button></span></div>';
+    '<div class="ayah-foot"><span>' + T('আয়াত:') + ' ' + bn(no) + '</span><span class="ac">' +
+    '<button class="b-play" title="' + T('শুনুন') + '">▶</button>' +
+    '<button class="b-mark' + (saved ? ' on' : '') + '" title="' + T('বুকমার্ক') + '">' + (saved ? '★' : '☆') + '</button></span></div>';
   if (tr) el.querySelector('.tr-bn').textContent = tr;     // textContent: নিরাপদ
 
   el.querySelector('.b-play').onclick = () => {
@@ -1082,13 +1123,13 @@ function hdMoreBtn(show) { document.getElementById('hdMore').style.display = sho
 
 function showHadithBooks() {
   hd.level = 'books'; hd.token++;
-  hdSetTitle('হাদিস গ্রন্থসমূহ'); hdMoreBtn(false);
+  hdSetTitle(T('হাদিস গ্রন্থসমূহ')); hdMoreBtn(false);
   const body = hdBody();
   HADITH_BOOKS.forEach(b => {
     const row = hdEl('button', 'hd-row' + (b.ara || b.ben ? '' : ' off'));
     row.appendChild(hdEl('span', 'no', bn(b.id)));
-    const nm = hdEl('span', 'nm', b.name);
-    if (!b.ara && !b.ben) nm.appendChild(hdEl('small', '', 'শীঘ্রই আসছে'));
+    const nm = hdEl('span', 'nm', hn(b));
+    if (!b.ara && !b.ben) nm.appendChild(hdEl('small', '', T('শীঘ্রই আসছে')));
     row.appendChild(nm);
     row.onclick = () => openHadithBook(b);
     body.appendChild(row);
@@ -1108,21 +1149,21 @@ async function fetchEdition(slug) {
 async function openHadithBook(b) {
   if (!b.ara && !b.ben) {
     const body = hdBody(); hd.level = 'books';
-    body.appendChild(hdEl('div', 'hd-msg', '"' + b.name + '"-এর ডেটা এখনো যোগ করা হয়নি।'));
-    const back = hdEl('button', 'hd-row'); back.appendChild(hdEl('span', 'nm', '← কিতাবের তালিকায় ফিরুন')); back.onclick = showHadithBooks; body.appendChild(back);
+    body.appendChild(hdEl('div', 'hd-msg', '"' + hn(b) + '" — ' + T('ডেটা এখনো যোগ করা হয়নি।')));
+    const back = hdEl('button', 'hd-row'); back.appendChild(hdEl('span', 'nm', T('← কিতাবের তালিকায় ফিরুন'))); back.onclick = showHadithBooks; body.appendChild(back);
     return;
   }
   hd.level = 'chapters'; hd.book = b; const token = ++hd.token;
-  hdSetTitle(b.name); hdMoreBtn(false);
-  const body = hdBody(); body.appendChild(hdEl('div', 'hd-msg', 'লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)'));
+  hdSetTitle(hn(b)); hdMoreBtn(false);
+  const body = hdBody(); body.appendChild(hdEl('div', 'hd-msg', T('লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)')));
   let ara = null, ben = null;
   try { ara = await fetchEdition(b.ara); } catch (e) {}
-  try { ben = await fetchEdition(b.ben); } catch (e) {}
+  try { ben = await fetchEdition(trSlug(b)); } catch (e) {}
   if (token !== hd.token) return;
   if (!ara && !ben) {
     const bd = hdBody();
-    bd.appendChild(hdEl('div', 'hd-msg', 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।'));
-    const again = hdEl('button', 'hd-row'); again.appendChild(hdEl('span', 'nm', '🔄 আবার চেষ্টা করুন')); again.onclick = () => openHadithBook(b); bd.appendChild(again);
+    bd.appendChild(hdEl('div', 'hd-msg', T('ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।')));
+    const again = hdEl('button', 'hd-row'); again.appendChild(hdEl('span', 'nm', T('🔄 আবার চেষ্টা করুন'))); again.onclick = () => openHadithBook(b); bd.appendChild(again);
     return;
   }
   hd.data = { ara, ben };
@@ -1130,7 +1171,7 @@ async function openHadithBook(b) {
   // পরিচ্ছেদের নাম: বাংলা থাকলে বাংলা, না থাকলে আরবি নাম
   const nameBn = (ben && ben.metadata && ben.metadata.section) || {};
   const nameAr = (ara && ara.metadata && ara.metadata.section) || {};
-  const chName = k => (String(nameBn[k] || '').trim()) || (String(nameAr[k] || '').trim()) || ('পরিচ্ছেদ ' + bn(k));
+  const chName = k => (String(nameBn[k] || '').trim()) || (String(nameAr[k] || '').trim()) || (T('পরিচ্ছেদ') + ' ' + bn(k));
   // পরিচ্ছেদ অনুযায়ী হাদিস গ্রুপ
   const groups = {};
   base.hadiths.forEach(h => { const k = (h.reference && h.reference.book) != null ? h.reference.book : 0; (groups[k] = groups[k] || []).push(h); });
@@ -1144,7 +1185,7 @@ async function openHadithBook(b) {
     row.appendChild(hdEl('span', 'no', bn(k)));
     const nm = hdEl('span', 'nm', chName(k));
     const first = groups[k][0].hadithnumber, last = groups[k][groups[k].length - 1].hadithnumber;
-    nm.appendChild(hdEl('small', '', 'হাদিস ' + bn(first) + (first !== last ? ' – ' + bn(last) : '') + ' · মোট ' + bn(groups[k].length) + 'টি'));
+    nm.appendChild(hdEl('small', '', T('হাদিস') + ' ' + bn(first) + (first !== last ? ' – ' + bn(last) : '') + ' · ' + T('মোট') + ' ' + bn(groups[k].length) + T('টি')));
     row.appendChild(nm);
     row.onclick = () => openHadithChapter(k, chName(k));
     bd.appendChild(row);
@@ -1163,7 +1204,7 @@ function openHadithChapter(k, name) {
   hd.list = arr.map(h => ({ no: h.hadithnumber, ar: araMap[h.hadithnumber] || '', bn: benMap[h.hadithnumber] || '' }));
   hd.shown = 0;
   const b0 = hdBody();
-  const head = hdEl('div', 'hd-msg', 'পরিচ্ছেদ ' + bn(k) + ' · ' + hd.book.name);
+  const head = hdEl('div', 'hd-msg', T('পরিচ্ছেদ') + ' ' + bn(k) + ' · ' + hn(hd.book));
   head.style.padding = '0 0 12px'; b0.appendChild(head);
   window.scrollTo(0, 0);
   hadithMore();
@@ -1174,14 +1215,14 @@ function hadithMore() {
   const next = hd.list.slice(hd.shown, hd.shown + HD_PAGE);
   next.forEach(h => {
     const card = hdEl('div', 'hd-item');
-    card.appendChild(hdEl('span', 'hd-num', hd.book.name + ' · হাদিস নং ' + bn(h.no)));
+    card.appendChild(hdEl('span', 'hd-num', hn(hd.book) + ' · ' + T('হাদিস নং') + ' ' + bn(h.no)));
     if (h.ar) { const a = hdEl('p', 'hd-ar', h.ar); a.lang = 'ar'; card.appendChild(a); }
     if (h.bn) card.appendChild(hdEl('p', 'hd-bn', h.bn));
     body.appendChild(card);
   });
   hd.shown += next.length;
   hdMoreBtn(hd.shown < hd.list.length);
-  if (!hd.list.length) body.appendChild(hdEl('div', 'hd-msg', 'এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।'));
+  if (!hd.list.length) body.appendChild(hdEl('div', 'hd-msg', T('এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।')));
 }
 
 function hadithBack() {
@@ -1233,7 +1274,7 @@ function incrementTasbih() {
     if(tCount > tTarget) {
         tCount = 1;
         tRound++;
-        document.getElementById('tasbihRoundInfo').textContent = 'রাউন্ড: ' + bn(tRound);
+        document.getElementById('tasbihRoundInfo').textContent = T('রাউন্ড:') + ' ' + bn(tRound);
     }
     document.getElementById('tasbihCount').textContent = bn(tCount);
     
@@ -1246,8 +1287,59 @@ function resetTasbih() {
     tCount = 0;
     tRound = 1;
     document.getElementById('tasbihCount').textContent = bn(tCount);
-    document.getElementById('tasbihRoundInfo').textContent = 'রাউন্ড: ' + bn(tRound);
+    document.getElementById('tasbihRoundInfo').textContent = T('রাউন্ড:') + ' ' + bn(tRound);
 }
+
+// ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
+const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
+const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextName,#cdText,#cdMin,#hdBody,#duaList,#rdAyahs,#locList,#surahListContainer,.lang-wrap,script,style';
+function i18nWalk(){
+  const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
+  while((x=tw.nextNode()))nodes.push(x);
+  nodes.forEach(n=>{
+    if(n.parentElement.closest(I18N_SKIP))return;
+    if(n.__o===undefined)n.__o=n.nodeValue;
+    const m=n.__o.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    if(!m[2])return;
+    n.nodeValue=LANG==='bn'?n.__o:m[1]+T(m[2])+m[3];
+  });
+  document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(e=>{
+    if(e.closest('.lang-wrap'))return;
+    ['placeholder','aria-label','title'].forEach(a=>{
+      if(!e.hasAttribute(a))return;
+      const k='_o_'+a;if(e[k]===undefined)e[k]=e.getAttribute(a);
+      e.setAttribute(a,T(e[k]));
+    });
+  });
+}
+function applyLang(l){
+  LANG=l;try{localStorage.setItem('lang',l)}catch(e){}
+  const h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
+  i18nWalk();
+  document.title=TITLES[l];
+  $('langCode').textContent={bn:'বাং',en:'EN',ar:'عربي'}[l];
+  document.querySelectorAll('#langMenu button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
+  renderSurahList();tick();upd();
+  ring.textContent=bn(c);
+  $('tasbihTarget').textContent=bn(tTarget);
+  const sel=$('tasbihSelector');
+  $('currentTasbihLabel').textContent=sel.options[sel.selectedIndex].text.split('(')[0].trim();
+  $('tasbihCount').textContent=bn(tCount);
+  $('tasbihRoundInfo').textContent=T('রাউন্ড:')+' '+bn(tRound);
+  if($('locSheet').classList.contains('show'))renderLocList($('locSearch').value);
+  const act=document.querySelector('.view-section.active');
+  if(act&&act.id==='hadith-view')showHadithBooks();
+  if(act&&act.id==='dua-view')renderDuas($('duaSearch').value);
+  if(act&&act.id==='surah-view'&&rd.n)openSurah(rd.n);
+}
+(function(){
+  const btn=$('langBtn'),menu=$('langMenu');
+  const close=()=>{menu.classList.remove('show');btn.setAttribute('aria-expanded','false');};
+  btn.addEventListener('click',e=>{e.stopPropagation();const o=menu.classList.toggle('show');btn.setAttribute('aria-expanded',o);});
+  menu.addEventListener('click',e=>{const b=e.target.closest('button[data-l]');if(!b)return;close();applyLang(b.dataset.l);});
+  document.addEventListener('click',close);
+})();
+applyLang(LANG);
 </script>
 </body>
   </html>
