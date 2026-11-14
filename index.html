@@ -282,6 +282,18 @@ section{padding:18px 16px 0}
 .rd-status{text-align:center;color:var(--muted);font-size:14px;padding:16px}
 .rd-more{background:var(--blue);color:#fff;border:0;padding:12px 22px;border-radius:14px;font-size:15px;font-family:inherit;cursor:pointer}
 
+
+/* কুরআন হিরো (ক্যালিগ্রাফি) ও তাফসীর পেজ */
+.qr-cal{text-align:center;padding:4px 0 12px}
+.qr-cal .ar{font-family:'Aref Ruqaa','Katibeh','Amiri',serif;font-size:60px;line-height:1.55;color:var(--blue);direction:rtl;display:block}
+.qr-cal small{display:block;font-size:14px;color:var(--muted);margin-top:-4px;letter-spacing:.3px}
+.tfv-cur{display:flex;align-items:center;gap:10px;background:var(--blue-l);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.tfv-cur div{flex:1;min-width:0;font-size:15px;line-height:1.4}
+.tfv-cur small{display:block;color:var(--muted);font-size:12px}
+.tfv-cur button{background:var(--blue);color:#fff;border:0;border-radius:12px;padding:8px 14px;font:inherit;font-size:13.5px;cursor:pointer;flex:none}
+#tafsir-view .pk-search{width:100%;margin:0 0 12px}
+#tafsir-view .pk-h{top:57px}
+
 /* বটম শিট (তাফসীর / তথ্য / তাফসীর নির্বাচন) */
 .sh-bg{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .22s}
 .sh-bg.show{opacity:1;pointer-events:auto}
@@ -517,6 +529,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <defs>
+<symbol id="tafsir" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5c-3.5-.5-6.5 0-8.5 1.5z"/><path d="M12 6.5v13"/><path d="M6.5 9h2.5M6.5 12h2.5M15 9h2.5M15 12h2.5"/></symbol>
 <symbol id="quran" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H19v-5"/><path d="M12 7l1 2 2 .3-1.5 1.4.4 2.1L12 11.8 10.1 12.8l.4-2.1L9 9.3 11 9z"/></symbol>
 <symbol id="hadith" viewBox="0 0 24 24"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
 <symbol id="dua" viewBox="0 0 24 24"><path d="M12 21s-8-4.6-8-10.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 8 2.5C20 16.4 12 21 12 21z"/><path d="M12 3v3M9.5 4.2l1 1.8M14.5 4.2l-1 1.8"/></symbol>
@@ -590,6 +603,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
       <div class="sh"><h2>সব সেবা</h2><span>Services</span></div>
       <nav class="grid" aria-label="প্রধান মেনু">
         <button class="m" onclick="switchView('quran')"><div class="ic"><svg class="i"><use href="#quran"/></svg></div>আল-কুরআন<small>Al-Quran</small></button>
+        <button class="m" onclick="tfvMode='editions';switchView('tafsir')"><div class="ic"><svg class="i"><use href="#tafsir"/></svg></div>তাফসীর<small>Tafsir</small></button>
         <button class="m" onclick="switchView('hadith')"><div class="ic"><svg class="i"><use href="#hadith"/></svg></div>হাদিস<small>Hadith</small></button>
         <button class="m" onclick="switchView('dua')"><div class="ic"><svg class="i"><use href="#dua"/></svg></div>দোয়া<small>Dua</small></button>
         <button class="m" onclick="switchView('amal')"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></button>
@@ -634,7 +648,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
         <button onclick="switchView('home')" style="background: var(--blue); color: #fff; border: 0; padding: 8px 14px; border-radius: 12px; font-size: 14px; cursor: pointer;">← হোম পেজে ফিরুন</button>
         <span style="font-size: 13px; color: var(--muted);">Al-Quran (১১৪ সূরা)</span>
       </div>
-      <div class="sh"><h2>আল-কুরআন</h2></div>
+      <div class="qr-cal" aria-label="আল-কুরআন"><span class="ar" lang="ar">القرآن الكريم</span><small>আল-কুরআন</small></div>
       <p style="text-align: center; color: var(--muted); font-size: 13.5px; margin-bottom: 14px;">যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন</p>
       
       <div id="surahListContainer">
@@ -873,6 +887,19 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
     <div class="hd-wrap" id="asmaBody"></div>
   </div>
 
+  <!-- তাফসীর ভিউ (তাফসীর বাছুন → সূরা বাছুন) -->
+  <div id="tafsir-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="tfvBack()" aria-label="ফিরে যান">←</button>
+      <h3 id="tfvTitle">তাফসীর</h3>
+    </div>
+    <div class="hd-wrap">
+      <div id="tfvCur"></div>
+      <input class="pk-search" id="tfvSearch" type="search" placeholder="খুঁজুন..." autocomplete="off">
+      <div id="tfvBody"></div>
+    </div>
+  </div>
+
   <div id="topic-view" class="view-section">
     <div class="rd-bar">
       <button class="rd-back" onclick="topicBack()" aria-label="ফিরে যান">←</button>
@@ -884,7 +911,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
   <!-- সূরা পড়ার ভিউ (ক্যালিগ্রাফি বিসমিল্লাহ + শব্দে শব্দে অর্থ + তাফসীর) -->
   <div id="surah-view" class="view-section">
     <div class="rd-bar">
-      <button class="rd-back" onclick="switchView('quran')" aria-label="ফিরে যান">←</button>
+      <button class="rd-back" onclick="switchView(window.rdFrom==='tafsir'?'tafsir':'quran')" aria-label="ফিরে যান">←</button>
       <h3 id="rdTitle">সূরা</h3>
       <button class="rd-tf" onclick="openPicker()" aria-label="তাফসীর নির্বাচন করুন"><svg class="i" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7.5h7M8 11.5h7"/></svg><span>তাফসীর</span></button>
     </div>
@@ -1340,6 +1367,8 @@ function switchView(viewName) {
   document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
   const target = document.getElementById(viewName + '-view');
   (target || document.getElementById('home-view')).classList.add('active');
+  if (viewName === 'quran') window.rdFrom = 'quran';
+  if (viewName === 'tafsir') tfvRender();
   if (viewName === 'hadith') showHadithBooks();
   if (viewName === 'asma') showAsmaList();
   if (viewName === 'hijri') showHijri(true);
@@ -1541,6 +1570,7 @@ function tfLoadEditions() {
     tf.loadingList = null;
     renderPicker();
     tfUpdateNames();
+    if (typeof tfvRender === 'function') tfvRender();
     return tf.list;
   })();
   return tf.loadingList;
@@ -1688,6 +1718,65 @@ async function tfLoad() {
     if (b && !b.disabled) b.click();
   }, { passive: true });
 })();
+
+// ---------- তাফসীর পেজ ----------
+var tfvMode = 'editions';
+function tfvBack() { if (tfvMode === 'surahs') { tfvMode = 'editions'; tfvRender(); window.scrollTo(0, 0); } else switchView('home'); }
+function tfvRender() {
+  const view = document.getElementById('tafsir-view');
+  if (!view || !view.classList.contains('active')) return;
+  const box = document.getElementById('tfvBody'), cur = document.getElementById('tfvCur'), inp = document.getElementById('tfvSearch');
+  const q = (inp.value || '').trim().toLowerCase();
+  box.innerHTML = ''; cur.innerHTML = '';
+  if (tfvMode === 'surahs') {
+    document.getElementById('tfvTitle').textContent = tfFind(tf.cur).name;
+    inp.placeholder = 'সূরা খুঁজুন...';
+    const c = hdEl('div', 'tfv-cur'), d = hdEl('div');
+    d.appendChild(hdEl('small', '', 'নির্বাচিত তাফসীর')); d.appendChild(document.createTextNode(tfFind(tf.cur).name));
+    const b = hdEl('button', '', 'পরিবর্তন'); b.onclick = () => { tfvMode = 'editions'; inp.value = ''; tfvRender(); };
+    c.appendChild(d); c.appendChild(b); cur.appendChild(c);
+    let any = false;
+    for (let n = 1; n <= 114; n++) {
+      const nm = surahName(n), info = SURAH_INFO[n];
+      if (q && !(nm + ' ' + info.ar + ' ' + n + ' ' + bn(n)).toLowerCase().includes(q)) continue;
+      any = true;
+      const it = hdEl('button', 'pk-i'), sp = hdEl('span', '', bn(n) + '. ' + nm + ' (' + info.ar + ')');
+      sp.appendChild(hdEl('small', '', bn(info.cnt) + ' আয়াত'));
+      it.appendChild(sp); it.onclick = () => { window.rdFrom = 'tafsir'; openSurah(n); };
+      box.appendChild(it);
+    }
+    if (!any) box.appendChild(hdEl('div', 'tf-msg', 'কোনো সূরা পাওয়া যায়নি।'));
+    return;
+  }
+  document.getElementById('tfvTitle').textContent = 'তাফসীর';
+  inp.placeholder = 'তাফসীর খুঁজুন...';
+  const groups = {};
+  tf.list.forEach(e => {
+    const hay = (e.name + ' ' + (e.author || '') + ' ' + e.lang + ' ' + (TF_LANG_BN[e.lang] || '')).toLowerCase();
+    if (q && !hay.includes(q)) return;
+    (groups[e.lang || 'other'] = groups[e.lang || 'other'] || []).push(e);
+  });
+  const keys = Object.keys(groups).sort((a, b) => {
+    const ia = TF_LANG_ORDER.indexOf(a), ib = TF_LANG_ORDER.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+  });
+  if (!keys.length) { box.appendChild(hdEl('div', 'tf-msg', 'কোনো তাফসীর পাওয়া যায়নি।')); return; }
+  keys.forEach(k => {
+    box.appendChild(hdEl('div', 'pk-h', (TF_LANG_BN[k] || tfCap(k)) + ' (' + bn(groups[k].length) + ')'));
+    groups[k].forEach(e => {
+      const it = hdEl('button', 'pk-i' + (e.slug === tf.cur ? ' on' : '')), sp = hdEl('span', '', e.name);
+      if (e.author && e.author !== e.name) sp.appendChild(hdEl('small', '', e.author));
+      it.appendChild(sp);
+      it.onclick = () => {
+        tf.cur = e.slug; try { localStorage.setItem('lodTafsir', e.slug); } catch (x) {}
+        tfUpdateNames(); tfvMode = 'surahs'; inp.value = ''; tfvRender(); window.scrollTo(0, 0);
+      };
+      box.appendChild(it);
+    });
+  });
+}
+document.getElementById('tfvSearch').addEventListener('input', tfvRender);
+document.querySelector('[onclick*="tfvMode=\'editions\'"]').addEventListener('click', () => { document.getElementById('tfvSearch').value = ''; tfLoadEditions(); });
 
 // ---------- তাফসীর নির্বাচন ----------
 function openPicker() {
