@@ -32,6 +32,30 @@
 :root[data-theme]:not([data-theme="light"]) .ar,:root[data-theme]:not([data-theme="light"]) .hd-ar,:root[data-theme]:not([data-theme="light"]) .am-ar{color:var(--arc)}
 body{transition:background-color .25s,color .25s}
 
+
+/* ===== ডেভলপার পরিচিতি ===== */
+.dev-panel{display:none;padding:4px 2px 2px}
+.dev-panel.show{display:block}
+.dev-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 14px;text-align:center}
+.dev-av{width:92px;height:92px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid var(--blue);background:var(--blue-l);display:grid;place-items:center;position:relative}
+.dev-av img{width:100%;height:100%;object-fit:cover;display:block}
+.dev-av .fb{display:none;font-size:38px;font-weight:700;color:var(--blue)}
+.dev-name{font-size:18px;font-weight:700;line-height:1.3}
+.dev-role{font-size:13px;color:var(--blue);margin-top:2px}
+.dev-loc{font-size:12.5px;color:var(--muted);margin-top:4px}
+.dev-sec{margin-top:14px;text-align:start}
+.dev-sec h4{font-size:13.5px;color:var(--blue);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.dev-sec p,.dev-sec li{font-size:13.5px;line-height:1.65;color:var(--text)}
+.dev-sec ul{list-style:none}
+.dev-sec li{padding:5px 0;border-bottom:1px dashed var(--line)}
+.dev-sec li:last-child{border:0}
+.dev-sec li small{display:block;color:var(--muted);font-size:12px}
+.dev-chips{display:flex;flex-wrap:wrap;gap:6px}
+.dev-chips span{background:var(--blue-l);color:var(--blue);border-radius:999px;padding:3px 10px;font-size:12px}
+.dev-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.dev-links a{display:block;text-align:center;text-decoration:none;padding:9px 6px;border-radius:12px;background:var(--blue);color:var(--on-blue);font-size:13px;font-family:inherit}
+.dev-links a.alt{background:var(--blue-l);color:var(--blue)}
+
 /* ===== মেনু ড্রয়ার ===== */
 .drawer-bg{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
 .drawer-bg.show{opacity:1;pointer-events:auto}
@@ -416,6 +440,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
 <symbol id="palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-.5-.2-.9-.5-1.3-.3-.4-.5-.8-.5-1.3 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-3.9-4-7.2-9-7.2z"/><circle cx="7.5" cy="11" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="14.5" cy="7.5" r=".6"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/></symbol>
 <symbol id="bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></symbol>
 <symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></symbol>
 <symbol id="bk" viewBox="0 0 24 24"><path d="M3 5.5C5.500 4 9 4 12 6c3-2 6.500-2 9-.5V19c-2.500-1.500-6-1.500-9 .5-3-2-6.500-2-9-.5z"/><path d="M12 6v13.500"/></symbol>
@@ -796,6 +821,43 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
     <!-- ▼ ভবিষ্যতে এখানে আপনার ইচ্ছেমতো সিরিয়ালে আরও মেনু আইটেম (.mi বাটন) যোগ করুন ▼ -->
     <button class="mi" id="themeToggle" aria-expanded="false"><svg class="i"><use href="#palette"/></svg><span>থিম</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
     <div class="theme-panel" id="themePanel"><div class="theme-grid" id="themeGrid"></div></div>
+    <button class="mi" id="devToggle" aria-expanded="false"><svg class="i"><use href="#user"/></svg><span>ডেভলপার পরিচিতি</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
+    <div class="dev-panel" id="devPanel">
+      <div class="dev-card">
+        <div class="dev-av"><img src="developer.jpg" alt="মুহাম্মাদ শাহরিয়ার নাজিম" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><b class="fb">ন</b></div>
+        <div class="dev-name">মুহাম্মাদ শাহরিয়ার নাজিম</div>
+        <div class="dev-role">শিক্ষার্থী · লেখক · ইসলামিক ইতিহাস অনুরাগী</div>
+        <div class="dev-loc">📍 কুড়িগ্রাম, বাংলাদেশ</div>
+
+        <div class="dev-sec"><h4>পরিচিতি</h4>
+          <p>ইসলামি শিক্ষা, ইতিহাস, লেখালেখি ও গবেষণায় আগ্রহী একজন শিক্ষার্থী। পড়া, লেখা, ইতিহাস অনুসন্ধান এবং ব্যক্তিগত লেখা ও ডিজিটাল প্ল্যাটফর্মের মাধ্যমে জ্ঞান ছড়িয়ে দিতে ভালোবাসি।</p>
+        </div>
+
+        <div class="dev-sec"><h4>শিক্ষাগত যোগ্যতা</h4>
+          <ul>
+            <li>অনার্স ১ম বর্ষ – ইসলামের ইতিহাস ও সংস্কৃতি<small>সরকারি ব্রজমোহন কলেজ, বরিশাল · জাতীয় বিশ্ববিদ্যালয়</small></li>
+            <li>ফাজিল ২য় বর্ষ (দাওয়াহ)<small>সারসীনা দারুসসুন্নাত কামিল মাদরাসা, পিরোজপুর</small></li>
+            <li>আলিম – ২০২৪ · জিপিএ ৫.০০<small>সারসীনা দারুসসুন্নাত কামিল মাদরাসা</small></li>
+            <li>দাখিল – ২০২২ · জিপিএ ৪.৭৮<small>কাঠালবাড়ী নূরুল্লাহ ফাজিল ডিগ্রী মাদরাসা</small></li>
+          </ul>
+        </div>
+
+        <div class="dev-sec"><h4>প্রকাশিত বই</h4>
+          <p><b>শত রণাঙ্গনে মুসলিম উম্মাহ</b><br>মহানবী ﷺ-এর যুগ থেকে বর্তমান সময় পর্যন্ত মুসলিম উম্মাহর উল্লেখযোগ্য যুদ্ধ ও সামরিক অভিযানের ঐতিহাসিক সংকলন।</p>
+        </div>
+
+        <div class="dev-sec"><h4>দক্ষতা</h4>
+          <div class="dev-chips"><span>বাংলা</span><span>ইংরেজি</span><span>আরবি</span><span>কুরআন তিলাওয়াত</span><span>ইসলামি ইতিহাস</span><span>গবেষণা</span><span>লেখালেখি</span></div>
+        </div>
+
+        <div class="dev-links">
+          <a href="https://mshahriarnazim.github.io" target="_blank" rel="noopener">🌐 ওয়েবসাইট</a>
+          <a href="https://mshahriarnazim.github.io/personal-biography.pdf" target="_blank" rel="noopener" class="alt">📄 সিভি</a>
+          <a href="mailto:muhammadshahriarnazim@gmail.com" class="alt">✉️ ইমেইল</a>
+          <a href="https://wa.me/8801994171144" target="_blank" rel="noopener">🟢 হোয়াটসঅ্যাপ</a>
+        </div>
+      </div>
+    </div>
   </div>
 </aside>
 
@@ -2234,6 +2296,10 @@ Object.assign(D,{'মেনু':['Menu','القائمة'],'থিম':['Theme','
   apply(cur(),false);
   if(typeof i18nWalk==='function'&&root.lang!=='bn')i18nWalk();
 })();
+
+Object.assign(D,{'ডেভলপার পরিচিতি':['About the Developer','نبذة عن المطور'],'পরিচিতি':['About','نبذة'],'শিক্ষাগত যোগ্যতা':['Education','المؤهلات العلمية'],'প্রকাশিত বই':['Published Book','الكتاب المنشور'],'দক্ষতা':['Skills','المهارات'],'🌐 ওয়েবসাইট':['🌐 Website','🌐 الموقع'],'📄 সিভি':['📄 CV','📄 السيرة الذاتية'],'✉️ ইমেইল':['✉️ Email','✉️ البريد'],'🟢 হোয়াটসঅ্যাপ':['🟢 WhatsApp','🟢 واتساب'],'শিক্ষার্থী · লেখক · ইসলামিক ইতিহাস অনুরাগী':['Student · Writer · Islamic History Enthusiast','طالب · كاتب · مهتم بالتاريخ الإسلامي'],'📍 কুড়িগ্রাম, বাংলাদেশ':['📍 Kurigram, Bangladesh','📍 كوريغرام، بنغلاديش']});
+(function(){const t=document.getElementById('devToggle'),p=document.getElementById('devPanel');
+t.addEventListener('click',()=>{const o=p.classList.toggle('show');t.setAttribute('aria-expanded',o);});})();
 </script>
 </body>
   </html>
