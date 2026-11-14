@@ -323,6 +323,39 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 .hc-evrow .nm{flex:1;font-size:15.5px;font-weight:600;line-height:1.35}
 .hc-evrow small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
 .hc-note{text-align:center;font-size:12px;color:var(--muted);margin:12px 6px 20px}
+
+/* দৈনন্দিন আমল */
+.am-prog{background:linear-gradient(160deg,var(--blue),var(--blue-d));color:#fff;border-radius:22px;padding:14px 16px;box-shadow:var(--shadow)}
+.am-pt{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;margin-bottom:8px}
+.am-pt span{font-size:13.5px;opacity:.95}
+.am-bar{height:8px;background:rgba(255,255,255,.25);border-radius:8px;overflow:hidden}
+.am-bar i{display:block;height:100%;width:0;background:#fff;border-radius:8px;transition:width .3s}
+.am-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.am-h{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer}
+.am-chk{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:none;color:transparent;font-size:17px;display:grid;place-items:center;cursor:pointer;transition:.2s;font-family:inherit}
+.am-card.done .am-chk{background:var(--blue);border-color:var(--blue);color:#fff}
+.am-t{flex:1;min-width:0}
+.am-t b{display:block;font-size:16px;font-weight:600;line-height:1.4}
+.am-t small{display:block;font-size:12.5px;color:var(--blue);margin-top:1px}
+.am-card.done .am-t b{color:var(--muted)}
+.am-arr{color:var(--muted);transition:transform .2s;flex:none}
+.am-card.open .am-arr{transform:rotate(180deg)}
+.am-b{display:none;padding:2px 16px 16px;border-top:1px solid var(--line)}
+.am-card.open .am-b{display:block}
+.am-line{text-align:center;margin-top:12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.am-ar{font-family:'Amiri','Scheherazade New',serif;font-size:25px;line-height:2.05;direction:rtl;color:var(--blue-d)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .am-ar{color:#7fc1fb}}
+.am-mn{font-size:14.5px;line-height:1.7;color:var(--muted);margin-top:4px}
+.am-cnt{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px}
+.am-tap{width:84px;height:84px;border-radius:50%;border:5px solid var(--blue);background:var(--blue-l);color:var(--blue);font-size:28px;font-weight:700;font-family:inherit;cursor:pointer;transition:transform .1s}
+.am-tap:active{transform:scale(.93)}
+.am-cnt .btn{margin:0}
+.am-v{margin-top:14px;background:var(--blue-l);border-radius:14px;padding:11px 13px}
+.am-v b{display:block;font-size:13.5px;color:var(--blue);margin-bottom:2px}
+.am-v p{font-size:14.5px;line-height:1.75}
+.am-ex{margin-top:12px;font-size:13.5px;color:var(--muted);line-height:1.7}
+.am-ref{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.am-read{display:block;margin:14px auto 0;background:var(--blue);color:#fff;border:0;border-radius:14px;padding:10px 20px;font-family:inherit;font-size:15px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -401,7 +434,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
         <button class="m" onclick="switchView('quran')"><div class="ic"><svg class="i"><use href="#quran"/></svg></div>আল-কুরআন<small>Al-Quran</small></button>
         <button class="m" onclick="switchView('hadith')"><div class="ic"><svg class="i"><use href="#hadith"/></svg></div>হাদিস<small>Hadith</small></button>
         <button class="m" onclick="switchView('dua')"><div class="ic"><svg class="i"><use href="#dua"/></svg></div>দোয়া<small>Dua</small></button>
-        <a class="m" href="#amal"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></a>
+        <button class="m" onclick="switchView('amal')"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></button>
         <a class="m" href="#history"><div class="ic"><svg class="i"><use href="#history"/></svg></div>ইসলামিক ইতিহাস<small>History</small></a>
         <button class="m" onclick="switchView('qibla')"><div class="ic"><svg class="i"><use href="#qibla"/></svg></div>ক্বিবলা<small>Qibla</small></button>
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
@@ -668,6 +701,15 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
     </div>
   </div>
 
+  <!-- দৈনন্দিন আমল ভিউ -->
+  <div id="amal-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button>
+      <h3>দৈনন্দিন আমল</h3>
+    </div>
+    <div class="hd-wrap" id="amalBody"></div>
+  </div>
+
   <!-- হিজরি ক্যালেন্ডার ভিউ -->
   <div id="hijri-view" class="view-section">
     <div class="rd-bar">
@@ -754,6 +796,7 @@ Object.assign(D,{
 'এই বিভাগের কনটেন্ট শীঘ্রই যোগ করা হবে।':['Content for this section will be added soon.','سيتم إضافة محتوى هذا القسم قريبًا.']});
 Object.assign(D,{'আসমাউল হুসনা':['Asma ul-Husna','الأسماء الحسنى'],'আল্লাহর ৯৯টি নাম':['The 99 Names of Allah','أسماء الله الحسنى'],'কুরআনে উল্লেখ':['Mentioned in the Quran','ورود الاسم في القرآن'],'Asmaul Husna':['Asmaul Husna','الأسماء الحسنى'],'এই নামটি সরাসরি কুরআনে নাম হিসেবে আসেনি; বিষয়ের সাথে সম্পর্কিত আয়াত দেওয়া হলো।':['This name does not appear as a divine name in the Quran; related verses are given.','لم يرد هذا الاسم صراحةً في القرآن؛ وهذه آيات متعلقة بمعناه.']});
 Object.assign(D,{'হিজরি ক্যালেন্ডার':['Hijri Calendar','التقويم الهجري'],'আজ':['Today','اليوم'],'এই মাসের গুরুত্বপূর্ণ দিন':['Important days this month','أيام مهمة في هذا الشهر'],'বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।':['Dates may differ by a day depending on moon sighting in Bangladesh.','قد يختلف التاريخ بيوم حسب رؤية الهلال في بنغلاديش.']});
+Object.assign(D,{'দৈনন্দিন আমল':['Daily Amal','الأعمال اليومية'],'রাতের ঘুমানোর আগের আমল':['Deeds before sleeping at night','أعمال قبل النوم'],'আজকের অগ্রগতি':["Today's progress",'تقدم اليوم'],'ফজিলত':['Virtue','الفضل'],'সূরা মূলক পড়ুন':['Read Surah Al-Mulk','اقرأ سورة الملك'],'প্রতিদিন নতুন করে শুরু হয়। আপনার অগ্রগতি শুধু এই ডিভাইসে সংরক্ষিত থাকে।':['Resets every day. Your progress is saved only on this device.','يبدأ من جديد كل يوم. يُحفظ تقدمك على هذا الجهاز فقط.']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -1052,6 +1095,7 @@ function switchView(viewName) {
   if (viewName === 'hadith') showHadithBooks();
   if (viewName === 'asma') showAsmaList();
   if (viewName === 'hijri') showHijri(true);
+  if (viewName === 'amal') renderAmal();
   if (viewName === 'dua') { document.getElementById('duaSearch').value=''; renderDuas(''); }
   if (viewName !== 'qibla') stopQibla();
   if (viewName !== 'surah' && typeof player !== 'undefined') player.pause();
@@ -1885,6 +1929,118 @@ function renderHijri(){
   box.appendChild(hdEl('p','hc-note',T('বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।')));
 }
 
+// ===== দৈনন্দিন আমল: রাতের ঘুমানোর আগের আমল =====
+const AMAL_SEC='রাতের ঘুমানোর আগের আমল';
+const AMAL=[
+{t:'দৈনিক ১০০ বার আলহামদুলিল্লাহ',n:100,
+ lines:[['الْحَمْدُ لِلَّهِ','আলহামদুলিল্লাহ — সমস্ত প্রশংসা আল্লাহর জন্য।']],
+ v:'নবী ﷺ বলেছেন, “আলহামদুলিল্লাহ” (আমলের) পাল্লা পূর্ণ করে দেয়।',r:'সহীহ মুসলিম ২২৩'},
+{t:'দৈনিক ১০০ বার আল্লাহু আকবার',n:100,
+ lines:[['اللَّهُ أَكْبَرُ','আল্লাহু আকবার — আল্লাহ সবচেয়ে বড়।']],
+ v:'নবী ﷺ বলেছেন, প্রতিটি তাকবীর (আল্লাহু আকবার) একটি সদকা।',r:'সহীহ মুসলিম ১০০৬'},
+{t:'দৈনিক ১০০ বার সুবহানাল্লাহ',n:100,
+ lines:[['سُبْحَانَ اللَّهِ','সুবহানাল্লাহ — আল্লাহ পবিত্র।'],['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ','সুবহানাল্লাহি ওয়া বিহামদিহী — আল্লাহ পবিত্র, তাঁর প্রশংসাসহ।']],
+ v:'নবী ﷺ বলেছেন, যে ব্যক্তি দিনে ১০০ বার “সুবহানাল্লাহি ওয়া বিহামদিহী” বলবে, তার গুনাহ সমুদ্রের ফেনার সমান হলেও মাফ করে দেওয়া হবে।',r:'সহীহ বুখারী ৬৪০৫'},
+{t:'দৈনিক ১০০ বার লা ইলাহা ইল্লাল্লাহ',n:100,
+ lines:[['لَا إِلَهَ إِلَّا اللَّهُ','লা ইলাহা ইল্লাল্লাহ — আল্লাহ ছাড়া কোনো ইলাহ নেই।'],['لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ','আল্লাহ ছাড়া কোনো ইলাহ নেই, তিনি একক, তাঁর কোনো শরীক নেই। রাজত্ব তাঁরই, প্রশংসা তাঁরই এবং তিনি সর্ববিষয়ে ক্ষমতাবান।']],
+ v:'নবী ﷺ বলেছেন, যে ব্যক্তি দিনে ১০০ বার এটি পড়বে, তার জন্য দশটি দাস মুক্ত করার সমান সওয়াব লেখা হবে, ১০০টি নেকি লেখা হবে, ১০০টি গুনাহ মোছা হবে এবং সেদিন সন্ধ্যা পর্যন্ত শয়তান থেকে সুরক্ষা মিলবে।',r:'সহীহ বুখারী ৩২৯৩; সহীহ মুসলিম ২৬৯১'},
+{t:'দৈনিক ১০০ বার আস্তাগফিরুল্লাহ',n:100,
+ lines:[['أَسْتَغْفِرُ اللَّهَ','আস্তাগফিরুল্লাহ — আমি আল্লাহর কাছে ক্ষমা চাই।'],['أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ','আস্তাগফিরুল্লাহা ওয়া আতূবু ইলাইহি — আমি আল্লাহর কাছে ক্ষমা চাই এবং তাঁর কাছে তওবা করি।']],
+ v:'নবী ﷺ বলেছেন, “আমি দিনে ১০০ বার আল্লাহর কাছে তওবা করি।”',r:'সহীহ মুসলিম ২৭০২'},
+{t:'দৈনিক ১০০ বার দরুদ শরীফ পাঠ',n:100,
+ lines:[['اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ','হে আল্লাহ! মুহাম্মাদ ﷺ ও তাঁর পরিবারের ওপর রহমত বর্ষণ করুন, যেমন ইবরাহীম (আ.) ও তাঁর পরিবারের ওপর করেছেন। নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত। হে আল্লাহ! মুহাম্মাদ ﷺ ও তাঁর পরিবারের ওপর বরকত দিন, যেমন ইবরাহীম (আ.) ও তাঁর পরিবারের ওপর দিয়েছেন। নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত।']],
+ v:'নবী ﷺ বলেছেন, যে আমার ওপর একবার দরুদ পড়ে, আল্লাহ তার ওপর দশবার রহমত বর্ষণ করেন।',r:'সহীহ মুসলিম ৪০৮; সহীহ বুখারী ৩৩৭০'},
+{t:'সকাল ও সন্ধ্যার মাসনুন জিকির',n:0,
+ lines:[['بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ','আল্লাহর নামে, যাঁর নামের সাথে আসমান-জমিনের কোনো কিছুই ক্ষতি করতে পারে না; তিনি সর্বশ্রোতা, সর্বজ্ঞ। (৩ বার)'],['رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا','আমি আল্লাহকে রব, ইসলামকে দ্বীন এবং মুহাম্মাদ ﷺ-কে নবী হিসেবে মেনে সন্তুষ্ট। (৩ বার)'],['قُلْ هُوَ اللَّهُ أَحَدٌ — قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ — قُلْ أَعُوذُ بِرَبِّ النَّاسِ','সূরা ইখলাস, ফালাক ও নাস — প্রতিটি ৩ বার।']],
+ extra:'এর সাথে আয়াতুল কুরসি ও সাইয়্যিদুল ইস্তিগফারও সকাল-সন্ধ্যায় পড়া সুন্নাহ। আলাদা ভাবে নিচের আমলগুলোতে আছে।',
+ r:'সুনান আবু দাউদ ৫০৮৮, ৫০৮২, ৫০৭২; জামে তিরমিযী ৩৩৮৮, ৩৩৮৯, ৩৫৭৫'},
+{t:'সালাতের পর তাসবিহাতে ফাতেমি',n:100,
+ lines:[['سُبْحَانَ اللَّهِ','সুবহানাল্লাহ — ৩৩ বার'],['الْحَمْدُ لِلَّهِ','আলহামদুলিল্লাহ — ৩৩ বার'],['اللَّهُ أَكْبَرُ','আল্লাহু আকবার — ৩৪ বার']],
+ v:'প্রতি ফরজ সালাতের পর ৩৩ বার সুবহানাল্লাহ, ৩৩ বার আলহামদুলিল্লাহ ও ৩৪ বার আল্লাহু আকবার পড়া সুন্নাহ। নবী ﷺ এটি ফাতেমা (রা.)-কে শিখিয়েছিলেন। (কাউন্টারে মোট ১০০ গণনা হবে)',r:'সহীহ বুখারী ৩৭০৫, ৬৩১৮; সহীহ মুসলিম ২৭২৮'},
+{t:'সাইয়্যিদুল ইস্তিগফার পাঠ',n:0,sayyid:1,
+ v:'নবী ﷺ বলেছেন, যে ব্যক্তি দৃঢ় বিশ্বাসের সাথে দিনে এটি পড়ে সন্ধ্যার আগে মারা যায়, সে জান্নাতি; আর রাতে পড়ে সকালের আগে মারা গেলেও সে জান্নাতি।',r:'সহীহ বুখারী ৬৩০৬'},
+{t:'আয়াতুল কুরসি পাঠ (ঘুমানোর আগে ও ফরজ সালাতের পর)',n:0,kursi:1,
+ v:'ঘুমানোর আগে পড়লে আল্লাহর পক্ষ থেকে একজন রক্ষক নিযুক্ত থাকে এবং সকাল পর্যন্ত শয়তান কাছে আসতে পারে না। আর প্রতি ফরজ সালাতের পর পড়লে জান্নাতে প্রবেশের পথে মৃত্যু ছাড়া কোনো বাধা থাকে না।',r:'সহীহ বুখারী ২৩১১; সুনানুল কুবরা, নাসায়ী ৯৮৪৮; সূরা বাকারা ২:২৫৫'},
+{t:'সূরা মূলক তিলাওয়াত (ঘুমানোর আগে)',n:0,mulk:1,
+ v:'নবী ﷺ বলেছেন, কুরআনে ৩০ আয়াতের একটি সূরা আছে, যা তার পাঠকারীর জন্য সুপারিশ করতে থাকে, যতক্ষণ না তাকে ক্ষমা করা হয় — সেটি সূরা তাবারাকাল্লাযী (মূলক)। জাবির (রা.) বলেন, নবী ﷺ আলিফ-লাম-মীম সাজদা ও তাবারাকাল্লাযী না পড়ে ঘুমাতেন না।',r:'জামে তিরমিযী ২৮৯১, ২৮৯২; সুনান আবু দাউদ ১৪০০'}
+];
+function amalState(){
+  const n=dhakaNow(),k=n.getUTCFullYear()+'-'+(n.getUTCMonth()+1)+'-'+n.getUTCDate();
+  let s=null;try{s=JSON.parse(localStorage.getItem('amalDaily')||'null');}catch(e){}
+  if(!s||s.date!==k)s={date:k,done:{},cnt:{}};
+  return s;
+}
+function amalSave(s){try{localStorage.setItem('amalDaily',JSON.stringify(s));}catch(e){}}
+function renderAmal(){
+  const box=document.getElementById('amalBody');box.innerHTML='';
+  const st=amalState();
+  const total=AMAL.length;
+  const doneN=()=>AMAL.filter((a,i)=>st.done[i]).length;
+  const prog=hdEl('div','am-prog');
+  const pt=hdEl('div','am-pt');
+  const pl=hdEl('b','',T('আজকের অগ্রগতি'));const pc=hdEl('span','','');
+  pt.appendChild(pl);pt.appendChild(pc);prog.appendChild(pt);
+  const bar=hdEl('div','am-bar');const fill=hdEl('i','');bar.appendChild(fill);prog.appendChild(bar);
+  box.appendChild(prog);
+  const upd=()=>{const d=doneN();pc.textContent=bn(d)+'/'+bn(total)+' '+T('সম্পন্ন');fill.style.width=(d/total*100)+'%';};
+  box.appendChild(hdEl('h3','tp-h',T(AMAL_SEC)));
+  AMAL.forEach((a,i)=>{
+    const card=hdEl('div','am-card'+(st.done[i]?' done':''));
+    const h=hdEl('div','am-h');
+    const chk=hdEl('button','am-chk','✓');chk.setAttribute('aria-label','done');
+    const tt=hdEl('div','am-t');
+    tt.appendChild(hdEl('b','',bn(i+1)+'. '+T(a.t)));
+    const sub=hdEl('small','',a.n?(bn(st.cnt[i]||0)+' / '+bn(a.n)):'');
+    if(a.n)tt.appendChild(sub);
+    const arr=hdEl('span','am-arr','▾');
+    h.appendChild(chk);h.appendChild(tt);h.appendChild(arr);
+    const body=hdEl('div','am-b');
+    const setDone=v=>{st.done[i]=v;card.classList.toggle('done',v);amalSave(st);upd();};
+    chk.onclick=e=>{e.stopPropagation();setDone(!st.done[i]);};
+    h.onclick=()=>card.classList.toggle('open');
+    // আরবি ও অর্থ
+    const addLine=(ar,mean)=>{
+      const w=hdEl('div','am-line');
+      const p=hdEl('p','am-ar',ar);p.lang='ar';w.appendChild(p);
+      if(mean)w.appendChild(hdEl('p','am-mn',mean));
+      body.appendChild(w);return p;
+    };
+    (a.lines||[]).forEach(l=>addLine(l[0],l[1]));
+    if(a.sayyid){const d=DUAS.find(x=>x.t.indexOf('সাইয়্যিদুল')===0);if(d)addLine(d.ar,d.bn);}
+    if(a.kursi){
+      const w=hdEl('div','am-line');const p=hdEl('p','am-ar','');p.lang='ar';
+      const m=hdEl('p','am-mn',T('লোড হচ্ছে...'));w.appendChild(p);w.appendChild(m);body.appendChild(w);
+      const load=()=>fetchAyahPair(2,255).then(d=>{p.textContent=d.ar;m.textContent=d.tr;}).catch(()=>{m.textContent=T('ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।')+' ';const b=hdEl('button','btn',T('আবার চেষ্টা করুন'));b.onclick=()=>{m.textContent=T('লোড হচ্ছে...');load();};m.appendChild(b);});
+      load();
+    }
+    if(a.mulk){
+      const b=hdEl('button','am-read','📖 '+T('সূরা মূলক পড়ুন'));
+      b.onclick=()=>openSurah(67);body.appendChild(b);
+    }
+    // কাউন্টার
+    if(a.n){
+      const cw=hdEl('div','am-cnt');
+      const tap=hdEl('button','am-tap',bn(st.cnt[i]||0));
+      const rs=hdEl('button','btn',T('রিসেট'));
+      const refresh=()=>{tap.textContent=bn(st.cnt[i]||0);sub.textContent=bn(st.cnt[i]||0)+' / '+bn(a.n);};
+      tap.onclick=()=>{
+        const c=(st.cnt[i]||0)+1;st.cnt[i]=c;
+        if(navigator.vibrate)try{navigator.vibrate(12);}catch(e){}
+        if(c>=a.n&&!st.done[i]){st.done[i]=true;card.classList.add('done');}
+        amalSave(st);refresh();upd();
+      };
+      rs.onclick=()=>{st.cnt[i]=0;st.done[i]=false;card.classList.remove('done');amalSave(st);refresh();upd();};
+      cw.appendChild(tap);cw.appendChild(rs);body.appendChild(cw);
+    }
+    if(a.extra)body.appendChild(hdEl('p','am-ex',a.extra));
+    if(a.v){const v=hdEl('div','am-v');v.appendChild(hdEl('b','',T('ফজিলত')));v.appendChild(hdEl('p','',a.v));body.appendChild(v);}
+    if(a.r)body.appendChild(hdEl('p','am-ref',T('সূত্র:')+' '+refT(a.r)));
+    card.appendChild(h);card.appendChild(body);box.appendChild(card);
+  });
+  upd();
+  box.appendChild(hdEl('p','hc-note',T('প্রতিদিন নতুন করে শুরু হয়। আপনার অগ্রগতি শুধু এই ডিভাইসে সংরক্ষিত থাকে।')));
+}
+
 // Surah Toggle Function
 function toggleSurah(id) {
   const el = document.getElementById(id);
@@ -1984,6 +2140,7 @@ function applyLang(l){
   if(act&&act.id==='topic-view'&&curTopic){const cs=curSub;openTopic(curTopic);if(cs)openSub(cs);}
   if(act&&act.id==='dua-view')renderDuas($('duaSearch').value);
   if(act&&act.id==='hijri-view')renderHijri();
+  if(act&&act.id==='amal-view')renderAmal();
   if(act&&act.id==='asma-view'){if(asmaCur)openAsma(asmaCur);else showAsmaList();}
   if(act&&act.id==='surah-view'&&rd.n)openSurah(rd.n);
 }
