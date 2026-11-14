@@ -249,6 +249,16 @@ html[lang=ar] body{font-family:'Noto Sans Arabic','Hind Siliguri',system-ui,sans
 html[lang=en] .m small{display:none}
 html[dir=rtl] .dq-h{text-align:right}
 html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
+.pcards{display:grid;gap:12px}
+.pcard{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:start;padding:14px 16px;border-radius:20px;border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(224,168,46,.8),rgba(30,136,229,.6)) border-box;box-shadow:var(--shadow);color:var(--text);font-family:inherit;cursor:pointer;transition:transform .15s}
+.pcard:active{transform:scale(.985)}
+.pcard .pi{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none;font-size:26px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-d));box-shadow:0 6px 14px rgba(30,136,229,.35)}
+.pcard .pt{flex:1;min-width:0}
+.pcard .pt b{display:block;font-size:16.5px;font-weight:700;line-height:1.35}
+.pcard .pt span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.pcard .pn{position:absolute;top:8px;inset-inline-end:14px;font-size:11px;font-weight:700;color:var(--gold)}
+.pcard .pc{color:var(--gold);font-size:26px;line-height:1;margin-top:10px}
+html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
 </style>
 </head>
 <body>
@@ -273,6 +283,11 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
 <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></symbol>
 <symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></symbol>
+<symbol id="bk" viewBox="0 0 24 24"><path d="M3 5.5C5.500 4 9 4 12 6c3-2 6.500-2 9-.5V19c-2.500-1.500-6-1.500-9 .5-3-2-6.500-2-9-.5z"/><path d="M12 6v13.500"/></symbol>
+<symbol id="scroll" viewBox="0 0 24 24"><path d="M8 4h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8M8 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9M10 9h6M10 13h4"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 3l2.600 5.600 6.100.7-4.500 4.200 1.200 6L12 16.500 6.600 19.500l1.200-6L3.300 9.300l6.100-.7z"/></symbol>
+<symbol id="scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+<symbol id="qa" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 9h6M9 12h4"/></symbol>
 </defs>
 </svg>
 
@@ -352,11 +367,17 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
       </div>
     </section>
 
-    <section id="tasbih">
-      <div class="sh"><h2>ডিজিটাল তাসবিহ</h2><span>Tasbih</span></div>
-      <div class="tas">
-        <button class="ring" id="ring" aria-label="গণনা করুন">০</button>
-        <div><h3>সুবহানাল্লাহ</h3><p>লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।</p><button class="btn" id="reset">রিসেট করুন</button></div>
+    <section id="topics">
+      <div class="sh"><h2>বিশেষ বিভাগসমূহ</h2><span>Explore</span></div>
+      <div class="pcards">
+        <button class="pcard" onclick="openTopic(1)"><span class="pi"><svg class="i"><use href="#quran"/></svg></span><span class="pt"><b>বিষয়ভিত্তিক আয়াত</b><span>কুরআনের আয়াত বিষয় অনুযায়ী</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(2)"><span class="pi"><svg class="i"><use href="#hadith"/></svg></span><span class="pt"><b>বিষয়ভিত্তিক হাদিস</b><span>সহীহ হাদিস বিষয় অনুযায়ী</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(3)"><span class="pi"><svg class="i"><use href="#bk"/></svg></span><span class="pt"><b>কাসাসুল কুরআন</b><span>কুরআনে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(4)"><span class="pi"><svg class="i"><use href="#scroll"/></svg></span><span class="pt"><b>কাসাসুল হাদিস</b><span>হাদিসে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(5)"><span class="pi"><svg class="i"><use href="#star"/></svg></span><span class="pt"><b>কাসাসুল আম্বিয়া</b><span>নবী-রাসূলগণের জীবনকাহিনি</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(6)"><span class="pi"><svg class="i"><use href="#history"/></svg></span><span class="pt"><b>ইসলামের ইতিহাস</b><span>ইসলামের গৌরবোজ্জ্বল অধ্যায়</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(7)"><span class="pi"><svg class="i"><use href="#scale"/></svg></span><span class="pt"><b>ফিকহ ও মাসআলা-মাসায়েল</b><span>দৈনন্দিন জীবনের বিধান</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(8)"><span class="pi"><svg class="i"><use href="#qa"/></svg></span><span class="pt"><b>ইসলামী প্রশ্নোত্তর</b><span>আপনার জিজ্ঞাসার জবাব</span></span><span class="pn"></span><span class="pc">›</span></button>
       </div>
     </section>
   </div>
@@ -580,6 +601,14 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
     </div>
   </div>
 
+  <div id="topic-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button>
+      <h3 id="topicTitle"></h3>
+    </div>
+    <div class="hd-wrap" id="topicBody"></div>
+  </div>
+
   <!-- সূরা পড়ার ভিউ (শব্দে শব্দে অর্থ + অনুবাদ) -->
   <div id="surah-view" class="view-section">
     <div class="rd-bar">
@@ -626,6 +655,17 @@ if(!['bn','en','ar'].includes(LANG))LANG='bn';
 const DIG={bn:'০১২৩৪৫৬৭৮৯',en:'0123456789',ar:'٠١٢٣٤٥٦٧٨٩'};
 const bn=n=>String(n).replace(/\d/g,d=>DIG[LANG][d]);
 const D={"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the 🕋 icon lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما تتطابق أيقونة 🕋 مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন": ["Turn your phone until 🕋 points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
+Object.assign(D,{
+'বিশেষ বিভাগসমূহ':['Special Sections','أقسام مميزة'],
+'বিষয়ভিত্তিক আয়াত':['Topical Verses','الآيات الموضوعية'],'কুরআনের আয়াত বিষয় অনুযায়ী':['Quranic verses by topic','آيات القرآن حسب الموضوع'],
+'বিষয়ভিত্তিক হাদিস':['Topical Hadith','الأحاديث الموضوعية'],'সহীহ হাদিস বিষয় অনুযায়ী':['Authentic hadith by topic','الأحاديث الصحيحة حسب الموضوع'],
+'কাসাসুল কুরআন':['Qasas al-Quran','قصص القرآن'],'কুরআনে বর্ণিত শিক্ষণীয় ঘটনা':['Instructive stories from the Quran','قصص مفيدة وردت في القرآن'],
+'কাসাসুল হাদিস':['Qasas al-Hadith','قصص الحديث'],'হাদিসে বর্ণিত শিক্ষণীয় ঘটনা':['Instructive stories from the Hadith','قصص مفيدة وردت في الحديث'],
+'কাসাসুল আম্বিয়া':['Qasas al-Anbiya','قصص الأنبياء'],'নবী-রাসূলগণের জীবনকাহিনি':['Life stories of the Prophets','سير الأنبياء والرسل'],
+'ইসলামের ইতিহাস':['History of Islam','تاريخ الإسلام'],'ইসলামের গৌরবোজ্জ্বল অধ্যায়':['Glorious chapters of Islam','فصول مشرقة من الإسلام'],
+'ফিকহ ও মাসআলা-মাসায়েল':['Fiqh & Rulings','الفقه والمسائل'],'দৈনন্দিন জীবনের বিধান':['Rulings for daily life','أحكام الحياة اليومية'],
+'ইসলামী প্রশ্নোত্তর':['Islamic Q&A','أسئلة وأجوبة إسلامية'],'আপনার জিজ্ঞাসার জবাব':['Answers to your questions','إجابات عن أسئلتكم'],
+'এই বিভাগের কনটেন্ট শীঘ্রই যোগ করা হবে।':['Content for this section will be added soon.','سيتم إضافة محتوى هذا القسم قريبًا.']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -1232,6 +1272,19 @@ function hadithBack() {
   else { switchView('home'); }
 }
 
+// ===== বিশেষ বিভাগ (পরে কনটেন্ট যোগ করার জন্য) =====
+const TOPICS=['বিষয়ভিত্তিক আয়াত','বিষয়ভিত্তিক হাদিস','কাসাসুল কুরআন','কাসাসুল হাদিস','কাসাসুল আম্বিয়া','ইসলামের ইতিহাস','ফিকহ ও মাসআলা-মাসায়েল','ইসলামী প্রশ্নোত্তর'];
+const TOPIC_CONTENT={}; // ভবিষ্যতে: TOPIC_CONTENT[1] = function(box){ ... box-এ কনটেন্ট বসান ... }
+let curTopic=0;
+function openTopic(n){
+  curTopic=n;
+  document.getElementById('topicTitle').textContent=T(TOPICS[n-1]);
+  const box=document.getElementById('topicBody'); box.innerHTML='';
+  if(TOPIC_CONTENT[n]) TOPIC_CONTENT[n](box);
+  else box.appendChild(hdEl('div','hd-msg',T('এই বিভাগের কনটেন্ট শীঘ্রই যোগ করা হবে।')));
+  switchView('topic');
+}
+
 // Surah Toggle Function
 function toggleSurah(id) {
   const el = document.getElementById(id);
@@ -1243,9 +1296,7 @@ function toggleSurah(id) {
   }
 }
 
-let c=0;const ring=document.getElementById('ring');
-ring.addEventListener('click',()=>{c=c>=33?1:c+1;ring.textContent=bn(c);if(navigator.vibrate)try{navigator.vibrate(12)}catch(e){}});
-document.getElementById('reset').addEventListener('click',()=>{c=0;ring.textContent=bn(0);});
+let c=0;
 
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',(e)=>{
   document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('act'));
@@ -1293,7 +1344,7 @@ function resetTasbih() {
 
 // ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
 const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
-const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextName,#cdText,#cdMin,#langMenu,#hdBody,#duaList,#rdAyahs,#locList,#surahListContainer,.lang-wrap,script,style';
+const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#rdAyahs,#locList,#surahListContainer,.lang-wrap,script,style';
 function i18nWalk(){
   const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
   while((x=tw.nextNode()))nodes.push(x);
@@ -1321,7 +1372,7 @@ function applyLang(l){
   $('langCode').textContent={bn:'বাংলা',en:'English',ar:'العربية'}[l];
   document.querySelectorAll('#langMenu button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
   renderSurahList();tick();upd();
-  ring.textContent=bn(c);
+  document.querySelectorAll('.pcard .pn').forEach((e,i)=>e.textContent=bn(i+1));
   $('tasbihTarget').textContent=bn(tTarget);
   const sel=$('tasbihSelector');
   $('currentTasbihLabel').textContent=sel.options[sel.selectedIndex].text.split('(')[0].trim();
@@ -1330,6 +1381,7 @@ function applyLang(l){
   if($('locSheet').classList.contains('show'))renderLocList($('locSearch').value);
   const act=document.querySelector('.view-section.active');
   if(act&&act.id==='hadith-view')showHadithBooks();
+  if(act&&act.id==='topic-view'&&curTopic)openTopic(curTopic);
   if(act&&act.id==='dua-view')renderDuas($('duaSearch').value);
   if(act&&act.id==='surah-view'&&rd.n)openSurah(rd.n);
 }
