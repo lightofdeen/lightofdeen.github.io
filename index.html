@@ -259,6 +259,9 @@ html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
 .pcard .pn{position:absolute;top:8px;inset-inline-end:14px;font-size:11px;font-weight:700;color:var(--gold)}
 .pcard .pc{color:var(--gold);font-size:26px;line-height:1;margin-top:10px}
 html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
+.tp-h{margin:22px 4px 10px;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.tp-h:first-child{margin-top:4px}
+.tp-h::before{content:"";width:4px;height:20px;border-radius:4px;background:linear-gradient(var(--gold),var(--blue))}
 </style>
 </head>
 <body>
@@ -288,6 +291,7 @@ html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
 <symbol id="star" viewBox="0 0 24 24"><path d="M12 3l2.600 5.600 6.100.7-4.500 4.200 1.200 6L12 16.500 6.600 19.500l1.200-6L3.300 9.300l6.100-.7z"/></symbol>
 <symbol id="scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
 <symbol id="qa" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 9h6M9 12h4"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.500"/><path d="M5 20c0-3.900 3.100-6.500 7-6.500s7 2.600 7 6.500"/></symbol>
 </defs>
 </svg>
 
@@ -372,12 +376,13 @@ html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
       <div class="pcards">
         <button class="pcard" onclick="openTopic(1)"><span class="pi"><svg class="i"><use href="#quran"/></svg></span><span class="pt"><b>বিষয়ভিত্তিক আয়াত</b><span>কুরআনের আয়াত বিষয় অনুযায়ী</span></span><span class="pn"></span><span class="pc">›</span></button>
         <button class="pcard" onclick="openTopic(2)"><span class="pi"><svg class="i"><use href="#hadith"/></svg></span><span class="pt"><b>বিষয়ভিত্তিক হাদিস</b><span>সহীহ হাদিস বিষয় অনুযায়ী</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(3)"><span class="pi"><svg class="i"><use href="#bk"/></svg></span><span class="pt"><b>কাসাসুল কুরআন</b><span>কুরআনে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(4)"><span class="pi"><svg class="i"><use href="#scroll"/></svg></span><span class="pt"><b>কাসাসুল হাদিস</b><span>হাদিসে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(5)"><span class="pi"><svg class="i"><use href="#star"/></svg></span><span class="pt"><b>কাসাসুল আম্বিয়া</b><span>নবী-রাসূলগণের জীবনকাহিনি</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(6)"><span class="pi"><svg class="i"><use href="#history"/></svg></span><span class="pt"><b>ইসলামের ইতিহাস</b><span>ইসলামের গৌরবোজ্জ্বল অধ্যায়</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(7)"><span class="pi"><svg class="i"><use href="#scale"/></svg></span><span class="pt"><b>ফিকহ ও মাসআলা-মাসায়েল</b><span>দৈনন্দিন জীবনের বিধান</span></span><span class="pn"></span><span class="pc">›</span></button>
-        <button class="pcard" onclick="openTopic(8)"><span class="pi"><svg class="i"><use href="#qa"/></svg></span><span class="pt"><b>ইসলামী প্রশ্নোত্তর</b><span>আপনার জিজ্ঞাসার জবাব</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(3)"><span class="pi"><svg class="i"><use href="#user"/></svg></span><span class="pt"><b>জীবনী সমূহ</b><span>মহান ব্যক্তিদের জীবনী</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(4)"><span class="pi"><svg class="i"><use href="#bk"/></svg></span><span class="pt"><b>কাসাসুল কুরআন</b><span>কুরআনে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(5)"><span class="pi"><svg class="i"><use href="#scroll"/></svg></span><span class="pt"><b>কাসাসুল হাদিস</b><span>হাদিসে বর্ণিত শিক্ষণীয় ঘটনা</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(6)"><span class="pi"><svg class="i"><use href="#star"/></svg></span><span class="pt"><b>কাসাসুল আম্বিয়া</b><span>নবী-রাসূলগণের জীবনকাহিনি</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(7)"><span class="pi"><svg class="i"><use href="#history"/></svg></span><span class="pt"><b>ইসলামের ইতিহাস</b><span>ইসলামের গৌরবোজ্জ্বল অধ্যায়</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(8)"><span class="pi"><svg class="i"><use href="#scale"/></svg></span><span class="pt"><b>ফিকহ ও মাসআলা-মাসায়েল</b><span>দৈনন্দিন জীবনের বিধান</span></span><span class="pn"></span><span class="pc">›</span></button>
+        <button class="pcard" onclick="openTopic(9)"><span class="pi"><svg class="i"><use href="#qa"/></svg></span><span class="pt"><b>ইসলামী প্রশ্নোত্তর</b><span>আপনার জিজ্ঞাসার জবাব</span></span><span class="pn"></span><span class="pc">›</span></button>
       </div>
     </section>
   </div>
@@ -603,7 +608,7 @@ html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
 
   <div id="topic-view" class="view-section">
     <div class="rd-bar">
-      <button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button>
+      <button class="rd-back" onclick="topicBack()" aria-label="ফিরে যান">←</button>
       <h3 id="topicTitle"></h3>
     </div>
     <div class="hd-wrap" id="topicBody"></div>
@@ -659,6 +664,7 @@ Object.assign(D,{
 'বিশেষ বিভাগসমূহ':['Special Sections','أقسام مميزة'],
 'বিষয়ভিত্তিক আয়াত':['Topical Verses','الآيات الموضوعية'],'কুরআনের আয়াত বিষয় অনুযায়ী':['Quranic verses by topic','آيات القرآن حسب الموضوع'],
 'বিষয়ভিত্তিক হাদিস':['Topical Hadith','الأحاديث الموضوعية'],'সহীহ হাদিস বিষয় অনুযায়ী':['Authentic hadith by topic','الأحاديث الصحيحة حسب الموضوع'],
+'জীবনী সমূহ':['Biographies','السير والتراجم'],'মহান ব্যক্তিদের জীবনী':['Lives of great personalities','سير الشخصيات العظيمة'],
 'কাসাসুল কুরআন':['Qasas al-Quran','قصص القرآن'],'কুরআনে বর্ণিত শিক্ষণীয় ঘটনা':['Instructive stories from the Quran','قصص مفيدة وردت في القرآن'],
 'কাসাসুল হাদিস':['Qasas al-Hadith','قصص الحديث'],'হাদিসে বর্ণিত শিক্ষণীয় ঘটনা':['Instructive stories from the Hadith','قصص مفيدة وردت في الحديث'],
 'কাসাসুল আম্বিয়া':['Qasas al-Anbiya','قصص الأنبياء'],'নবী-রাসূলগণের জীবনকাহিনি':['Life stories of the Prophets','سير الأنبياء والرسل'],
@@ -1273,17 +1279,53 @@ function hadithBack() {
 }
 
 // ===== বিশেষ বিভাগ (পরে কনটেন্ট যোগ করার জন্য) =====
-const TOPICS=['বিষয়ভিত্তিক আয়াত','বিষয়ভিত্তিক হাদিস','কাসাসুল কুরআন','কাসাসুল হাদিস','কাসাসুল আম্বিয়া','ইসলামের ইতিহাস','ফিকহ ও মাসআলা-মাসায়েল','ইসলামী প্রশ্নোত্তর'];
+const TOPICS=['বিষয়ভিত্তিক আয়াত','বিষয়ভিত্তিক হাদিস','জীবনী সমূহ','কাসাসুল কুরআন','কাসাসুল হাদিস','কাসাসুল আম্বিয়া','ইসলামের ইতিহাস','ফিকহ ও মাসআলা-মাসায়েল','ইসলামী প্রশ্নোত্তর'];
 const TOPIC_CONTENT={}; // ভবিষ্যতে: TOPIC_CONTENT[1] = function(box){ ... box-এ কনটেন্ট বসান ... }
 let curTopic=0;
 function openTopic(n){
-  curTopic=n;
+  curTopic=n; curSub=null;
   document.getElementById('topicTitle').textContent=T(TOPICS[n-1]);
   const box=document.getElementById('topicBody'); box.innerHTML='';
   if(TOPIC_CONTENT[n]) TOPIC_CONTENT[n](box);
   else box.appendChild(hdEl('div','hd-msg',T('এই বিভাগের কনটেন্ট শীঘ্রই যোগ করা হবে।')));
   switchView('topic');
 }
+
+// ===== বিষয়ভিত্তিক আয়াত: শিরোনাম ও বিষয়ের তালিকা =====
+const AYAH_TOPICS=[["ঈমান ও আকিদা", ["ঈমান", "তাওহিদ", "আল্লাহর পরিচয়", "আল্লাহর অস্তিত্ব", "আল্লাহর একত্ববাদ", "আল্লাহর রহমত", "আল্লাহর ক্ষমতা", "আল্লাহর জ্ঞান", "আল্লাহর ভালোবাসা", "আল্লাহর ওপর ভরসা", "শিরক", "কুফর", "নিফাক", "তাকদির", "ফেরেশতা", "আসমানি কিতাব", "নবী ও রাসুল", "আখিরাত", "পুনরুত্থান", "কিয়ামত"]], ["ইবাদত ও আমল", ["নামাজ", "রোজা", "যাকাত", "হজ", "উমরাহ", "দোয়া", "জিকির", "তাসবিহ", "ইস্তিগফার", "তওবা", "কুরআন তিলাওয়াত", "তাহাজ্জুদ", "জুমার নামাজ", "জুমার দিনের ফজিলত", "সিজদা", "ইবাদতের গুরুত্ব", "ইখলাস", "তাকওয়া", "ধৈর্য", "শুকরিয়া"]], ["নৈতিকতা ও চরিত্র", ["সত্যবাদিতা", "মিথ্যা", "আমানতদারি", "ওয়াদা পালন", "ক্ষমা", "ধৈর্য", "কৃতজ্ঞতা", "অহংকার", "হিংসা", "গিবত", "অপবাদ", "পরনিন্দা", "ক্রোধ নিয়ন্ত্রণ", "বিনয়", "দয়া", "সহানুভূতি", "ন্যায়বিচার", "ইনসাফ", "সততা", "লজ্জাশীলতা"]], ["মানবজীবন ও সামাজিক সম্পর্ক", ["পিতা-মাতার অধিকার", "পিতা-মাতার প্রতি সদাচরণ", "সন্তানের অধিকার", "স্বামী-স্ত্রীর সম্পর্ক", "বিবাহ", "তালাক", "পরিবার", "আত্মীয়তার সম্পর্ক", "প্রতিবেশীর অধিকার", "এতিমের অধিকার", "দরিদ্রের অধিকার", "মিসকিনের অধিকার", "মেহমানদারি", "মানবাধিকার", "মুসলিম ভ্রাতৃত্ব", "সামাজিক সম্প্রীতি", "নারী অধিকার", "পুরুষের দায়িত্ব", "সন্তানের লালন-পালন", "আত্মীয়তার বন্ধন রক্ষা"]], ["হালাল-হারাম ও অর্থনীতি", ["হালাল উপার্জন", "হারাম উপার্জন", "সুদ", "ঘুষ", "ব্যবসা-বাণিজ্য", "ওজনে কম দেওয়া", "প্রতারণা", "ঋণ", "দান-সদকা", "যাকাত", "সম্পদের মালিকানা", "উত্তরাধিকার", "অপচয়", "কৃপণতা", "সম্পদের পরীক্ষা", "এতিমের সম্পদ", "খাদ্য ও পানীয়", "হালাল খাদ্য", "হারাম খাদ্য", "বৈধ ব্যবসা"]], ["নবী-রাসুল ও পূর্ববর্তী জাতি", ["আদম (আ.)", "নূহ (আ.)", "ইবরাহিম (আ.)", "ইসমাইল (আ.)", "ইসহাক (আ.)", "ইয়াকুব (আ.)", "ইউসুফ (আ.)", "মুসা (আ.)", "হারুন (আ.)", "দাউদ (আ.)", "সুলাইমান (আ.)", "আইয়ুব (আ.)", "ইউনুস (আ.)", "যাকারিয়া (আ.)", "ইয়াহইয়া (আ.)", "ঈসা (আ.)", "মুহাম্মদ (সা.)", "ফেরাউন", "কারুন", "আদ জাতি", "সামুদ জাতি", "আসহাবে কাহফ", "আসহাবে ফিল"]], ["আখিরাত ও পরকাল", ["মৃত্যু", "কবর", "বারযাখ", "কিয়ামত", "হাশর", "পুনরুত্থান", "আমলনামা", "মিজান", "পুলসিরাত", "হিসাব-নিকাশ", "জান্নাত", "জাহান্নাম", "জান্নাতের নেয়ামত", "জাহান্নামের শাস্তি", "শাফাআত", "চিরস্থায়ী জীবন", "দুনিয়ার ক্ষণস্থায়িত্ব", "আখিরাতের প্রস্তুতি"]], ["জ্ঞান ও শিক্ষা", ["জ্ঞান অর্জন", "শিক্ষার গুরুত্ব", "চিন্তা-গবেষণা", "বিবেক", "প্রজ্ঞা", "উপদেশ গ্রহণ", "অজ্ঞতা", "আলেমদের মর্যাদা", "জ্ঞান ও আমল", "সত্য অনুসন্ধান", "কুরআন নিয়ে চিন্তা", "সৃষ্টিজগত নিয়ে চিন্তা"]], ["দুনিয়া ও মানবজীবন", ["দুনিয়ার জীবন", "দুনিয়ার পরীক্ষা", "বিপদ-মুসিবত", "রোগ-ব্যাধি", "দারিদ্র্য", "সম্পদ", "সন্তান-সন্ততি", "যৌবন", "বার্ধক্য", "সময়ের গুরুত্ব", "জীবন ও মৃত্যু", "রিজিক", "বৃষ্টি", "প্রকৃতি", "আকাশ ও পৃথিবী", "পাহাড়", "সমুদ্র", "প্রাণীজগৎ", "পরিবেশ", "সৃষ্টির নিদর্শন"]], ["বিশেষ গুরুত্বপূর্ণ বিষয়", ["জিহাদ", "হিজরত", "শহিদ", "বিজয়", "পরাজয়", "ফিতনা", "পরীক্ষা ও ধৈর্য", "শয়তানের ষড়যন্ত্র", "নফসের কুপ্রবৃত্তি", "ওয়াসওয়াসা", "সিরাতুল মুস্তাকিম", "হিদায়াত", "গোমরাহি", "দাওয়াত", "সৎকাজের আদেশ", "অসৎকাজে নিষেধ", "ক্ষমা প্রার্থনা", "আল্লাহর শাস্তি", "আল্লাহর প্রতিশ্রুতি", "আল্লাহর সাহায্য"]]];
+Object.assign(D,{"ঈমান ও আকিদা": ["Faith & Creed", "الإيمان والعقيدة"], "ইবাদত ও আমল": ["Worship & Deeds", "العبادات والأعمال"], "নৈতিকতা ও চরিত্র": ["Ethics & Character", "الأخلاق والسلوك"], "মানবজীবন ও সামাজিক সম্পর্ক": ["Human Life & Social Relations", "الحياة الإنسانية والعلاقات الاجتماعية"], "হালাল-হারাম ও অর্থনীতি": ["Halal, Haram & Economy", "الحلال والحرام والاقتصاد"], "নবী-রাসুল ও পূর্ববর্তী জাতি": ["Prophets & Previous Nations", "الأنبياء والأمم السابقة"], "আখিরাত ও পরকাল": ["The Hereafter", "الآخرة"], "জ্ঞান ও শিক্ষা": ["Knowledge & Education", "العلم والتعليم"], "দুনিয়া ও মানবজীবন": ["This World & Human Life", "الدنيا والحياة الإنسانية"], "বিশেষ গুরুত্বপূর্ণ বিষয়": ["Other Important Topics", "موضوعات مهمة أخرى"], "এই বিষয়ের আয়াত শীঘ্রই যোগ করা হবে।": ["Verses for this topic will be added soon.", "ستتم إضافة آيات هذا الموضوع قريبًا."]});
+// পরে আয়াত যোগ করতে: বিষয়ের নাম দিয়ে নিচে বসান। যেমন:
+// AYAH_DATA['ঈমান']=[{ar:'আরবি আয়াত',bn:'বাংলা অনুবাদ',ref:'সূরা আল-বাকারা, আয়াত ২৮৫'}];
+const AYAH_DATA={};
+let curSub=null;
+function topicBack(){ if(curSub) openTopic(curTopic); else switchView('home'); }
+function openSub(name){
+  curSub=name;
+  document.getElementById('topicTitle').textContent=name;
+  const box=document.getElementById('topicBody'); box.innerHTML='';
+  const arr=AYAH_DATA[name]||[];
+  arr.forEach((a,i)=>{
+    const card=hdEl('div','hd-item');
+    card.appendChild(hdEl('span','hd-num',bn(i+1)+(a.ref?' · '+a.ref:'')));
+    if(a.ar){const p=hdEl('p','hd-ar',a.ar);p.lang='ar';card.appendChild(p);}
+    if(a.bn)card.appendChild(hdEl('p','hd-bn',a.bn));
+    box.appendChild(card);
+  });
+  if(!arr.length)box.appendChild(hdEl('div','hd-msg',T('এই বিষয়ের আয়াত শীঘ্রই যোগ করা হবে।')));
+  switchView('topic');
+}
+TOPIC_CONTENT[1]=function(box){
+  AYAH_TOPICS.forEach(([h,list])=>{
+    box.appendChild(hdEl('h3','tp-h',T(h)));
+    list.forEach((name,i)=>{
+      const row=hdEl('button','hd-row');
+      row.appendChild(hdEl('span','no',bn(i+1)));
+      row.appendChild(hdEl('span','nm',name));
+      row.onclick=()=>openSub(name);
+      box.appendChild(row);
+    });
+  });
+};
 
 // Surah Toggle Function
 function toggleSurah(id) {
@@ -1381,7 +1423,7 @@ function applyLang(l){
   if($('locSheet').classList.contains('show'))renderLocList($('locSearch').value);
   const act=document.querySelector('.view-section.active');
   if(act&&act.id==='hadith-view')showHadithBooks();
-  if(act&&act.id==='topic-view'&&curTopic)openTopic(curTopic);
+  if(act&&act.id==='topic-view'&&curTopic){const cs=curSub;openTopic(curTopic);if(cs)openSub(cs);}
   if(act&&act.id==='dua-view')renderDuas($('duaSearch').value);
   if(act&&act.id==='surah-view'&&rd.n)openSurah(rd.n);
 }
