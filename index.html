@@ -434,6 +434,60 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 .am-ex{margin-top:12px;font-size:13.5px;color:var(--muted);line-height:1.7}
 .am-ref{margin-top:10px;font-size:12.5px;color:var(--muted)}
 .am-read{display:block;margin:14px auto 0;background:var(--blue);color:#fff;border:0;border-radius:14px;padding:10px 20px;font-family:inherit;font-size:15px;cursor:pointer}
+
+/* ===== অ্যাকাউন্ট / প্রোফাইল / তাজবিদ ===== */
+.ac-sec{margin:18px 4px 8px;font-size:13.5px;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px}
+.ac-sec::before{content:"";width:4px;height:16px;border-radius:4px;background:linear-gradient(var(--gold),var(--blue))}
+.ac-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 16px;margin-bottom:12px}
+.ac-logo{width:64px;height:64px;border-radius:20px;background:var(--blue-l);display:grid;place-items:center;font-size:32px;margin:0 auto 10px}
+.ac-h{text-align:center;font-size:20px;margin-bottom:6px}
+.ac-sub{text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6;margin-bottom:16px}
+.ac-tabs{display:flex;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:12px}
+.ac-tab{flex:1;border:0;background:none;color:var(--muted);font:inherit;font-size:15px;padding:9px;border-radius:10px;cursor:pointer}
+.ac-tab.on{background:var(--blue);color:var(--on-blue);font-weight:600}
+.ac-in{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:16px;outline:none}
+.ac-in:focus{border-color:var(--blue)}
+.ac-code{text-align:center;letter-spacing:8px;font-size:22px;font-weight:700}
+.ac-sent{text-align:center;color:var(--muted);font-size:14px;margin-bottom:10px;word-break:break-all}
+.ac-btn{display:block;width:100%;margin-top:12px;padding:13px;border:0;border-radius:14px;background:var(--blue);color:var(--on-blue);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+.ac-btn.sm{width:auto;margin:0;padding:12px 16px;font-size:14px;white-space:nowrap}
+.ac-btn.alt{background:none;border:1px solid var(--line);color:var(--blue)}
+.ac-btn.out{background:none;border:1px solid #e57373;color:#e53935}
+.ac-btn:disabled{opacity:.6}
+.ac-err{min-height:20px;margin-top:8px;font-size:13px;color:#e53935;text-align:center}
+.ac-row{display:flex;justify-content:space-between;gap:8px;margin-top:10px}
+.ac-link{background:none;border:0;color:var(--blue);font:inherit;font-size:13.5px;cursor:pointer;padding:4px}
+.ac-note{text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6;margin-top:6px}
+.ac-hero{text-align:center;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px 16px;margin-bottom:12px}
+.ac-av{width:84px;height:84px;border-radius:50%;border:3px solid var(--blue);background:var(--blue-l);font-size:42px;cursor:pointer;display:grid;place-items:center;margin:0 auto 10px}
+.ac-un{font-size:20px;font-weight:700}
+.ac-id{color:var(--muted);font-size:13.5px;margin-top:2px}
+.ac-since{color:var(--muted);font-size:12.5px;margin-top:4px}
+.ac-picks{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.ac-pk{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:22px;cursor:pointer}
+.ac-uf.need{border-color:var(--gold)}
+.ac-lb{font-size:13.5px;font-weight:700;color:var(--blue);margin-bottom:8px;display:block}
+.ac-row2{display:flex;gap:8px}
+.ac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ac-stat{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:14px 12px;text-align:center}
+.ac-si{font-size:24px}
+.ac-sv{font-size:19px;font-weight:700;margin:4px 0 2px}
+.ac-sl{font-size:12.5px;color:var(--muted)}
+.ac-ss{font-size:12px;color:var(--muted);margin-top:4px}
+.ac-bar{height:7px;border-radius:7px;background:var(--line);margin-top:8px;overflow:hidden}
+.ac-bar i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--blue))}
+.ac-lv{font-size:16.5px;font-weight:600;line-height:1.5}
+.ac-chart{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:130px}
+.ac-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}
+.ac-col i{width:100%;max-width:26px;border-radius:7px 7px 3px 3px;background:linear-gradient(var(--blue),var(--gold))}
+.ac-n{font-size:11px;color:var(--muted)}.ac-w{font-size:12px;color:var(--muted)}
+.ac-kvr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.ac-kvr:last-child{border:0}
+.ac-ck{color:var(--blue);font-weight:700}
+.tj-p{line-height:1.85;font-size:15.5px;margin-bottom:10px}
+.tj-ar{font-family:'Amiri','Scheherazade New',serif;font-size:26px;line-height:2;direction:rtl;text-align:right;background:var(--bg);border-radius:12px;padding:6px 14px;margin-bottom:8px}
+.ac-toast{position:fixed;left:50%;bottom:110px;transform:translate(-50%,20px);background:#222;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+.ac-toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -519,6 +573,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
+        <button class="m" onclick="switchView('tajweed')"><div class="ic"><svg class="i"><use href="#bk"/></svg></div>তাজবিদ<small>Tajweed</small></button>
       </nav>
     </section>
 
@@ -818,6 +873,22 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
     <div class="rd-status" id="rdStatus"></div>
     <div style="text-align:center;padding:8px 0 24px"><button class="rd-more" id="rdMore" onclick="loadMoreAyahs()" style="display:none">আরও আয়াত দেখুন</button></div>
   </div>
+
+  <!-- অ্যাকাউন্ট: লগইন -->
+  <div id="auth-view" class="view-section">
+    <div class="rd-bar"><button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button><h3>লগইন বা সাইন আপ</h3></div>
+    <div style="padding:16px 16px 120px" id="authBody"></div>
+  </div>
+  <!-- অ্যাকাউন্ট: প্রোফাইল -->
+  <div id="profile-view" class="view-section">
+    <div class="rd-bar"><button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button><h3>আমার প্রোফাইল</h3></div>
+    <div style="padding:16px 16px 120px" id="profBody"></div>
+  </div>
+  <!-- তাজবিদ শিক্ষা -->
+  <div id="tajweed-view" class="view-section">
+    <div class="rd-bar"><button class="rd-back" onclick="tjBack()" aria-label="ফিরে যান">←</button><h3 id="tjTitle">তাজবিদ শিক্ষা</h3></div>
+    <div style="padding:16px 16px 120px" id="tjBody"></div>
+  </div>
 </main>
 
 <nav class="nav" aria-label="নিচের নেভিগেশন">
@@ -874,6 +945,8 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
         </div>
       </div>
     </div>
+    <div class="ac-sec">অ্যাকাউন্ট</div>
+    <button class="mi" id="authBtn" onclick="openAccount()"><svg class="i"><use href="#user"/></svg><span id="authLbl">লগইন / সাইন আপ</span><svg class="i mi-chev" style="transform:rotate(-90deg)"><use href="#chev"/></svg></button>
   </div>
 </aside>
 
@@ -2378,6 +2451,454 @@ function openHadithSub(name){
     box.appendChild(card);
   });
 }
+</script>
+<!-- ===== অ্যাকাউন্ট: লগইন · প্রোফাইল · তাজবিদ ===== -->
+<script>
+(function(){
+'use strict';
+
+/* ───────── ১) সেটিং: Supabase প্রজেক্টের URL ও anon key এখানে বসান (বিস্তারিত: LOGIN-SETUP.md) ───────── */
+const CFG = { url: '', key: '' };
+const SB_LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+
+/* ───────── ২) অনুবাদ (ইংরেজি / আরবি) ───────── */
+Object.assign(D, {
+ 'অ্যাকাউন্ট':['Account','الحساب'],
+ 'লগইন / সাইন আপ':['Log in / Sign up','تسجيل الدخول / إنشاء حساب'],
+ 'আমার প্রোফাইল':['My Profile','ملفي الشخصي'],
+ 'লগইন বা সাইন আপ':['Log in or Sign up','تسجيل الدخول أو إنشاء حساب'],
+ 'ইমেইল অথবা ফোন নম্বর দিন, আমরা একটি কোড পাঠাব। নতুন হলে স্বয়ংক্রিয়ভাবে অ্যাকাউন্ট খোলা হবে।':['Enter your email or phone number and we will send you a code. A new account is created automatically.','أدخل بريدك الإلكتروني أو رقم هاتفك وسنرسل لك رمزًا. سيتم إنشاء حساب جديد تلقائيًا.'],
+ 'ইমেইল':['Email','البريد'],'ফোন':['Phone','الهاتف'],
+ 'কোড পাঠান':['Send code','إرسال الرمز'],
+ 'কোড যাচাই করুন':['Verify code','تحقق من الرمز'],
+ 'আবার কোড পাঠান':['Resend code','إعادة إرسال الرمز'],
+ 'নম্বর/ইমেইল বদলান':['Change number/email','تغيير الرقم/البريد'],
+ 'কোডটি লিখুন':['Enter the code','أدخل الرمز'],
+ 'সঠিক ইমেইল দিন':['Enter a valid email','أدخل بريدًا صحيحًا'],
+ 'সঠিক ফোন নম্বর দিন (যেমন 01XXXXXXXXX)':['Enter a valid phone number (e.g. 01XXXXXXXXX)','أدخل رقم هاتف صحيحًا'],
+ 'লগইন সিস্টেম এখনো চালু করা হয়নি।':['The login system is not enabled yet.','نظام تسجيل الدخول غير مفعل بعد.'],
+ 'লগআউট':['Log out','تسجيل الخروج'],
+ 'ইউজারনেম':['Username','اسم المستخدم'],
+ 'ইউজারনেম সেট করুন':['Set a username','عيّن اسم مستخدم'],
+ 'সংরক্ষণ':['Save','حفظ'],'পরিবর্তন':['Edit','تعديل'],
+ 'আয়াত পড়া হয়েছে':['Verses read','الآيات المقروءة'],
+ 'তাজবিদ শেখা':['Tajweed learned','التجويد'],
+ 'শেষ পড়া বিষয়':['Last read','آخر ما قرأت'],
+ 'মোট ব্যবহারের সময়':['Total time spent','إجمالي وقت الاستخدام'],
+ 'আজকের সময়':['Today','اليوم'],
+ 'ধারাবাহিক দিন':['Day streak','أيام متتالية'],
+ 'এই সপ্তাহের ব্যবহার (মিনিট)':['This week (minutes)','استخدام هذا الأسبوع (دقائق)'],
+ 'বুকমার্ক করা আয়াত':['Bookmarked verses','الآيات المحفوظة'],
+ 'সদস্য হয়েছেন':['Member since','عضو منذ'],
+ 'সর্বশেষ সিঙ্ক':['Last sync','آخر مزامنة'],
+ 'এখনই সিঙ্ক করুন':['Sync now','مزامنة الآن'],
+ 'এখনো কিছু পড়া হয়নি':['Nothing read yet','لم تقرأ شيئًا بعد'],
+ 'এইমাত্র':['just now','الآن'],
+ 'ঘ':['h','س'],'মি':['m','د'],'সে':['s','ث'],'দিন':['days','أيام'],
+ 'আবার চেষ্টা করুন':['Try again','حاول مرة أخرى'],
+ 'তাজবিদ শিক্ষা':['Tajweed Lessons','دروس التجويد'],
+ 'তাজবিদ':['Tajweed','التجويد'],
+ 'পড়া শেষ করেছি':['Mark as read','تمت القراءة'],
+ 'পড়া হয়েছে ✓':['Read ✓','تمت القراءة ✓'],
+ 'পরবর্তী পাঠ ›':['Next lesson ›','الدرس التالي ›'],
+ 'উদাহরণ':['Examples','أمثلة'],
+ 'আপনার অগ্রগতি':['Your progress','تقدمك'],
+ 'লগইন করলে আপনার পড়ার অগ্রগতি সব ডিভাইসে সেভ থাকবে।':['Log in to keep your progress on all devices.','سجّل الدخول لحفظ تقدمك على جميع الأجهزة.'],
+ 'ইউজারনেম ৩–২০ অক্ষরের হতে হবে (অক্ষর, সংখ্যা, _ বা .)':['Username must be 3–20 characters (letters, digits, _ or .)','يجب أن يكون الاسم 3–20 حرفًا (حروف أو أرقام أو _ أو .)'],
+ 'এই ইউজারনেম আগে থেকেই আছে':['This username is already taken','اسم المستخدم مستخدم بالفعل'],
+ 'সংরক্ষিত হয়েছে':['Saved','تم الحفظ'],
+ 'আপনি লগইন করেছেন':['You are logged in','تم تسجيل الدخول'],
+ 'লগআউট হয়েছে':['Logged out','تم تسجيل الخروج'],
+ 'অবতার বেছে নিন':['Choose avatar','اختر صورة رمزية']
+});
+const t = s => T(s);
+
+/* ───────── ৩) স্থানীয় ডেটা (লগইন ছাড়াও কাজ করে, লগইন করলে অ্যাকাউন্টে মিশে যায়) ───────── */
+const SK='lod_stats_v1', PK='lod_pend_v1', TOTAL_AYAH=6236;
+const lsGet=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const fresh=()=>({sec:0,days:{},ayahs:{},tajweed:[],last:null});
+let stats=lsGet(SK,null)||fresh(), pend=lsGet(PK,null)||{sec:0,days:{}};
+const pad=n=>String(n).padStart(2,'0');
+const dkey=(d=new Date())=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const dayRec=d=>stats.days[d]||(stats.days[d]={s:0,a:0});
+let saveT=null;
+function persist(){clearTimeout(saveT);saveT=setTimeout(()=>{lsSet(SK,stats);lsSet(PK,pend)},800);}
+function countAyahs(){let n=0;for(const k in stats.ayahs)n+=stats.ayahs[k].length;return n;}
+
+window.lodTrackAyah=function(sura,ayah){
+  const k=String(sura),arr=stats.ayahs[k]||(stats.ayahs[k]=[]);
+  if(arr.includes(ayah))return;
+  arr.push(ayah);dayRec(dkey()).a++;persist();
+};
+function setLast(label){stats.last={t:label,ts:Date.now()};persist();}
+
+let lastTick=Date.now(),tickN=0;
+setInterval(()=>{
+  const now=Date.now(),dt=Math.min(10,Math.round((now-lastTick)/1000));lastTick=now;
+  if(document.visibilityState!=='visible'||dt<=0)return;
+  const d=dkey();
+  stats.sec+=dt;dayRec(d).s+=dt;
+  pend.sec+=dt;pend.days[d]=(pend.days[d]||0)+dt;
+  persist();
+  if(++tickN%36===0)sync();
+  if(tickN%6===0&&isActive('profile'))renderProfile();
+},5000);
+document.addEventListener('visibilitychange',()=>{lastTick=Date.now();if(document.visibilityState==='hidden'){lsSet(SK,stats);lsSet(PK,pend);sync();}});
+
+/* ───────── ৪) "শেষ কোন বিষয়ে পড়েছেন" ট্র্যাকিং ───────── */
+const VIEW_LABELS={quran:'আল-কুরআন',dua:'দোয়া',amal:'দৈনন্দিন আমল',tasbih:'তাসবিহ',qibla:'ক্বিবলা',hijri:'হিজরি ক্যালেন্ডার',asma:'আসমাউল হুসনা'};
+const _sv=switchView;
+switchView=function(name){
+  _sv(name);
+  if(VIEW_LABELS[name])setLast(VIEW_LABELS[name]);
+  if(name==='profile')renderProfile();
+  if(name==='auth')renderAuth();
+  if(name==='tajweed')tjList();
+};
+const _os=openSurah;openSurah=function(n){_os(n);try{setLast(T('সূরা')+' '+surahName(n));}catch(e){}};
+const _ba=buildAyah;buildAyah=function(v){try{lodTrackAyah(rd.n,v.verse_number);}catch(e){}return _ba(v);};
+const _osub=openSub;openSub=function(name){_osub(name);setLast((curTopic===2?'হাদিস: ':'আয়াত: ')+name);};
+const _ohs=openHadithSub;openHadithSub=function(name){_ohs(name);setLast('হাদিস: '+name);};
+const _ohb=openHadithBook;openHadithBook=function(b){_ohb(b);try{setLast('হাদিস: '+b.name);}catch(e){}};
+const isActive=n=>{const e=document.getElementById(n+'-view');return e&&e.classList.contains('active');};
+
+/* ───────── ৫) টোস্ট ───────── */
+function toast(msg){
+  let el=document.getElementById('acToast');
+  if(!el){el=document.createElement('div');el.id='acToast';el.className='ac-toast';document.body.appendChild(el);}
+  el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+/* ───────── ৬) Supabase ───────── */
+const cfgOk=()=>!!(CFG.url&&CFG.key);
+let sb=null,user=null,profile=null,syncing=false,lastSync=0;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+async function sbInit(){
+  if(!cfgOk())return false;
+  if(sb)return true;
+  try{
+    if(!window.supabase)await loadScript(SB_LIB);
+    sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+    sb.auth.onAuthStateChange((ev,session)=>{user=session?session.user:null;setTimeout(onAuth,0);});
+    const {data}=await sb.auth.getSession();
+    user=data.session?data.session.user:null;
+    onAuth();
+    return true;
+  }catch(e){sb=null;return false;}
+}
+async function onAuth(){
+  updateDrawerBtn();
+  if(user){
+    await loadProfile();
+    await sync();
+    updateDrawerBtn();
+    if(isActive('auth')){switchView('profile');}
+    else if(isActive('profile'))renderProfile();
+  }else{profile=null;}
+}
+async function loadProfile(){
+  try{
+    const {data}=await sb.from('profiles').select('username,avatar,created_at').eq('id',user.id).maybeSingle();
+    profile=data||{username:null,avatar:null,created_at:user.created_at};
+    if(!data)await sb.from('profiles').upsert({id:user.id});
+  }catch(e){profile=profile||{username:null,avatar:null,created_at:user.created_at};}
+}
+function merge(r,l,p){
+  const m=fresh();
+  m.sec=(r.sec||0)+(p.sec||0);
+  const ds=new Set([...Object.keys(r.days||{}),...Object.keys(l.days||{})]);
+  const cut=dkey(new Date(Date.now()-90*864e5));
+  ds.forEach(d=>{if(d<cut)return;const a=(r.days||{})[d]||{},b=(l.days||{})[d]||{};m.days[d]={s:(a.s||0)+((p.days||{})[d]||0),a:Math.max(a.a||0,b.a||0)};});
+  new Set([...Object.keys(r.ayahs||{}),...Object.keys(l.ayahs||{})]).forEach(n=>{
+    m.ayahs[n]=[...new Set([...((r.ayahs||{})[n]||[]),...((l.ayahs||{})[n]||[])])].sort((x,y)=>x-y);});
+  m.tajweed=[...new Set([...(r.tajweed||[]),...(l.tajweed||[])])];
+  const rl=r.last,ll=l.last;
+  m.last=((ll&&ll.ts)||0)>((rl&&rl.ts)||0)?ll:(rl||ll||null);
+  return m;
+}
+async function sync(){
+  if(!sb||!user||syncing)return false;
+  syncing=true;let ok=false;
+  try{
+    const {data,error}=await sb.from('profiles').select('stats').eq('id',user.id).maybeSingle();
+    if(error)throw error;
+    const m=merge((data&&data.stats)||{},stats,pend);
+    const {error:e2}=await sb.from('profiles').upsert({id:user.id,stats:m,updated_at:new Date().toISOString()});
+    if(e2)throw e2;
+    stats=m;pend={sec:0,days:{}};lsSet(SK,stats);lsSet(PK,pend);lastSync=Date.now();ok=true;
+  }catch(e){}
+  syncing=false;
+  if(isActive('profile'))renderProfile();
+  return ok;
+}
+
+/* ───────── ৭) মেনুর বাটন ───────── */
+function updateDrawerBtn(){
+  const l=document.getElementById('authLbl');if(!l)return;
+  l.textContent=user?(t('আমার প্রোফাইল')+(profile&&profile.username?' · @'+profile.username:'')):t('লগইন / সাইন আপ');
+}
+window.openAccount=function(){
+  const x=document.getElementById('drawerX');if(x)x.click();
+  sbInit().then(()=>{switchView(user?'profile':'auth');});
+};
+
+/* ───────── ৮) লগইন স্ক্রিন ───────── */
+const A={mode:'email',step:1,target:'',cool:0,timer:null,busy:false};
+const bnDigits=v=>v.replace(/[০-৯]/g,c=>'০১২৩৪৫৬৭৮৯'.indexOf(c));
+function normPhone(v){
+  v=bnDigits(v).replace(/[\s\-()]/g,'');
+  if(/^\+\d{8,15}$/.test(v))return v;
+  if(/^01\d{9}$/.test(v))return '+88'+v;
+  if(/^8801\d{9}$/.test(v))return '+'+v;
+  if(/^00\d{8,15}$/.test(v))return '+'+v.slice(2);
+  return null;
+}
+const okEmail=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+function errText(e){
+  const m=((e&&e.message)||'')+'',st=e&&e.status;
+  if(st===429||/rate|too many|seconds|limit/i.test(m))return 'অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+  if(/invalid|expired|token/i.test(m))return 'কোডটি ভুল বা মেয়াদোত্তীর্ণ।';
+  if(/provider|sms|twilio|phone/i.test(m))return 'ফোনে কোড পাঠানোর সার্ভিস এখনো চালু নেই। ইমেইল ব্যবহার করুন।';
+  return 'সমস্যা হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করুন।';
+}
+function renderAuth(){
+  const box=document.getElementById('authBody');box.innerHTML='';
+  const card=hdEl('div','ac-card');
+  card.appendChild(hdEl('div','ac-logo','🕌'));
+  card.appendChild(hdEl('h2','ac-h',t('লগইন বা সাইন আপ')));
+  card.appendChild(hdEl('p','ac-sub',t('ইমেইল অথবা ফোন নম্বর দিন, আমরা একটি কোড পাঠাব। নতুন হলে স্বয়ংক্রিয়ভাবে অ্যাকাউন্ট খোলা হবে।')));
+  box.appendChild(card);
+  if(!cfgOk()){card.appendChild(hdEl('div','ac-err',t('লগইন সিস্টেম এখনো চালু করা হয়নি।')));
+    box.appendChild(guestNote());return;}
+  const msg=hdEl('div','ac-err');msg.id='acMsg';
+  if(A.step===1){
+    const tabs=hdEl('div','ac-tabs');
+    ['email','phone'].forEach(m=>{const b=hdEl('button','ac-tab'+(A.mode===m?' on':''),t(m==='email'?'ইমেইল':'ফোন'));b.onclick=()=>{A.mode=m;renderAuth();};tabs.appendChild(b);});
+    card.appendChild(tabs);
+    const inp=hdEl('input','ac-in');inp.id='acInput';inp.autocomplete=A.mode==='email'?'email':'tel';
+    if(A.mode==='email'){inp.type='email';inp.inputMode='email';inp.placeholder='name@example.com';}
+    else{inp.type='tel';inp.inputMode='tel';inp.placeholder='01XXXXXXXXX  /  +8801XXXXXXXXX';}
+    card.appendChild(inp);card.appendChild(msg);
+    const go=hdEl('button','ac-btn',t('কোড পাঠান'));go.onclick=sendCode;card.appendChild(go);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendCode();});
+  }else{
+    card.appendChild(hdEl('p','ac-sent','✉️ '+A.target));
+    const inp=hdEl('input','ac-in ac-code');inp.id='acInput';inp.type='text';inp.inputMode='numeric';inp.autocomplete='one-time-code';inp.maxLength=8;inp.placeholder='••••••';
+    card.appendChild(inp);card.appendChild(msg);
+    const go=hdEl('button','ac-btn',t('কোড যাচাই করুন'));go.onclick=verifyCode;card.appendChild(go);
+    inp.addEventListener('input',()=>{inp.value=bnDigits(inp.value).replace(/\D/g,'');if(inp.value.length>=6&&!A.busy)verifyCode();});
+    const row=hdEl('div','ac-row');
+    const rs=hdEl('button','ac-link',t('আবার কোড পাঠান'));rs.id='acResend';rs.onclick=()=>{if(A.cool<=0)sendCode(true);};row.appendChild(rs);
+    const ch=hdEl('button','ac-link',t('নম্বর/ইমেইল বদলান'));ch.onclick=()=>{A.step=1;renderAuth();};row.appendChild(ch);
+    card.appendChild(row);updateCool();
+    setTimeout(()=>inp.focus(),50);
+  }
+  box.appendChild(guestNote());
+}
+function guestNote(){return hdEl('p','ac-note','🔒 '+t('লগইন করলে আপনার পড়ার অগ্রগতি সব ডিভাইসে সেভ থাকবে।'));}
+function updateCool(){
+  clearInterval(A.timer);
+  const b=document.getElementById('acResend');if(!b)return;
+  const draw=()=>{if(!document.getElementById('acResend')){clearInterval(A.timer);return;}
+    b.textContent=A.cool>0?t('আবার কোড পাঠান')+' ('+bn(A.cool)+')':t('আবার কোড পাঠান');b.disabled=A.cool>0;b.style.opacity=A.cool>0?.5:1;};
+  draw();A.timer=setInterval(()=>{A.cool--;draw();if(A.cool<=0)clearInterval(A.timer);},1000);
+}
+const acMsg=(x,ok)=>{const m=document.getElementById('acMsg');if(m){m.textContent=x?t(x):'';m.style.color=ok?'#2e7d32':'';}};
+async function sendCode(resend){
+  if(A.busy)return;
+  let target=A.target;
+  if(resend!==true){
+    const raw=(document.getElementById('acInput').value||'').trim();
+    if(A.mode==='email'){if(!okEmail(raw)){acMsg('সঠিক ইমেইল দিন');return;}target=raw.toLowerCase();}
+    else{const p=normPhone(raw);if(!p){acMsg('সঠিক ফোন নম্বর দিন (যেমন 01XXXXXXXXX)');return;}target=p;}
+  }
+  A.busy=true;acMsg('...',true);
+  try{
+    if(!(await sbInit()))throw new Error('init');
+    const {error}=await sb.auth.signInWithOtp(A.mode==='email'?{email:target,options:{shouldCreateUser:true}}:{phone:target});
+    if(error)throw error;
+    A.target=target;A.step=2;A.cool=60;A.busy=false;renderAuth();
+  }catch(e){A.busy=false;acMsg(errText(e));}
+}
+async function verifyCode(){
+  if(A.busy)return;
+  const code=(document.getElementById('acInput').value||'').trim();
+  if(code.length<6){acMsg('কোডটি লিখুন');return;}
+  A.busy=true;acMsg('...',true);
+  try{
+    const {error}=await sb.auth.verifyOtp(A.mode==='email'?{email:A.target,token:code,type:'email'}:{phone:A.target,token:code,type:'sms'});
+    if(error)throw error;
+    A.busy=false;A.step=1;toast(t('আপনি লগইন করেছেন'));
+  }catch(e){A.busy=false;acMsg(errText(e));}
+}
+
+/* ───────── ৯) প্রোফাইল ───────── */
+const AVATARS=['🕌','📖','🌙','⭐','🌿','🕋','🤲','💚'];
+const WD=['র','সো','ম','বু','বৃ','শু','শ'];
+function fmtDur(sec){
+  sec=Math.max(0,Math.floor(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60);
+  if(h>0)return bn(h)+' '+t('ঘ')+' '+bn(m)+' '+t('মি');
+  if(m>0)return bn(m)+' '+t('মি');
+  return bn(sec)+' '+t('সে');
+}
+function ago(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return t('এইমাত্র');
+  if(s<3600)return bn(Math.floor(s/60))+' '+t('মি')+' ';
+  if(s<86400)return bn(Math.floor(s/3600))+' '+t('ঘ')+' ';
+  return bn(Math.floor(s/86400))+' '+t('দিন')+' ';
+}
+function streak(){
+  let d=new Date(),n=0;
+  const ok=k=>stats.days[k]&&stats.days[k].s>=60;
+  if(!ok(dkey(d)))d=new Date(Date.now()-864e5);
+  while(ok(dkey(d))){n++;d=new Date(d.getTime()-864e5);}
+  return n;
+}
+function maskId(){
+  if(!user)return '';
+  if(user.email){const [a,b]=user.email.split('@');return a.slice(0,2)+'•••@'+b;}
+  const p=user.phone||'';return p.length>6?p.slice(0,5)+'•••'+p.slice(-3):p;
+}
+function bar(pct){const w=hdEl('div','ac-bar'),i=hdEl('i');i.style.width=Math.min(100,pct)+'%';w.appendChild(i);return w;}
+function statCard(icon,label,value,sub,pct){
+  const c=hdEl('div','ac-stat');
+  c.appendChild(hdEl('div','ac-si',icon));
+  c.appendChild(hdEl('div','ac-sv',value));
+  c.appendChild(hdEl('div','ac-sl',t(label)));
+  if(sub)c.appendChild(hdEl('div','ac-ss',sub));
+  if(pct!==undefined)c.appendChild(bar(pct));
+  return c;
+}
+function renderProfile(){
+  const box=document.getElementById('profBody');if(!box)return;
+  const keepScroll=window.scrollY;box.innerHTML='';
+  if(!user||!profile){
+    box.appendChild(hdEl('div','hd-msg',t('লগইন বা সাইন আপ')));
+    const b=hdEl('button','ac-btn',t('লগইন / সাইন আপ'));b.onclick=()=>switchView('auth');box.appendChild(b);return;
+  }
+  // হিরো
+  const hero=hdEl('div','ac-hero');
+  const av=hdEl('button','ac-av',profile.avatar||'🕌');av.title=t('অবতার বেছে নিন');
+  const pick=hdEl('div','ac-picks');pick.style.display='none';
+  AVATARS.forEach(a=>{const b=hdEl('button','ac-pk',a);b.onclick=async()=>{
+    profile.avatar=a;try{await sb.from('profiles').upsert({id:user.id,avatar:a});}catch(e){}renderProfile();};pick.appendChild(b);});
+  av.onclick=()=>{pick.style.display=pick.style.display==='none'?'flex':'none';};
+  hero.appendChild(av);
+  hero.appendChild(hdEl('div','ac-un',profile.username?'@'+profile.username:t('ইউজারনেম সেট করুন')));
+  hero.appendChild(hdEl('div','ac-id',maskId()));
+  if(profile.created_at)hero.appendChild(hdEl('div','ac-since',t('সদস্য হয়েছেন')+': '+new Date(profile.created_at).toLocaleDateString(LANG==='bn'?'bn-BD':LANG==='ar'?'ar':'en-GB',{year:'numeric',month:'long'})));
+  hero.appendChild(pick);
+  box.appendChild(hero);
+  // ইউজারনেম ফর্ম
+  const uf=hdEl('div','ac-card ac-uf'+(profile.username?'':' need'));
+  uf.appendChild(hdEl('label','ac-lb',t('ইউজারনেম')));
+  const row=hdEl('div','ac-row2');
+  const inp=hdEl('input','ac-in');inp.value=profile.username||'';inp.maxLength=20;inp.placeholder='your_name';inp.autocapitalize='off';inp.spellcheck=false;
+  const sv=hdEl('button','ac-btn sm',t(profile.username?'পরিবর্তন':'সংরক্ষণ'));
+  const m=hdEl('div','ac-err');
+  sv.onclick=async()=>{
+    const v=inp.value.trim();
+    if(!/^[\p{L}\p{N}_.]{3,20}$/u.test(v)){m.style.color='';m.textContent=t('ইউজারনেম ৩–২০ অক্ষরের হতে হবে (অক্ষর, সংখ্যা, _ বা .)');return;}
+    sv.disabled=true;
+    const {error}=await sb.from('profiles').upsert({id:user.id,username:v,updated_at:new Date().toISOString()});
+    sv.disabled=false;
+    if(error){m.style.color='';m.textContent=(error.code==='23505')?t('এই ইউজারনেম আগে থেকেই আছে'):t('আবার চেষ্টা করুন');return;}
+    profile.username=v;updateDrawerBtn();toast(t('সংরক্ষিত হয়েছে'));renderProfile();
+  };
+  row.appendChild(inp);row.appendChild(sv);uf.appendChild(row);uf.appendChild(m);
+  box.appendChild(uf);
+  // পরিসংখ্যান
+  const ay=countAyahs(),tj=(stats.tajweed||[]).length,td=(stats.days[dkey()]||{}).s||0;
+  const grid=hdEl('div','ac-grid');
+  grid.appendChild(statCard('📖',"আয়াত পড়া হয়েছে",bn(ay),bn(ay)+' / '+bn(TOTAL_AYAH),ay/TOTAL_AYAH*100));
+  grid.appendChild(statCard('🎓',"তাজবিদ শেখা",bn(tj)+' / '+bn(TJ.length),null,tj/TJ.length*100));
+  grid.appendChild(statCard('⏱️',"মোট ব্যবহারের সময়",fmtDur(stats.sec),t('আজকের সময়')+': '+fmtDur(td)));
+  grid.appendChild(statCard('🔥',"ধারাবাহিক দিন",bn(streak())+' '+t('দিন'),null));
+  box.appendChild(grid);
+  // শেষ পড়া
+  const lc=hdEl('div','ac-card ac-last');
+  lc.appendChild(hdEl('div','ac-lb','🕘 '+t('শেষ পড়া বিষয়')));
+  lc.appendChild(hdEl('div','ac-lv',stats.last?t(stats.last.t.split(': ')[0])+(stats.last.t.includes(': ')?': '+stats.last.t.split(': ').slice(1).join(': '):''):t('এখনো কিছু পড়া হয়নি')));
+  if(stats.last)lc.appendChild(hdEl('div','ac-ss',ago(stats.last.ts)));
+  box.appendChild(lc);
+  // সাপ্তাহিক চার্ট
+  const ch=hdEl('div','ac-card');
+  ch.appendChild(hdEl('div','ac-lb','📊 '+t('এই সপ্তাহের ব্যবহার (মিনিট)')));
+  const bars=hdEl('div','ac-chart');
+  const vals=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5);vals.push({m:Math.round((((stats.days[dkey(d)]||{}).s)||0)/60),w:WD[d.getDay()]});}
+  const mx=Math.max(5,...vals.map(v=>v.m));
+  vals.forEach(v=>{const c=hdEl('div','ac-col');const n=hdEl('span','ac-n',bn(v.m));const b=hdEl('i');b.style.height=Math.max(4,v.m/mx*84)+'px';c.appendChild(n);c.appendChild(b);c.appendChild(hdEl('span','ac-w',v.w));bars.appendChild(c);});
+  ch.appendChild(bars);box.appendChild(ch);
+  // বুকমার্ক
+  let bm=0;try{bm=JSON.parse(localStorage.getItem('quranBookmarks')||'[]').length;}catch(e){}
+  const extra=hdEl('div','ac-card ac-kv');
+  [['🔖',t('বুকমার্ক করা আয়াত'),bn(bm)],['☁️',t('সর্বশেষ সিঙ্ক'),lastSync?ago(lastSync):'—']].forEach(([i,k,v])=>{
+    const r=hdEl('div','ac-kvr');r.appendChild(hdEl('span','',i+' '+k));r.appendChild(hdEl('b','',v));extra.appendChild(r);});
+  box.appendChild(extra);
+  // বাটন
+  const sy=hdEl('button','ac-btn alt',t('এখনই সিঙ্ক করুন'));sy.onclick=async()=>{sy.disabled=true;const ok=await sync();sy.disabled=false;toast(ok?t('সংরক্ষিত হয়েছে'):t('আবার চেষ্টা করুন'));};
+  box.appendChild(sy);
+  const lo=hdEl('button','ac-btn out',t('লগআউট'));
+  lo.onclick=async()=>{lo.disabled=true;await sync();try{await sb.auth.signOut();}catch(e){}
+    stats=fresh();pend={sec:0,days:{}};lsSet(SK,stats);lsSet(PK,pend);user=null;profile=null;lastSync=0;updateDrawerBtn();toast(t('লগআউট হয়েছে'));switchView('home');};
+  box.appendChild(lo);
+  window.scrollTo(0,keepScroll);
+}
+
+/* ───────── ১০) তাজবিদ শিক্ষা ───────── */
+const TJ=[
+ {t:'তাজবিদ পরিচিতি',b:['“তাজবিদ” শব্দের অর্থ সুন্দর ও নিখুঁত করা। পরিভাষায়—কুরআনের প্রতিটি হরফকে তার সঠিক উচ্চারণস্থল (মাখরাজ) ও বৈশিষ্ট্য (সিফাত) অনুযায়ী আদায় করা।','আল্লাহ তাআলা বলেছেন: কুরআন ধীরে ধীরে, স্পষ্টভাবে (তারতিলসহ) তিলাওয়াত করো (সূরা মুযযাম্মিল ৭৩:৪)।'],ex:['وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا']},
+ {t:'তিলাওয়াতের আদব',b:['• পবিত্র অবস্থায় (সম্ভব হলে ওযুসহ) ও কিবলামুখী হয়ে বসা।','• তিলাওয়াতের শুরুতে “আউযুবিল্লাহি মিনাশ শাইতানির রাজীম” পড়া (সূরা নাহল ১৬:৯৮)।','• সূরার শুরুতে “বিসমিল্লাহির রাহমানির রাহীম” পড়া (সূরা তাওবা ছাড়া)।','• ধীরে, মনোযোগ ও অর্থ নিয়ে চিন্তা করে পড়া।'],ex:['فَإِذَا قَرَأْتَ الْقُرْآنَ فَاسْتَعِذْ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ']},
+ {t:'মাখরাজ (উচ্চারণস্থল)',b:['আরবি হরফ উচ্চারণের স্থানকে মাখরাজ বলে। মোট ১৭টি মাখরাজ, যা ৫টি বড় অংশে ভাগ করা যায়:','১. জাউফ—মুখ ও গলার ফাঁকা অংশ (মদ্দের হরফ: আ-ঊ-ঈ)।','২. হালক—কণ্ঠনালি।','৩. লিসান—জিহ্বা (সবচেয়ে বেশি হরফ এখান থেকে)।','৪. শাফাতান—দুই ঠোঁট (ب م و ف)।','৫. খাইশুম—নাকের ভেতরের অংশ (গুন্নাহ)।']},
+ {t:'হালকের হরফ',b:['কণ্ঠ থেকে উচ্চারিত হয় ৬টি হরফ, তিন স্থানে:','• গলার গভীর অংশ: ء ه','• গলার মধ্য অংশ: ع ح','• গলার উপরের অংশ: غ خ','এই ছয় হরফকে “হুরুফে হালকি” বলা হয়। নুন সাকিনের ইযহারের সময় এগুলোর গুরুত্ব আছে।'],ex:['أ  هـ  ع  ح  غ  خ']},
+ {t:'নুন সাকিন ও তানভীনের হুকুম',b:['নুন সাকিন (نْ) বা তানভীন (ــٍ ــً ــٌ)-এর পরের হরফ অনুযায়ী চার নিয়ম:','১. ইযহার (স্পষ্ট করে পড়া)—পরে হালকের ৬ হরফ: ء ه ع ح غ خ','২. ইদগাম (মিলিয়ে পড়া)—পরে ي ر م ل و ن (ইয়ারমালূন)। ي ن م و হলে গুন্নাহসহ (বিগুন্নাহ), ل ر হলে গুন্নাহ ছাড়া (বিলা গুন্নাহ)।','৩. ইকলাব (বদলে পড়া)—পরে ب: নুন সাকিনকে মীমের মতো করে গুন্নাহসহ পড়া।','৪. ইখফা (গোপন করা)—বাকি ১৫ হরফ: ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك; গুন্নাহসহ।'],ex:['مَنْ آمَنَ  (ইযহার)','مَن يَقُولُ  (ইদগাম বিগুন্নাহ)','مِن رَّبِّهِمْ  (ইদগাম বিলা গুন্নাহ)','مِنۢ بَعْدِ  (ইকলাব)','أَنتُمْ  (ইখফা)']},
+ {t:'মীম সাকিনের হুকুম',b:['মীম সাকিন (مْ)-এর পর যে হরফ আসে তার ভিত্তিতে তিন নিয়ম:','১. ইখফা শাফাভি—পরে ب: ঠোঁটে গোপন করে গুন্নাহসহ।','২. ইদগাম মিসলাইন (শাফাভি)—পরে م: মিলিয়ে গুন্নাহসহ।','৩. ইযহার শাফাভি—বাকি সব হরফ: স্পষ্ট করে। (و ও ف-এর আগে বিশেষ সতর্কতা দরকার, যাতে ঠোঁট মিশে না যায়।)'],ex:['تَرْمِيهِم بِحِجَارَةٍ  (ইখফা)','لَهُم مَّا  (ইদগাম)','أَنتُمْ تَعْلَمُونَ  (ইযহার)']},
+ {t:'গুন্নাহ',b:['গুন্নাহ হলো নাক থেকে উচ্চারিত মিষ্টি সুর। মীম (م) ও নুন (ن)-এর তাশদীদযুক্ত অবস্থায় (مّ نّ) গুন্নাহ ওয়াজিব; সময় প্রায় ২ হরকত (আঙুল বন্ধ-খোলার সমান)।','ইখফা, ইকলাব ও বিগুন্নাহ ইদগামেও গুন্নাহ আদায় করতে হয়।'],ex:['إِنَّ','ثُمَّ','مِن وَلِيٍّ']},
+ {t:'মদ্দ (দীর্ঘ করে পড়া)',b:['মদ্দের হরফ: আলিফ (যবরের পর), ওয়াও সাকিন (পেশের পর), ইয়া সাকিন (যেরের পর)।','• মদ্দে আসলি/তবয়ী—পরে হামযা বা সাকিন নেই: ২ হরকত।','• মদ্দে মুত্তাসিল—একই শব্দে মদ্দের হরফের পর হামযা: সাধারণত ৪–৫ হরকত (ওয়াজিব)।','• মদ্দে মুনফাসিল—ভিন্ন শব্দে হামযা: সাধারণত ৪–৫ হরকত (জায়েয)।','• মদ্দে লাযিম—মদ্দের পর স্থায়ী সাকিন/তাশদীদ: ৬ হরকত।'],ex:['قَالَ  (তবয়ী)','جَاءَ  (মুত্তাসিল)','بِمَا أُنزِلَ  (মুনফাসিল)','الضَّالِّينَ  (লাযিম)']},
+ {t:'কলকলা',b:['কলকলা মানে প্রতিধ্বনির মতো হালকা কম্পন। হরফ ৫টি: ق ط ب ج د (কুতবু জাদ্দিন)।','হরফগুলো সাকিন হলে বা ওয়াক্‌ফের সময় সাকিন হয়ে গেলে কলকলা হয়। শব্দের মাঝে সাকিন হলে ছোট, থামার সময় বড় কলকলা।'],ex:['يَقْطَعُونَ','الْفَلَقِ','أَحَدٌ  (থামলে)']},
+ {t:'মোটা ও চিকন হরফ',b:['মোটা (ইসতিলা/তাফখীম) হরফ ৭টি: خ ص ض غ ط ق ظ (খুসসা দগতিন কযা)। এগুলো সবসময় মোটা সুরে উচ্চারিত হয়।','বাকি হরফ সাধারণত চিকন (তারকীক)। আলিফের সুর আগের হরফ অনুযায়ী মোটা বা চিকন হয়।'],ex:['قَالَ','صِرَاطَ','ضَرَبَ','طَيْرًا']},
+ {t:'লাম ও রা-এর নিয়ম',b:['“আল্লাহ” শব্দের লাম: আগে যবর বা পেশ থাকলে মোটা (পুর), যের থাকলে চিকন (বারীক)।','রা (ر): সাধারণত যবর/পেশে মোটা, যেরে চিকন। সাকিন রা-এর ক্ষেত্রে আগের হরকত দেখা হয়।'],ex:['وَاللَّهُ  (মোটা)','بِاللَّهِ  (চিকন)','رَبِّ','رِزْقًا']},
+ {t:'ওয়াক্‌ফ ও ইবতিদা (থামা ও শুরু)',b:['থামার সময় শেষ হরফে সাকিন দিতে হয়। গোল তা (ة) থামলে হা (ه)-এর মতো পড়া হয়, আর যবর-তানভীন (ً) থামলে আলিফ-মদ্দের মতো হয়।','উপমহাদেশের মুসহাফে প্রচলিত চিহ্ন:','• مـ — থামা জরুরি','• لا — থামা উচিত নয়','• ج — থামা বা না থামা দুটোই বৈধ','• ط — থামা উত্তম','• صلى — মিলিয়ে পড়া উত্তম','• قلى — থামা উত্তম'],ex:['رَحْمَةً  ←  রাহমাহ','الْعَالَمِينَ']}
+];
+let tjCur=-1;
+function tjDone(i){return (stats.tajweed||[]).includes(i);}
+function tjList(){
+  tjCur=-1;document.getElementById('tjTitle').textContent=t('তাজবিদ শিক্ষা');
+  const box=document.getElementById('tjBody');box.innerHTML='';
+  const n=(stats.tajweed||[]).length;
+  const p=hdEl('div','ac-card');
+  p.appendChild(hdEl('div','ac-lb','🎓 '+t('আপনার অগ্রগতি')+': '+bn(n)+' / '+bn(TJ.length)));p.appendChild(bar(n/TJ.length*100));box.appendChild(p);
+  TJ.forEach((l,i)=>{
+    const r=hdEl('button','hd-row');r.appendChild(hdEl('span','no',bn(i+1)));r.appendChild(hdEl('span','nm',l.t));
+    if(tjDone(i))r.appendChild(hdEl('span','ac-ck','✓'));
+    r.onclick=()=>tjOpen(i);box.appendChild(r);
+  });
+}
+function tjOpen(i){
+  tjCur=i;const l=TJ[i];
+  document.getElementById('tjTitle').textContent=l.t;
+  const box=document.getElementById('tjBody');box.innerHTML='';
+  const c=hdEl('div','ac-card tj');
+  l.b.forEach(x=>c.appendChild(hdEl('p','tj-p',x)));
+  if(l.ex){c.appendChild(hdEl('div','ac-lb',t('উদাহরণ')));l.ex.forEach(e=>{const p=hdEl('p','tj-ar',e);p.lang='ar';c.appendChild(p);});}
+  box.appendChild(c);
+  const done=tjDone(i);
+  const b=hdEl('button','ac-btn'+(done?' alt':''),t(done?'পড়া হয়েছে ✓':'পড়া শেষ করেছি'));
+  b.onclick=()=>{if(!tjDone(i)){stats.tajweed.push(i);persist();setLast('তাজবিদ: '+l.t);}tjOpen(i);};
+  box.appendChild(b);
+  if(i<TJ.length-1){const nx=hdEl('button','ac-btn alt',t('পরবর্তী পাঠ ›'));nx.onclick=()=>tjOpen(i+1);box.appendChild(nx);}
+  setLast('তাজবিদ: '+l.t);
+  window.scrollTo(0,0);
+}
+window.tjBack=function(){if(tjCur>=0)tjList();else switchView('home');};
+
+/* ───────── ১১) চালু ───────── */
+updateDrawerBtn();
+if(cfgOk())sbInit();
+window.addEventListener('pagehide',()=>{lsSet(SK,stats);lsSet(PK,pend);});
+})();
 </script>
 </body>
   </html>
