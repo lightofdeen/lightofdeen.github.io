@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Light of Deen – ঈমানের আলোয় আলোকিত জীবন</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --blue:#1e88e5; --blue-d:#1565c0; --blue-l:#e3f1fd; --bg:#f2f7fc; --card:#ffffff;
@@ -262,6 +262,23 @@ html[dir=rtl] .pcard .pc{transform:scaleX(-1)}
 .tp-h{margin:22px 4px 10px;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
 .tp-h:first-child{margin-top:4px}
 .tp-h::before{content:"";width:4px;height:20px;border-radius:4px;background:linear-gradient(var(--gold),var(--blue))}
+
+/* হেডার ও নামাজের সময় কার্ডের ফন্ট: সমান উচ্চতার সুন্দর বাংলা সংখ্যা */
+.hero,.prayer{font-family:'SolaimanLipi','Noto Sans Bengali','Hind Siliguri',system-ui,sans-serif;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1}
+.clock{font-weight:600;letter-spacing:.3px}
+.t b,.count #cdText,.next strong{font-weight:600}
+
+/* SolaimanLipi: ফন্ট ফাইলটি index.html-এর পাশে fonts/SolaimanLipi.ttf নামে রাখুন */
+@font-face{font-family:'SolaimanLipi';src:local('SolaimanLipi'),local('Solaiman Lipi'),url('fonts/SolaimanLipi.ttf') format('truetype'),url('SolaimanLipi.ttf') format('truetype');font-display:swap}
+/* হেডারের লেখা চাপাচাপি: নাম, অল্প গ্যাপ, তারপর তারিখ-সময় একসাথে */
+.hero{padding-bottom:46px}
+.hero .date{margin-top:8px;line-height:1.15}
+.hero .date b{font-size:17px;line-height:1.2;margin-top:1px}
+.hero .clockrow{margin-top:0;line-height:1}
+.hero .clock{font-size:22px;line-height:1.1}
+.hero .cal2{margin-top:1px;gap:0 12px;line-height:1.15}
+.hero .brand h1{line-height:1.05}
+.hero .brand p{line-height:1.1;margin-top:1px}
 </style>
 </head>
 <body>
