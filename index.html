@@ -536,6 +536,78 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 .am-ex{margin-top:12px;font-size:13.5px;color:var(--muted);line-height:1.7}
 .am-ref{margin-top:10px;font-size:12.5px;color:var(--muted)}
 .am-read{display:block;margin:14px auto 0;background:var(--blue);color:#fff;border:0;border-radius:14px;padding:10px 20px;font-family:inherit;font-size:15px;cursor:pointer}
+
+/* ===== যাকাত ক্যালকুলেটর ===== */
+.zk-wrap{padding:16px 16px 30px;max-width:720px;margin:0 auto}
+.zk-hero{display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:22px;background:linear-gradient(135deg,var(--blue),var(--blue-d));color:var(--on-blue);box-shadow:var(--shadow);margin-bottom:6px}
+.zk-hero .zk-hi{width:54px;height:54px;border-radius:18px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.zk-hero .zk-hi svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.zk-hero b{display:block;font-size:19px;line-height:1.3}
+.zk-hero span{display:block;font-size:13px;opacity:.9;margin-top:3px;line-height:1.5}
+.zk-h{font-size:18px;font-weight:700;margin:24px 2px 10px;line-height:1.4}
+details.zk-d{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+details.zk-d summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+details.zk-d summary::-webkit-details-marker{display:none}
+details.zk-d summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s;flex:none;margin-top:-4px}
+details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.zk-b{padding:0 16px 16px;font-size:14.5px;line-height:1.8}
+.zk-b p{margin:0 0 10px}
+.zk-b ul{margin:0 0 8px;padding-left:20px}
+.zk-b li{margin-bottom:5px}
+.zk-q{border-left:3px solid var(--blue);padding:2px 0 2px 12px;margin:12px 0}
+.zk-q .hd-ar{font-size:22px;margin:0 0 6px}
+.zk-q p{margin:0 0 4px}
+.zk-ref{font-size:12.5px;color:var(--muted)}
+.zk-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+.zk-card h4{font-size:15.5px;margin:0 0 3px;display:flex;align-items:center;gap:8px}
+.zk-card h4 i{font-style:normal;width:26px;height:26px;border-radius:9px;background:var(--blue-l);color:var(--blue);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.zk-hint{font-size:12.5px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.zk-lbl{display:block;font-size:13px;font-weight:600;margin:10px 0 5px;color:var(--text)}
+.zk-in{display:flex;align-items:center;border:1px solid var(--line);border-radius:14px;background:var(--bg);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.zk-in:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
+.zk-in>span{padding:0 4px 0 14px;color:var(--muted);font-weight:700;flex:none}
+.zk-in input,.zk-in select{border:0;background:transparent;color:var(--text);font:inherit;font-size:16px;padding:12px 14px;width:100%;min-width:0;outline:none}
+.zk-in>span+input{padding-left:8px}
+.zk-in select{cursor:pointer}
+.zk-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:340px){.zk-row{grid-template-columns:1fr}}
+.zk-val{margin-top:10px;padding:9px 12px;border-radius:12px;background:var(--blue-l);color:var(--blue-d);font-size:13.5px;display:flex;justify-content:space-between;gap:8px}
+:root[data-theme="dark"] .zk-val,:root[data-theme="forest"] .zk-val,:root[data-theme="night"] .zk-val{color:var(--text)}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .zk-val{color:var(--text)}}
+.zk-val b{font-weight:700}
+.zk-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.zk-seg label{position:relative;cursor:pointer}
+.zk-seg input{position:absolute;opacity:0;pointer-events:none}
+.zk-seg div{border:1.5px solid var(--line);border-radius:14px;padding:11px 10px;text-align:center;font-size:14px;font-weight:600;background:var(--bg);transition:all .15s;line-height:1.4}
+.zk-seg small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px}
+.zk-seg input:checked+div{border-color:var(--blue);background:var(--blue-l);color:var(--blue-d)}
+:root[data-theme="dark"] .zk-seg input:checked+div,:root[data-theme="forest"] .zk-seg input:checked+div,:root[data-theme="night"] .zk-seg input:checked+div{color:var(--text)}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .zk-seg input:checked+div{color:var(--text)}}
+.zk-seg input:focus-visible+div{box-shadow:0 0 0 3px var(--blue-l)}
+.zk-btns{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+.zk-btn{width:100%;padding:15px;border:0;border-radius:16px;background:var(--blue);color:var(--on-blue);font:inherit;font-size:16.5px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,opacity .12s}
+.zk-btn:active{transform:scale(.985);opacity:.92}
+.zk-btn.sec{background:transparent;color:var(--blue);border:1px solid var(--line);box-shadow:none;font-size:14.5px;padding:12px;font-weight:600}
+.zk-res{display:none;scroll-margin-top:70px;margin-top:16px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow)}
+.zk-res.show{display:block;animation:zkin .3s ease}
+@keyframes zkin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.zk-top{padding:20px 16px;text-align:center;background:linear-gradient(135deg,var(--blue),var(--blue-d));color:var(--on-blue)}
+.zk-top.no{background:linear-gradient(135deg,#8a97a6,#66758a)}
+.zk-top.warn{background:linear-gradient(135deg,#e0a82e,#c58a12)}
+.zk-top small{display:block;font-size:13px;opacity:.92;margin-bottom:6px}
+.zk-top .zk-big{font-size:34px;font-weight:800;line-height:1.2;word-break:break-word}
+.zk-top .zk-st{display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.2);font-size:13.5px;font-weight:600}
+.zk-tb{padding:6px 16px 4px}
+.zk-tr{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:14.5px;line-height:1.5}
+.zk-tr:last-child{border-bottom:0}
+.zk-tr span{color:var(--muted)}
+.zk-tr b{text-align:right;font-weight:600}
+.zk-tr.hl b{color:var(--blue-d);font-size:16px}
+:root[data-theme="dark"] .zk-tr.hl b,:root[data-theme="forest"] .zk-tr.hl b,:root[data-theme="night"] .zk-tr.hl b{color:var(--text)}
+.zk-note{margin:0;padding:12px 16px 16px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.zk-msg{padding:16px;font-size:14.5px;line-height:1.7;text-align:center}
+.zk-disc{font-size:12.5px;color:var(--muted);line-height:1.7;margin:16px 4px 0;text-align:center}
+
 </style>
 </head>
 <body>
@@ -550,6 +622,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 <symbol id="qibla" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
 <symbol id="tasbih" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><circle cx="18" cy="9" r="2"/><circle cx="6" cy="9" r="2"/><circle cx="16" cy="16.5" r="2"/><circle cx="8" cy="16.5" r="2"/><path d="M12 19v3"/></symbol>
 <symbol id="hijri" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M14.5 13.2a3 3 0 1 0 0 4.6 2.4 2.4 0 0 1 0-4.6z"/></symbol>
+<symbol id="zakat" viewBox="0 0 24 24"><path d="M9 3.5h6l-1.4 3h-3.2z"/><path d="M10.4 6.5C6.6 8.2 4.5 11.4 4.5 15a5 5 0 0 0 5 5h5a5 5 0 0 0 5-5c0-3.6-2.1-6.8-5.9-8.5"/><path d="M12 10.6v6.8M14.2 12.2c-.3-.8-1.1-1.2-2.2-1.2-1.3 0-2.2.7-2.2 1.6 0 2.2 4.4 1 4.4 3.1 0 .9-.9 1.6-2.2 1.6-1.1 0-1.9-.4-2.3-1.2"/></symbol>
 <symbol id="home" viewBox="0 0 24 24"><path d="M3.5 11L12 4l8.5 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></symbol>
 <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 <symbol id="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></symbol>
@@ -623,6 +696,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
+        <button class="m" onclick="switchView('zakat')"><div class="ic"><svg class="i"><use href="#zakat"/></svg></div>যাকাত ক্যালকুলেটর<small>Zakat</small></button>
       </nav>
     </section>
 
@@ -888,6 +962,187 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
       <h3>হিজরি ক্যালেন্ডার</h3>
     </div>
     <div class="hd-wrap" id="hijriBody"></div>
+  </div>
+
+    <!-- যাকাত ক্যালকুলেটর ভিউ -->
+  <div id="zakat-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
+      <h3>যাকাত ক্যালকুলেটর</h3>
+    </div>
+    <div class="zk-wrap">
+
+      <div class="zk-hero">
+        <div class="zk-hi"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#zakat"/></svg></div>
+        <div><b>আপনার যাকাত হিসাব করুন</b><span>সম্পদের তথ্য দিন, নিসাব যাচাই ও যাকাতের পরিমাণ স্বয়ংক্রিয়ভাবে জেনে নিন।</span></div>
+      </div>
+
+      <h2 class="zk-h">যাকাত কাকে বলে?</h2>
+
+      <details class="zk-d" open>
+        <summary>যাকাতের পরিচয় ও গুরুত্ব</summary>
+        <div class="zk-b">
+          <p>‘যাকাত’ আরবি শব্দ; এর অর্থ পবিত্রতা ও বৃদ্ধি। শরিয়তের পরিভাষায়, নিসাব পরিমাণ সম্পদের মালিক মুসলিম এক চান্দ্র বছর পূর্ণ হওয়ার পর সেই সম্পদের নির্ধারিত অংশ (সাধারণত ২.৫%) আল্লাহর নির্ধারিত খাতে, তাঁর সন্তুষ্টির জন্য মালিকানা দিয়ে দেওয়াকে যাকাত বলে।</p>
+          <p>যাকাত ইসলামের পাঁচ স্তম্ভের একটি এবং ফরজ ইবাদত। এটি সম্পদকে পবিত্র করে, মনকে কৃপণতা থেকে মুক্ত করে এবং সমাজে ধনী-গরিবের সম্পর্ক মজবুত করে।</p>
+        </div>
+      </details>
+
+      <details class="zk-d">
+        <summary>কুরআনের আলোকে যাকাত</summary>
+        <div class="zk-b">
+          <div class="zk-q">
+            <p class="hd-ar" lang="ar">وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ</p>
+            <p>“আর তোমরা সালাত কায়েম করো, যাকাত দাও এবং রুকুকারীদের সঙ্গে রুকু করো।”</p>
+            <p class="zk-ref">— সূরা আল-বাকারা ২:৪৩</p>
+          </div>
+          <div class="zk-q">
+            <p class="hd-ar" lang="ar">خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا</p>
+            <p>“তাদের সম্পদ থেকে সাদাকা (যাকাত) গ্রহণ করো, যার মাধ্যমে তুমি তাদের পবিত্র ও পরিশুদ্ধ করবে।”</p>
+            <p class="zk-ref">— সূরা আত-তাওবা ৯:১০৩</p>
+          </div>
+          <div class="zk-q">
+            <p>“আর যারা সোনা ও রুপা জমা করে রাখে এবং তা আল্লাহর পথে ব্যয় করে না, তাদের যন্ত্রণাদায়ক শাস্তির সংবাদ দাও।”</p>
+            <p class="zk-ref">— সূরা আত-তাওবা ৯:৩৪</p>
+          </div>
+          <div class="zk-q">
+            <p>“আর যে যাকাত তোমরা আল্লাহর সন্তুষ্টি কামনায় দাও, তারাই (বহুগুণ) বৃদ্ধিপ্রাপ্ত।”</p>
+            <p class="zk-ref">— সূরা আর-রূম ৩০:৩৯</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="zk-d">
+        <summary>হাদিসের আলোকে যাকাত</summary>
+        <div class="zk-b">
+          <div class="zk-q">
+            <p>নবী ﷺ বলেছেন, “ইসলাম পাঁচটি ভিত্তির ওপর প্রতিষ্ঠিত: আল্লাহ ছাড়া কোনো ইলাহ নেই ও মুহাম্মাদ ﷺ আল্লাহর রাসূল—এ সাক্ষ্য দেওয়া, সালাত কায়েম করা, যাকাত আদায় করা, হজ করা এবং রমজানের রোজা রাখা।”</p>
+            <p class="zk-ref">— সহীহ বুখারী ৮, সহীহ মুসলিম ১৬</p>
+          </div>
+          <div class="zk-q">
+            <p>মুআয (রা.)-কে ইয়েমেনে পাঠানোর সময় নবী ﷺ বলেন, তাদের জানাও, আল্লাহ তাদের সম্পদে যাকাত ফরজ করেছেন; তা তাদের ধনীদের কাছ থেকে নেওয়া হবে এবং তাদের দরিদ্রদের মধ্যে বণ্টন করা হবে।</p>
+            <p class="zk-ref">— সহীহ বুখারী ১৩৯৫, সহীহ মুসলিম ১৯</p>
+          </div>
+          <div class="zk-q">
+            <p>নবী ﷺ বলেছেন, “পাঁচ উকিয়ার (দুইশত দিরহাম) কম রুপায় যাকাত নেই।” (এটিই রুপার নিসাবের ভিত্তি)</p>
+            <p class="zk-ref">— সহীহ বুখারী ১৪০৫, সহীহ মুসলিম ৯৭৯</p>
+          </div>
+          <div class="zk-q">
+            <p>যাকে আল্লাহ সম্পদ দিয়েছেন, অথচ সে তার যাকাত আদায় করেনি, কিয়ামতের দিন তার সম্পদকে মাথায় দুটি কালো দাগওয়ালা বিষধর সাপের রূপ দেওয়া হবে। সাপটি তার গলায় পেঁচিয়ে ধরবে এবং বলবে, “আমি তোমার সম্পদ, আমি তোমার জমানো ধন।”</p>
+            <p class="zk-ref">— সহীহ বুখারী ১৪০৩ (সারসংক্ষেপ)</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="zk-d">
+        <summary>নিসাব, হার ও শর্তসমূহ</summary>
+        <div class="zk-b">
+          <ul>
+            <li><b>রুপার নিসাব:</b> সাড়ে ৫২ ভরি (প্রায় ৬১২.৩৬ গ্রাম) রুপা।</li>
+            <li><b>স্বর্ণের নিসাব:</b> সাড়ে ৭ ভরি (প্রায় ৮৭.৪৮ গ্রাম) স্বর্ণ।</li>
+            <li><b>যাকাতের হার:</b> মোট নিট সম্পদের ২.৫% (চল্লিশ ভাগের এক ভাগ)।</li>
+            <li><b>শর্ত:</b> মুসলিম হওয়া; মৌলিক প্রয়োজন ও ঋণের অতিরিক্ত নিসাব পরিমাণ সম্পদের পূর্ণ মালিক হওয়া; সম্পদের ওপর এক চান্দ্র বছর (হাওল) অতিক্রান্ত হওয়া।</li>
+            <li><b>যেসব সম্পদে যাকাত আসে:</b> নগদ টাকা ও ব্যাংকের জমা, স্বর্ণ-রুপা, ব্যবসার পণ্য, ব্যবসার উদ্দেশ্যে কেনা শেয়ার ও বিনিয়োগ, এবং ফেরত পাওয়া নিশ্চিত পাওনা।</li>
+            <li><b>যেসব সম্পদে যাকাত নেই:</b> ব্যক্তিগত ব্যবহারের বাড়ি, গাড়ি, আসবাব ও পোশাক।</li>
+          </ul>
+          <p class="zk-ref">নগদ অর্থ ও ব্যবসার সম্পদে সাধারণত রুপার নিসাবকে ভিত্তি ধরা হয়, কারণ এতে দরিদ্রের উপকার বেশি। এ বিষয়ে আলেমদের মধ্যে মতভেদ আছে।</p>
+        </div>
+      </details>
+
+      <details class="zk-d">
+        <summary>যাকাত পাওয়ার আট খাত</summary>
+        <div class="zk-b">
+          <div class="zk-q">
+            <p class="hd-ar" lang="ar">إِنَّمَا الصَّدَقَاتُ لِلْفُقَرَاءِ وَالْمَسَاكِينِ وَالْعَامِلِينَ عَلَيْهَا وَالْمُؤَلَّفَةِ قُلُوبُهُمْ وَفِي الرِّقَابِ وَالْغَارِمِينَ وَفِي سَبِيلِ اللَّهِ وَابْنِ السَّبِيلِ ۖ فَرِيضَةً مِّنَ اللَّهِ ۗ وَاللَّهُ عَلِيمٌ حَكِيمٌ</p>
+            <p class="zk-ref">— সূরা আত-তাওবা ৯:৬০</p>
+          </div>
+          <ul>
+            <li>ফকির (যার কিছুই নেই বা প্রয়োজনের চেয়ে অনেক কম)</li>
+            <li>মিসকিন (যার সামান্য আছে, কিন্তু প্রয়োজন মেটে না)</li>
+            <li>যাকাত আদায় ও বণ্টনে নিযুক্ত কর্মচারী</li>
+            <li>যাদের মন ইসলামের প্রতি আকৃষ্ট করা প্রয়োজন</li>
+            <li>দাসমুক্তি (বন্দি বা দাসত্ব থেকে মুক্তি)</li>
+            <li>ঋণগ্রস্ত ব্যক্তি</li>
+            <li>আল্লাহর পথে (দ্বীনের কাজে)</li>
+            <li>মুসাফির (পথে সম্বলহীন হয়ে পড়া ব্যক্তি)</li>
+          </ul>
+          <p class="zk-ref">নিজের পিতা-মাতা, দাদা-দাদি, সন্তান ও স্ত্রীকে যাকাত দেওয়া যায় না।</p>
+        </div>
+      </details>
+
+      <h2 class="zk-h">যাকাত হিসাব করুন</h2>
+
+      <div class="zk-card">
+        <h4><i>১</i>নিসাব নির্ধারণ</h4>
+        <p class="zk-hint">কোন ধাতুর হিসাবে নিসাব যাচাই হবে তা বেছে নিন। সাধারণত রুপার নিসাব ধরা হয়।</p>
+        <div class="zk-seg">
+          <label><input type="radio" name="zkBase" value="silver" checked><div>রুপার নিসাব<small>সাড়ে ৫২ ভরি (ডিফল্ট)</small></div></label>
+          <label><input type="radio" name="zkBase" value="gold"><div>স্বর্ণের নিসাব<small>সাড়ে ৭ ভরি</small></div></label>
+        </div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>২</i>নগদ টাকা ও ব্যাংকের জমা</h4>
+        <p class="zk-hint">হাতে নগদ, ব্যাংক, মোবাইল ব্যাংকিং ও ডিপিএস/এফডিআর-এর জমা টাকা।</p>
+        <div class="zk-in"><span>৳</span><input id="zkCash" type="text" inputmode="decimal" autocomplete="off" placeholder="যেমন: ৫০০০০০"></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৩</i>স্বর্ণ</h4>
+        <p class="zk-hint">স্বর্ণের পরিমাণ ও বর্তমান বাজারদর (প্রতি ভরি) লিখুন। ১ ভরি = ১১.৬৬৪ গ্রাম।</p>
+        <div class="zk-row">
+          <div><label class="zk-lbl" for="zkGQ">পরিমাণ</label><div class="zk-in"><input id="zkGQ" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div></div>
+          <div><label class="zk-lbl" for="zkGU">একক</label><div class="zk-in"><select id="zkGU"><option value="bhori">ভরি</option><option value="gram">গ্রাম</option></select></div></div>
+        </div>
+        <label class="zk-lbl" for="zkGR">বাজারদর (প্রতি ভরি)</label>
+        <div class="zk-in"><span>৳</span><input id="zkGR" type="text" inputmode="decimal" autocomplete="off" placeholder="যেমন: ১৭০০০০"></div>
+        <div class="zk-val"><span>স্বর্ণের মূল্য</span><b id="zkGV">৳ ০</b></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৪</i>রুপা</h4>
+        <p class="zk-hint">রুপার পরিমাণ ও বর্তমান বাজারদর (প্রতি ভরি) লিখুন।</p>
+        <div class="zk-row">
+          <div><label class="zk-lbl" for="zkSQ">পরিমাণ</label><div class="zk-in"><input id="zkSQ" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div></div>
+          <div><label class="zk-lbl" for="zkSU">একক</label><div class="zk-in"><select id="zkSU"><option value="bhori">ভরি</option><option value="gram">গ্রাম</option></select></div></div>
+        </div>
+        <label class="zk-lbl" for="zkSR">বাজারদর (প্রতি ভরি)</label>
+        <div class="zk-in"><span>৳</span><input id="zkSR" type="text" inputmode="decimal" autocomplete="off" placeholder="যেমন: ২৫০০"></div>
+        <div class="zk-val"><span>রুপার মূল্য</span><b id="zkSV">৳ ০</b></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৫</i>ব্যবসায়িক পণ্য</h4>
+        <p class="zk-hint">ব্যবসার মজুত পণ্যের বর্তমান বিক্রয়মূল্য (পুঁজি নয়, বাজারমূল্য)।</p>
+        <div class="zk-in"><span>৳</span><input id="zkBiz" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৬</i>বিনিয়োগ ও শেয়ার</h4>
+        <p class="zk-hint">ব্যবসার উদ্দেশ্যে কেনা শেয়ার, মিউচুয়াল ফান্ড বা অন্য বিনিয়োগের বর্তমান বাজারমূল্য।</p>
+        <div class="zk-in"><span>৳</span><input id="zkInv" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৭</i>অন্যান্য সম্পদ ও পাওনা</h4>
+        <p class="zk-hint">অন্য মূল্যবান সম্পদ এবং যে পাওনা টাকা ফেরত পাওয়া নিশ্চিত।</p>
+        <div class="zk-in"><span>৳</span><input id="zkOth" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div>
+      </div>
+
+      <div class="zk-card">
+        <h4><i>৮</i>ঋণ ও দেনা (বাদ যাবে)</h4>
+        <p class="zk-hint">যে ঋণ বা দেনা এখন পরিশোধযোগ্য (ব্যাংক ঋণের চলতি কিস্তি, ধার, বকেয়া বিল ইত্যাদি)।</p>
+        <div class="zk-in"><span>৳</span><input id="zkDebt" type="text" inputmode="decimal" autocomplete="off" placeholder="০"></div>
+      </div>
+
+      <div class="zk-btns">
+        <button class="zk-btn" id="zkCalc" type="button">হিসাব করুন</button>
+        <button class="zk-btn sec" id="zkReset" type="button">নতুন করে শুরু করুন</button>
+      </div>
+
+      <div class="zk-res" id="zkRes" aria-live="polite"></div>
+
+      <p class="zk-disc">এই ক্যালকুলেটর সাধারণ ধারণা পাওয়ার জন্য। নির্দিষ্ট মাসআলা, সম্পদের ধরন বা মতভেদের ক্ষেত্রে অনুগ্রহ করে নির্ভরযোগ্য আলেমের পরামর্শ নিন।</p>
+    </div>
   </div>
 
   <!-- আসমাউল হুসনা ভিউ -->
@@ -5469,6 +5724,139 @@ function openBioPerson(name){
   history.replaceState(st(0, NAV.curDesc, 0), '');
 })();
 
+</script>
+
+<script>
+/* ===== যাকাত ক্যালকুলেটর ===== */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var BHORI = 11.664, SILVER_NISAB = 52.5, GOLD_NISAB = 7.5, RATE = 0.025;
+
+  try {
+    Object.assign(D, { 'যাকাত ক্যালকুলেটর': ['Zakat Calculator', 'حاسبة الزكاة'], 'ফিরে যান': ['Back', 'رجوع'] });
+    if (LANG !== 'bn') i18nWalk();
+  } catch (e) {}
+
+  /* বাংলা/আরবি অঙ্ক সহ যেকোনো লেখা থেকে সংখ্যা */
+  function num(v) {
+    v = String(v == null ? '' : v)
+      .replace(/[০-৯]/g, function (d) { return '০১২৩৪৫৬৭৮৯'.indexOf(d); })
+      .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); })
+      .replace(/[,،\s৳]/g, '').replace(/[^\d.]/g, '');
+    var x = parseFloat(v);
+    return isFinite(x) && x > 0 ? x : 0;
+  }
+  function fmt(n) { return bn((Math.round(n * 100) / 100).toLocaleString('en-IN', { maximumFractionDigits: 2 })); }
+  function money(n) { return '৳ ' + fmt(n); }
+  function qty(n) { return bn(String(Math.round(n * 1000) / 1000)); }
+  function toBhori(q, unit) { return unit === 'gram' ? q / BHORI : q; }
+
+  function vals() {
+    var base = (document.querySelector('input[name="zkBase"]:checked') || {}).value || 'silver';
+    var gQ = num($('zkGQ').value), gR = num($('zkGR').value), sQ = num($('zkSQ').value), sR = num($('zkSR').value);
+    return {
+      base: base,
+      cash: num($('zkCash').value),
+      gQ: gQ, gU: $('zkGU').value, gR: gR,
+      sQ: sQ, sU: $('zkSU').value, sR: sR,
+      biz: num($('zkBiz').value), inv: num($('zkInv').value), oth: num($('zkOth').value), debt: num($('zkDebt').value)
+    };
+  }
+
+  function metalPreview() {
+    var v = vals();
+    $('zkGV').textContent = money(toBhori(v.gQ, v.gU) * v.gR);
+    $('zkSV').textContent = money(toBhori(v.sQ, v.sU) * v.sR);
+  }
+
+  function row(l, r, cls) {
+    var d = document.createElement('div'); d.className = 'zk-tr' + (cls ? ' ' + cls : '');
+    var a = document.createElement('span'); a.textContent = l;
+    var b = document.createElement('b'); b.textContent = r;
+    d.appendChild(a); d.appendChild(b); return d;
+  }
+
+  function calc(scroll) {
+    var v = vals(), res = $('zkRes');
+    var goldV = toBhori(v.gQ, v.gU) * v.gR, silverV = toBhori(v.sQ, v.sU) * v.sR;
+    var assets = v.cash + goldV + silverV + v.biz + v.inv + v.oth;
+    var net = Math.max(0, assets - v.debt);
+    var isSilver = v.base === 'silver';
+    var metalName = isSilver ? 'রুপা' : 'স্বর্ণ';
+    var nisabBhori = isSilver ? SILVER_NISAB : GOLD_NISAB;
+    var rate = isSilver ? v.sR : v.gR;
+    var nisabVal = rate > 0 ? nisabBhori * rate : 0;
+
+    res.innerHTML = '';
+    var top = document.createElement('div'), body = document.createElement('div');
+
+    if (assets <= 0) {
+      top.className = 'zk-top warn';
+      top.innerHTML = '<small>তথ্য প্রয়োজন</small><div class="zk-big">—</div>';
+      body.className = 'zk-msg'; body.textContent = 'হিসাব করার জন্য অন্তত একটি সম্পদের তথ্য লিখুন।';
+      res.appendChild(top); res.appendChild(body);
+    } else {
+      var table = document.createElement('div'); table.className = 'zk-tb';
+      table.appendChild(row('মোট সম্পদ', money(assets)));
+      if (v.debt > 0) table.appendChild(row('বাদ: ঋণ ও দেনা', '− ' + money(v.debt)));
+      table.appendChild(row('মোট নিট সম্পদ', money(net), 'hl'));
+
+      if (nisabVal <= 0) {
+        top.className = 'zk-top warn';
+        top.innerHTML = '<small>নিসাব যাচাই করা যায়নি</small><div class="zk-big">' + money(net) + '</div><span class="zk-st">নিট সম্পদ</span>';
+        body.className = 'zk-msg';
+        body.textContent = 'নিসাব যাচাই করতে অনুগ্রহ করে ' + metalName + 'র প্রতি ভরির বর্তমান বাজারদর লিখুন, অথবা অন্য ধাতুর নিসাব বেছে নিন।';
+        res.appendChild(top); res.appendChild(body); res.appendChild(table);
+      } else {
+        table.appendChild(row(metalName + 'র নিসাব (' + qty(nisabBhori) + ' ভরি)', money(nisabVal)));
+        if (net >= nisabVal) {
+          var zakat = net * RATE;
+          top.className = 'zk-top';
+          top.innerHTML = '<small>আপনার মোট যাকাত</small><div class="zk-big">' + money(zakat) + '</div><span class="zk-st">যাকাত ফরজ হয়েছে</span>';
+          table.appendChild(row('যাকাতের হার', bn('২.৫') + '%'));
+          table.appendChild(row('প্রদেয় যাকাত', money(zakat), 'hl'));
+          res.appendChild(top); res.appendChild(table);
+          var n1 = document.createElement('p'); n1.className = 'zk-note';
+          n1.textContent = 'নিট সম্পদ নিসাব অতিক্রম করেছে এবং হিসাবের বছর পূর্ণ হলে এই পরিমাণ যাকাত আদায় করা ফরজ। যাকাত সম্পদের মালিক হয়ে তা যাকাতের হকদারদের হাতে পৌঁছে দিন।';
+          res.appendChild(n1);
+        } else {
+          top.className = 'zk-top no';
+          top.innerHTML = '<small>প্রদেয় যাকাত</small><div class="zk-big">' + money(0) + '</div><span class="zk-st">যাকাত ফরজ নয়</span>';
+          table.appendChild(row('নিসাব পূর্ণ হতে বাকি', money(nisabVal - net)));
+          res.appendChild(top); res.appendChild(table);
+          var n2 = document.createElement('p'); n2.className = 'zk-note';
+          n2.textContent = 'আপনার নিট সম্পদ নিসাব পরিমাণের কম, তাই বর্তমানে যাকাত ফরজ নয়। তবে নফল সাদাকা যেকোনো সময় দেওয়া যায়।';
+          res.appendChild(n2);
+        }
+      }
+    }
+    res.classList.add('show');
+    res.dataset.on = '1';
+    if (scroll) { try { res.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { res.scrollIntoView(); } }
+  }
+
+  function reset() {
+    ['zkCash', 'zkGQ', 'zkGR', 'zkSQ', 'zkSR', 'zkBiz', 'zkInv', 'zkOth', 'zkDebt'].forEach(function (id) { $(id).value = ''; });
+    $('zkGU').value = 'bhori'; $('zkSU').value = 'bhori';
+    document.querySelector('input[name="zkBase"][value="silver"]').checked = true;
+    var res = $('zkRes'); res.classList.remove('show'); res.innerHTML = ''; res.dataset.on = '';
+    metalPreview();
+    window.scrollTo(0, 0);
+  }
+
+  var timer = 0;
+  function onChange() {
+    metalPreview();
+    if ($('zkRes').dataset.on === '1') { clearTimeout(timer); timer = setTimeout(function () { calc(false); }, 250); }
+  }
+  ['zkCash', 'zkGQ', 'zkGR', 'zkSQ', 'zkSR', 'zkBiz', 'zkInv', 'zkOth', 'zkDebt'].forEach(function (id) { $(id).addEventListener('input', onChange); });
+  ['zkGU', 'zkSU'].forEach(function (id) { $(id).addEventListener('change', onChange); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="zkBase"]'), function (r) { r.addEventListener('change', onChange); });
+  $('zkCalc').addEventListener('click', function () { calc(true); });
+  $('zkReset').addEventListener('click', reset);
+  metalPreview();
+})();
 </script>
 </body>
   </html>
