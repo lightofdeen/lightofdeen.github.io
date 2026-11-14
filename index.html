@@ -2,6 +2,8 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
+<script>try{var _t=localStorage.getItem("lodTheme");if(_t&&_t!=="auto")document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
+<meta name="theme-color" content="#1e88e5">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Light of Deen – ঈমানের আলোয় আলোকিত জীবন</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,10 +16,44 @@
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
   --bg:#0c1622; --card:#14212f; --text:#e8f1fa; --muted:#93a8bd; --line:#223447; --blue-l:#17304a;
   --shadow:0 6px 22px rgba(0,0,0,.35); color-scheme:dark;}}
 :root[data-theme="dark"]{--bg:#0c1622; --card:#14212f; --text:#e8f1fa; --muted:#93a8bd; --line:#223447; --blue-l:#17304a; --shadow:0 6px 22px rgba(0,0,0,.35); color-scheme:dark;}
+
+/* ===== থিম ===== */
+:root[data-theme="nature"]{--blue:#2e7d32;--blue-d:#1b5e20;--blue-l:#e2f1dd;--bg:#f2f8ee;--card:#ffffff;--text:#1c2b1d;--muted:#5d7360;--line:#dbe9d5;--shadow:0 6px 22px rgba(46,125,50,.14);--gold:#c9a227;--on-blue:#fff;--arc:#1b5e20;color-scheme:light}
+:root[data-theme="forest"]{--blue:#3a9d5a;--blue-d:#25704a;--blue-l:#1b3a28;--bg:#0d1a12;--card:#15261b;--text:#e6f2e8;--muted:#92ad98;--line:#25402e;--shadow:0 6px 22px rgba(0,0,0,.4);--gold:#e0b84a;--on-blue:#fff;--arc:#8fdca5;color-scheme:dark}
+:root[data-theme="ocean"]{--blue:#00897b;--blue-d:#00695c;--blue-l:#dcf2ef;--bg:#edf8f7;--card:#ffffff;--text:#10292b;--muted:#587779;--line:#d1e8e6;--shadow:0 6px 22px rgba(0,137,123,.14);--gold:#d9a521;--on-blue:#fff;--arc:#00695c;color-scheme:light}
+:root[data-theme="sunset"]{--blue:#e65100;--blue-d:#bf360c;--blue-l:#fde6d4;--bg:#fff5ec;--card:#ffffff;--text:#33200f;--muted:#8a6a52;--line:#f2dfcf;--shadow:0 6px 22px rgba(230,81,0,.14);--gold:#d49a1a;--on-blue:#fff;--arc:#bf360c;color-scheme:light}
+:root[data-theme="rose"]{--blue:#d81b60;--blue-d:#ad1457;--blue-l:#fde3ec;--bg:#fff3f7;--card:#ffffff;--text:#331320;--muted:#8c6071;--line:#f4dce4;--shadow:0 6px 22px rgba(216,27,96,.13);--gold:#d49a1a;--on-blue:#fff;--arc:#ad1457;color-scheme:light}
+:root[data-theme="night"]{--blue:#7e57c2;--blue-d:#5e35b1;--blue-l:#2a2145;--bg:#120e1f;--card:#1c1630;--text:#ece6fa;--muted:#a89cc4;--line:#302648;--shadow:0 6px 22px rgba(0,0,0,.45);--gold:#e0b84a;--on-blue:#fff;--arc:#c4a9ff;color-scheme:dark}
+:root[data-theme="dark"]{--arc:#7fc1fb}
+:root[data-theme]:not([data-theme="light"]) .ar,:root[data-theme]:not([data-theme="light"]) .hd-ar,:root[data-theme]:not([data-theme="light"]) .am-ar{color:var(--arc)}
+body{transition:background-color .25s,color .25s}
+
+/* ===== মেনু ড্রয়ার ===== */
+.drawer-bg{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-bg.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;inset-inline-end:0;z-index:71;width:min(86vw,340px);background:var(--bg);color:var(--text);box-shadow:-8px 0 30px rgba(0,0,0,.28);transform:translateX(105%);transition:transform .28s ease,visibility .28s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);border-radius:24px 0 0 24px;visibility:hidden}
+html[dir=rtl] .drawer{transform:translateX(-105%);box-shadow:8px 0 30px rgba(0,0,0,.28);border-radius:0 24px 24px 0}
+.drawer.open{transform:none;visibility:visible}
+.drawer-h{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 10px}
+.drawer-h h3{font-size:19px}
+.drawer-body{padding:6px 14px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.mi{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);color:var(--text);font-family:inherit;font-size:16px;cursor:pointer;text-align:start}
+.mi .i{font-size:22px;color:var(--blue)}
+.mi span{flex:1}
+.mi .mi-chev{font-size:16px;color:var(--muted);transition:transform .2s}
+.mi[aria-expanded=true] .mi-chev{transform:rotate(90deg)}
+.theme-panel{display:none;padding:4px 2px 2px}
+.theme-panel.show{display:block}
+.theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.th{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;text-align:start;position:relative}
+.th.on{border-color:var(--blue);background:var(--blue-l)}
+.th .sw{width:30px;height:30px;border-radius:50%;flex:none;border:2px solid rgba(128,128,128,.35)}
+.th .ck{position:absolute;top:6px;inset-inline-end:8px;font-size:13px;color:var(--blue);display:none}
+.th.on .ck{display:block}
 html{scroll-padding-top:env(safe-area-inset-top,20px); scroll-behavior: smooth;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'SolaimanLipi','Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -85,13 +121,13 @@ section{padding:18px 16px 0}
 
 .dua{background:linear-gradient(160deg,var(--blue-l),var(--card));border-radius:24px;box-shadow:var(--shadow);padding:22px 20px;text-align:center}
 .ar{font-family:'Amiri',serif;font-size:27px;line-height:2;color:var(--blue-d);direction:rtl}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ar{color:#7fc1fb}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .ar{color:#7fc1fb}}
 .tr{margin-top:8px;font-size:14.5px;color:var(--muted);font-style:italic}
 .mean{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:15.5px}
 .ref{margin-top:6px;font-size:12.5px;color:var(--muted)}
 
 .tas{display:flex;align-items:center;gap:18px;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:18px}
-.ring{width:96px;height:96px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:32px;font-weight:700;font-family:inherit;box-shadow:0 8px 20px rgba(30,136,229,.4);cursor:pointer;flex:none;transition:transform .1s}
+.ring{width:96px;height:96px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:32px;font-weight:700;font-family:inherit;box-shadow:0 8px 20px color-mix(in srgb,var(--blue) 40%,transparent);cursor:pointer;flex:none;transition:transform .1s}
 .ring:active{transform:scale(.94)}
 .tas p{font-size:14px;color:var(--muted)}
 .tas h3{font-size:17px;margin-bottom:2px}
@@ -102,7 +138,7 @@ section{padding:18px 16px 0}
 .tasbih-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card); padding: 12px 16px; border-radius: 16px; box-shadow: var(--shadow); }
 .tasbih-select { background: var(--bg); color: var(--text); border: 1px solid var(--line); padding: 10px 14px; border-radius: 12px; font-family: inherit; font-size: 14.5px; outline: none; cursor: pointer; width: 100%; margin-top: 6px; }
 .tasbih-counter-box { background: var(--card); border-radius: 24px; box-shadow: var(--shadow); padding: 30px 20px; text-align: center; margin-top: 10px; position: relative; }
-.tasbih-circle-btn { width: 190px; height: 190px; border-radius: 50%; border: 6px solid var(--blue); background: var(--blue-l); color: var(--blue); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 30px rgba(30,136,229,.25); transition: transform .1s; margin: 20px 0; outline: none; }
+.tasbih-circle-btn { width: 190px; height: 190px; border-radius: 50%; border: 6px solid var(--blue); background: var(--blue-l); color: var(--blue); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 30px color-mix(in srgb,var(--blue) 25%,transparent); transition: transform .1s; margin: 20px 0; outline: none; }
 .tasbih-circle-btn:active { transform: scale(0.95); }
 .tasbih-circle-btn h2 { font-size: 45px; font-weight: 700; line-height: 1; }
 .tasbih-circle-btn span { font-size: 13.5px; color: var(--muted); margin-top: 6px; }
@@ -183,7 +219,7 @@ section{padding:18px 16px 0}
 .hd-item{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
 .hd-num{display:inline-block;background:var(--blue);color:#fff;border-radius:10px;padding:2px 12px;font-size:13.5px;font-weight:600;margin-bottom:10px}
 .hd-ar{font-family:'Amiri','Scheherazade New',serif;font-size:25px;line-height:2.1;direction:rtl;text-align:right;color:var(--blue-d)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hd-ar{color:#7fc1fb}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .hd-ar{color:#7fc1fb}}
 .hd-bn{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:16px;line-height:1.8;white-space:pre-line}
 .hd-msg{text-align:center;color:var(--muted);font-size:14px;padding:18px 8px}
 
@@ -250,9 +286,9 @@ html[lang=en] .m small{display:none}
 html[dir=rtl] .dq-h{text-align:right}
 html[dir=rtl] .clock small{margin-left:0;margin-right:6px}
 .pcards{display:grid;gap:12px}
-.pcard{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:start;padding:14px 16px;border-radius:20px;border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(224,168,46,.8),rgba(30,136,229,.6)) border-box;box-shadow:var(--shadow);color:var(--text);font-family:inherit;cursor:pointer;transition:transform .15s}
+.pcard{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:start;padding:14px 16px;border-radius:20px;border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(224,168,46,.8),color-mix(in srgb,var(--blue) 60%,transparent)) border-box;box-shadow:var(--shadow);color:var(--text);font-family:inherit;cursor:pointer;transition:transform .15s}
 .pcard:active{transform:scale(.985)}
-.pcard .pi{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none;font-size:26px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-d));box-shadow:0 6px 14px rgba(30,136,229,.35)}
+.pcard .pi{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none;font-size:26px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-d));box-shadow:0 6px 14px color-mix(in srgb,var(--blue) 35%,transparent)}
 .pcard .pt{flex:1;min-width:0}
 .pcard .pt b{display:block;font-size:16.5px;font-weight:700;line-height:1.35}
 .pcard .pt span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
@@ -344,7 +380,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 .am-card.open .am-b{display:block}
 .am-line{text-align:center;margin-top:12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
 .am-ar{font-family:'Amiri','Scheherazade New',serif;font-size:25px;line-height:2.05;direction:rtl;color:var(--blue-d)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .am-ar{color:#7fc1fb}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .am-ar{color:#7fc1fb}}
 .am-mn{font-size:14.5px;line-height:1.7;color:var(--muted);margin-top:4px}
 .am-cnt{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px}
 .am-tap{width:84px;height:84px;border-radius:50%;border:5px solid var(--blue);background:var(--blue-l);color:var(--blue);font-size:28px;font-weight:700;font-family:inherit;cursor:pointer;transition:transform .1s}
@@ -378,6 +414,8 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
 <symbol id="dawn" viewBox="0 0 24 24"><path d="M6 17a6 6 0 0 1 12 0M12 4v4M9.5 6.2L12 4l2.5 2.2M3 20h18"/></symbol>
 <symbol id="pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.2A7 7 0 0 1 19 9.8C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.5"/></symbol>
 <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+<symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.8 1.6-1.6 0-.5-.2-.9-.5-1.3-.3-.4-.5-.8-.5-1.3 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-3.9-4-7.2-9-7.2z"/><circle cx="7.5" cy="11" r=".6"/><circle cx="10" cy="7.5" r=".6"/><circle cx="14.5" cy="7.5" r=".6"/></symbol>
 <symbol id="bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></symbol>
 <symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></symbol>
 <symbol id="bk" viewBox="0 0 24 24"><path d="M3 5.5C5.500 4 9 4 12 6c3-2 6.500-2 9-.5V19c-2.500-1.500-6-1.500-9 .5-3-2-6.500-2-9-.5z"/><path d="M12 6v13.500"/></symbol>
@@ -402,7 +440,7 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
           <div class="lang-wrap">
             <button class="iconbtn langbtn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-label="Language"><svg class="i" style="font-size:17px"><use href="#globe"/></svg><b id="langCode">বাং</b></button>
           </div>
-          <button class="iconbtn" aria-label="নোটিফিকেশন"><svg class="i"><use href="#bell"/></svg></button>
+          <button class="iconbtn" id="menuBtn" aria-haspopup="dialog" aria-expanded="false" aria-label="মেনু"><svg class="i"><use href="#menu"/></svg></button>
         </div>
       </div>
       <p class="date">আসসালামু আলাইকুম<b id="live-date">লোড হচ্ছে...</b></p>
@@ -443,18 +481,6 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
       </nav>
     </section>
 
-    <section id="amal">
-      <div class="sh"><h2>আজকের আমল</h2><span id="pc">০/৪ সম্পন্ন</span></div>
-      <div class="card" style="padding-top:16px">
-        <div class="prog"><i id="bar"></i></div>
-        <ul class="amal" id="amalList">
-          <li tabindex="0" role="checkbox" aria-checked="false"><span class="chk">✓</span><div class="tx"><b>সূরা কাহফ তিলাওয়াত</b><span>জুমার দিনের বিশেষ আমল</span></div></li>
-          <li tabindex="0" role="checkbox" aria-checked="false"><span class="chk">✓</span><div class="tx"><b>নবীজি ﷺ-এর উপর দরুদ পাঠ</b><span>জুমার দিনে বেশি বেশি দরুদ পড়ুন</span></div></li>
-          <li tabindex="0" role="checkbox" aria-checked="false"><span class="chk">✓</span><div class="tx"><b>সকাল-সন্ধ্যার আযকার</b><span>আয়াতুল কুরসি ও তিন কুল</span></div></li>
-          <li tabindex="0" role="checkbox" aria-checked="false"><span class="chk">✓</span><div class="tx"><b>ইস্তিগফার ১০০ বার</b><span>আস্তাগফিরুল্লাহ</span></div></li>
-        </ul>
-      </div>
-    </section>
 
     <section id="dua">
       <div class="sh"><h2>দৈনন্দিন দোয়া</h2><span onclick="switchView('dua')" style="color:var(--blue);cursor:pointer">সব দোয়া দেখুন →</span></div>
@@ -763,6 +789,16 @@ html[dir=rtl] .hc-nav{transform:scaleX(-1)}
   </div>
 </nav>
 
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="মেনু" aria-hidden="true">
+  <div class="drawer-h"><h3>মেনু</h3><button class="sheet-x" id="drawerX" aria-label="বন্ধ করুন">✕</button></div>
+  <div class="drawer-body" id="menuItems">
+    <!-- ▼ ভবিষ্যতে এখানে আপনার ইচ্ছেমতো সিরিয়ালে আরও মেনু আইটেম (.mi বাটন) যোগ করুন ▼ -->
+    <button class="mi" id="themeToggle" aria-expanded="false"><svg class="i"><use href="#palette"/></svg><span>থিম</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
+    <div class="theme-panel" id="themePanel"><div class="theme-grid" id="themeGrid"></div></div>
+  </div>
+</aside>
+
 <div class="lang-menu" id="langMenu" role="menu">
   <button data-l="bn" role="menuitem">বাংলা</button>
   <button data-l="en" role="menuitem">English</button>
@@ -835,6 +871,7 @@ updateRealTimeDate();
 
 const items=[...document.querySelectorAll('#amalList li')];
 function upd(){
+  if(!document.getElementById('pc')||!document.getElementById('bar')||!items.length)return;
   const d=items.filter(i=>i.classList.contains('done')).length;
   document.getElementById('pc').textContent=bn(d)+'/'+bn(items.length)+' '+T('সম্পন্ন');
   document.getElementById('bar').style.width=(d/items.length*100)+'%';
@@ -2152,6 +2189,51 @@ function applyLang(l){
   document.addEventListener('click',close);
 })();
 applyLang(LANG);
+
+Object.assign(D,{'মেনু':['Menu','القائمة'],'থিম':['Theme','المظهر'],'ডিফল্ট (অটো)':['Default (Auto)','افتراضي (تلقائي)'],'সাদা':['Light','فاتح'],'ডার্ক':['Dark','داكن'],'প্রকৃতি':['Nature','الطبيعة'],'গভীর বন':['Deep Forest','الغابة'],'সাগর':['Ocean','المحيط'],'সূর্যাস্ত':['Sunset','الغروب'],'গোলাপি':['Rose','وردي'],'রাতের আকাশ':['Night Sky','سماء الليل']});
+
+/* ===== মেনু ও থিম ===== */
+(function(){
+  const THEMES=[
+    {id:'auto',n:'ডিফল্ট (অটো)',a:'#1e88e5',b:'#0c1622'},
+    {id:'light',n:'সাদা',a:'#1e88e5',b:'#ffffff'},
+    {id:'dark',n:'ডার্ক',a:'#1e88e5',b:'#0c1622'},
+    {id:'nature',n:'প্রকৃতি',a:'#2e7d32',b:'#f2f8ee'},
+    {id:'forest',n:'গভীর বন',a:'#3a9d5a',b:'#0d1a12'},
+    {id:'ocean',n:'সাগর',a:'#00897b',b:'#edf8f7'},
+    {id:'sunset',n:'সূর্যাস্ত',a:'#e65100',b:'#fff5ec'},
+    {id:'rose',n:'গোলাপি',a:'#d81b60',b:'#fff3f7'},
+    {id:'night',n:'রাতের আকাশ',a:'#7e57c2',b:'#120e1f'}
+  ];
+  const root=document.documentElement;
+  const $g=id=>document.getElementById(id);
+  const drawer=$g('drawer'),bg=$g('drawerBg'),btn=$g('menuBtn');
+  const grid=$g('themeGrid'),panel=$g('themePanel'),tog=$g('themeToggle');
+  function cur(){let t='auto';try{t=localStorage.getItem('lodTheme')||'auto';}catch(e){}return THEMES.some(x=>x.id===t)?t:'auto';}
+  function apply(id,save){
+    if(id==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',id);
+    if(save){try{localStorage.setItem('lodTheme',id);}catch(e){}}
+    grid.querySelectorAll('.th').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+    let m=document.querySelector('meta[name=theme-color]');
+    if(!m){m=document.createElement('meta');m.name='theme-color';document.head.appendChild(m);}
+    m.content=getComputedStyle(root).getPropertyValue('--blue').trim()||'#1e88e5';
+  }
+  THEMES.forEach(t=>{
+    const b=document.createElement('button');b.className='th';b.dataset.t=t.id;
+    b.innerHTML='<i class="sw" style="background:linear-gradient(135deg,'+t.a+' 50%,'+t.b+' 50%)"></i><span>'+t.n+'</span><b class="ck">✓</b>';
+    b.addEventListener('click',()=>apply(t.id,true));
+    grid.appendChild(b);
+  });
+  function openM(){drawer.classList.add('open');bg.classList.add('show');drawer.setAttribute('aria-hidden','false');btn.setAttribute('aria-expanded','true');}
+  function closeM(){drawer.classList.remove('open');bg.classList.remove('show');drawer.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false');}
+  btn.addEventListener('click',openM);
+  $g('drawerX').addEventListener('click',closeM);
+  bg.addEventListener('click',closeM);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+  tog.addEventListener('click',()=>{const o=panel.classList.toggle('show');tog.setAttribute('aria-expanded',o);});
+  apply(cur(),false);
+  if(typeof i18nWalk==='function'&&root.lang!=='bn')i18nWalk();
+})();
 </script>
 </body>
   </html>
