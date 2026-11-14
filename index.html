@@ -298,6 +298,31 @@ button,input,select,textarea{font-family:inherit}
 .as-nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
 .as-nav .btn{margin:0;background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);color:#fff;font-size:13px}
 html[dir=rtl] .as-row{text-align:right}
+
+/* হিজরি ক্যালেন্ডার */
+.hc-head{display:flex;align-items:center;gap:10px;background:linear-gradient(160deg,var(--blue),var(--blue-d));color:#fff;border-radius:22px;padding:14px 12px;box-shadow:var(--shadow)}
+.hc-mid{flex:1;text-align:center;line-height:1.3}
+.hc-mid b{display:block;font-size:19px;font-weight:700}
+.hc-mid small{font-size:13px;opacity:.92}
+.hc-nav{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:grid;place-items:center;font-family:inherit;flex:none}
+html[dir=rtl] .hc-nav{transform:scaleX(-1)}
+.hc-today{display:block;margin:10px auto 6px;border:1px solid var(--line);background:var(--card);color:var(--blue);border-radius:999px;padding:5px 18px;font:inherit;font-size:13.5px;cursor:pointer}
+.hc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:12px 8px}
+.hc-wd{text-align:center;font-size:12.5px;font-weight:600;color:var(--muted);padding:2px 0 6px}
+.hc-wd.fri{color:var(--blue)}
+.hc-cell{aspect-ratio:1/1.05;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:1.5px solid transparent;background:var(--bg)}
+.hc-cell.empty{background:none}
+.hc-h{font-size:19px;font-weight:700;line-height:1.1;color:var(--text)}
+.hc-g{font-size:10.5px;color:var(--muted);line-height:1.1}
+.hc-cell.fri .hc-h{color:var(--blue)}
+.hc-cell.ev{border-color:var(--gold)}
+.hc-cell.today{background:var(--blue);border-color:var(--blue)}
+.hc-cell.today .hc-h,.hc-cell.today .hc-g{color:#fff}
+.hc-evrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:8px}
+.hc-evrow .no{flex:none;min-width:38px;height:38px;border-radius:50%;background:var(--blue-l);color:var(--blue);display:grid;place-items:center;font-weight:700;font-size:15px}
+.hc-evrow .nm{flex:1;font-size:15.5px;font-weight:600;line-height:1.35}
+.hc-evrow small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.hc-note{text-align:center;font-size:12px;color:var(--muted);margin:12px 6px 20px}
 </style>
 </head>
 <body>
@@ -380,7 +405,7 @@ html[dir=rtl] .as-row{text-align:right}
         <a class="m" href="#history"><div class="ic"><svg class="i"><use href="#history"/></svg></div>ইসলামিক ইতিহাস<small>History</small></a>
         <button class="m" onclick="switchView('qibla')"><div class="ic"><svg class="i"><use href="#qibla"/></svg></div>ক্বিবলা<small>Qibla</small></button>
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
-        <a class="m" href="#hijri"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></a>
+        <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
       </nav>
     </section>
@@ -643,6 +668,15 @@ html[dir=rtl] .as-row{text-align:right}
     </div>
   </div>
 
+  <!-- হিজরি ক্যালেন্ডার ভিউ -->
+  <div id="hijri-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="switchView('home')" aria-label="ফিরে যান">←</button>
+      <h3>হিজরি ক্যালেন্ডার</h3>
+    </div>
+    <div class="hd-wrap" id="hijriBody"></div>
+  </div>
+
   <!-- আসমাউল হুসনা ভিউ -->
   <div id="asma-view" class="view-section">
     <div class="rd-bar">
@@ -719,6 +753,7 @@ Object.assign(D,{
 'ইসলামী প্রশ্নোত্তর':['Islamic Q&A','أسئلة وأجوبة إسلامية'],'আপনার জিজ্ঞাসার জবাব':['Answers to your questions','إجابات عن أسئلتكم'],
 'এই বিভাগের কনটেন্ট শীঘ্রই যোগ করা হবে।':['Content for this section will be added soon.','سيتم إضافة محتوى هذا القسم قريبًا.']});
 Object.assign(D,{'আসমাউল হুসনা':['Asma ul-Husna','الأسماء الحسنى'],'আল্লাহর ৯৯টি নাম':['The 99 Names of Allah','أسماء الله الحسنى'],'কুরআনে উল্লেখ':['Mentioned in the Quran','ورود الاسم في القرآن'],'Asmaul Husna':['Asmaul Husna','الأسماء الحسنى'],'এই নামটি সরাসরি কুরআনে নাম হিসেবে আসেনি; বিষয়ের সাথে সম্পর্কিত আয়াত দেওয়া হলো।':['This name does not appear as a divine name in the Quran; related verses are given.','لم يرد هذا الاسم صراحةً في القرآن؛ وهذه آيات متعلقة بمعناه.']});
+Object.assign(D,{'হিজরি ক্যালেন্ডার':['Hijri Calendar','التقويم الهجري'],'আজ':['Today','اليوم'],'এই মাসের গুরুত্বপূর্ণ দিন':['Important days this month','أيام مهمة في هذا الشهر'],'বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।':['Dates may differ by a day depending on moon sighting in Bangladesh.','قد يختلف التاريخ بيوم حسب رؤية الهلال في بنغلاديش.']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -1016,6 +1051,7 @@ function switchView(viewName) {
   (target || document.getElementById('home-view')).classList.add('active');
   if (viewName === 'hadith') showHadithBooks();
   if (viewName === 'asma') showAsmaList();
+  if (viewName === 'hijri') showHijri(true);
   if (viewName === 'dua') { document.getElementById('duaSearch').value=''; renderDuas(''); }
   if (viewName !== 'qibla') stopQibla();
   if (viewName !== 'surah' && typeof player !== 'undefined') player.pause();
@@ -1778,6 +1814,77 @@ function openAsma(n){
 }
 function asmaBack(){ if(asmaCur)showAsmaList(); else switchView('home'); }
 
+// ===== হিজরি ক্যালেন্ডার =====
+const HC_WD={bn:['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],ar:['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت']};
+const HC_EV=[[1,1,'ইসলামি নববর্ষ','Islamic New Year','رأس السنة الهجرية'],[1,10,'আশুরা','Day of Ashura','عاشوراء'],[3,12,'ঈদে মিলাদুন্নবী','Mawlid an-Nabi','المولد النبوي'],[7,27,'শবে মিরাজ','Isra and Mi’raj','الإسراء والمعراج'],[8,15,'শবে বরাত','Shab-e-Barat','ليلة النصف من شعبان'],[9,1,'রমজানের প্রথম রোজা','First day of Ramadan','أول رمضان'],[9,27,'শবে কদর (সম্ভাব্য)','Laylat al-Qadr (likely)','ليلة القدر (المرجحة)'],[10,1,'ঈদুল ফিতর','Eid al-Fitr','عيد الفطر'],[12,9,'আরাফার দিন','Day of Arafah','يوم عرفة'],[12,10,'ঈদুল আযহা','Eid al-Adha','عيد الأضحى']];
+const hcFmt=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric',timeZone:'UTC'});
+function hcParts(ms){
+  const ps=hcFmt.formatToParts(new Date(ms+HIJRI_ADJ*86400000+12*3600000));
+  const g=k=>parseInt(ps.find(p=>p.type===k).value,10);
+  return {d:g('day'),m:g('month'),y:g('year')};
+}
+const HC_DAY=86400000;
+let hcFirst=null; // বর্তমানে দেখানো হিজরি মাসের ১ তারিখের গ্রেগরিয়ান (UTC মধ্যরাত ms)
+function hcTodayMs(){const n=dhakaNow();return Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate());}
+function hcMonthStart(ms){return ms-(hcParts(ms).d-1)*HC_DAY;}
+function hcMonthLen(first){let n=28;while(hcParts(first+n*HC_DAY).d!==1&&n<31)n++;return n;}
+function hcMove(dir){
+  if(dir>0)hcFirst=hcFirst+hcMonthLen(hcFirst)*HC_DAY;
+  else hcFirst=hcMonthStart(hcFirst-HC_DAY);
+  renderHijri();
+}
+function showHijri(reset){
+  if(reset||hcFirst===null)hcFirst=hcMonthStart(hcTodayMs());
+  renderHijri();window.scrollTo(0,0);
+}
+function renderHijri(){
+  const box=document.getElementById('hijriBody');box.innerHTML='';
+  const first=hcFirst,len=hcMonthLen(first),hp=hcParts(first);
+  const last=first+(len-1)*HC_DAY,today=hcTodayMs();
+  const fd=new Date(first),ld=new Date(last);
+  const gm=NM('gm');
+  const gl=gm[fd.getUTCMonth()]+(fd.getUTCMonth()!==ld.getUTCMonth()?' – '+gm[ld.getUTCMonth()]:'')+' '+bn(ld.getUTCFullYear());
+  // শিরোনাম ও নেভিগেশন
+  const head=hdEl('div','hc-head');
+  const prev=hdEl('button','hc-nav','‹');prev.onclick=()=>hcMove(-1);prev.setAttribute('aria-label','Previous');
+  const next=hdEl('button','hc-nav','›');next.onclick=()=>hcMove(1);next.setAttribute('aria-label','Next');
+  const mid=hdEl('div','hc-mid');
+  mid.appendChild(hdEl('b','',NM('hm')[hp.m-1]+' '+bn(hp.y)+' '+T('হিজরি')));
+  mid.appendChild(hdEl('small','',gl));
+  head.appendChild(prev);head.appendChild(mid);head.appendChild(next);
+  box.appendChild(head);
+  // আজকের দিনে ফেরা
+  const tb=hdEl('button','hc-today',T('আজ'));tb.onclick=()=>showHijri(true);box.appendChild(tb);
+  // গ্রিড
+  const grid=hdEl('div','hc-grid');
+  HC_WD[LANG].forEach((w,i)=>grid.appendChild(hdEl('div','hc-wd'+(i===5?' fri':''),w)));
+  const startDow=fd.getUTCDay();
+  for(let i=0;i<startDow;i++)grid.appendChild(hdEl('div','hc-cell empty'));
+  const evs={};HC_EV.forEach(e=>{if(e[0]===hp.m)evs[e[1]]=e;});
+  for(let d=1;d<=len;d++){
+    const ms=first+(d-1)*HC_DAY,dow=new Date(ms).getUTCDay();
+    const c=hdEl('div','hc-cell'+(dow===5?' fri':'')+(ms===today?' today':'')+(evs[d]?' ev':''));
+    c.appendChild(hdEl('span','hc-h',bn(d)));
+    c.appendChild(hdEl('span','hc-g',bn(new Date(ms).getUTCDate())));
+    grid.appendChild(c);
+  }
+  box.appendChild(grid);
+  // এই মাসের গুরুত্বপূর্ণ দিন
+  const list=Object.keys(evs).map(Number).sort((a,b)=>a-b);
+  if(list.length){
+    box.appendChild(hdEl('h3','tp-h',T('এই মাসের গুরুত্বপূর্ণ দিন')));
+    list.forEach(d=>{
+      const e=evs[d],ms=first+(d-1)*HC_DAY,g=new Date(ms);
+      const row=hdEl('div','hc-evrow');
+      row.appendChild(hdEl('span','no',bn(d)));
+      const t=hdEl('span','nm',e[LANG==='bn'?2:LANG==='en'?3:4]);
+      t.appendChild(hdEl('small','',NM('days')[g.getUTCDay()]+', '+bn(g.getUTCDate())+' '+gm[g.getUTCMonth()]+' '+bn(g.getUTCFullYear())));
+      row.appendChild(t);box.appendChild(row);
+    });
+  }
+  box.appendChild(hdEl('p','hc-note',T('বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।')));
+}
+
 // Surah Toggle Function
 function toggleSurah(id) {
   const el = document.getElementById(id);
@@ -1876,6 +1983,7 @@ function applyLang(l){
   if(act&&act.id==='hadith-view')showHadithBooks();
   if(act&&act.id==='topic-view'&&curTopic){const cs=curSub;openTopic(curTopic);if(cs)openSub(cs);}
   if(act&&act.id==='dua-view')renderDuas($('duaSearch').value);
+  if(act&&act.id==='hijri-view')renderHijri();
   if(act&&act.id==='asma-view'){if(asmaCur)openAsma(asmaCur);else showAsmaList();}
   if(act&&act.id==='surah-view'&&rd.n)openSurah(rd.n);
 }
