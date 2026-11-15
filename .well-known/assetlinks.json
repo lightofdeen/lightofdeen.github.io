@@ -1,1 +1,13 @@
 
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lightofdeen.app",
+      "sha256_cert_fingerprints": [
+        "A0:43:62:D7:7C:B6:A4:00:8A:83:1C:79:2E:0B:57:01:65:43:7D:39:07:45:B5:D5:F2:D0:23:A6:6D:3F:7A:2D"
+      ]
+    }
+  }
+]
