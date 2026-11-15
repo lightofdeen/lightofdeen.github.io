@@ -716,7 +716,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
         <button class="m" onclick="switchView('zakat')"><div class="ic"><svg class="i"><use href="#zakat"/></svg></div>যাকাত ক্যালকুলেটর<small>Zakat</small></button>
-        <button class="m" onclick="switchView('library');libOpen()"><div class="ic"><svg class="i"><use href="#library"/></svg></div>লাইব্রেরী<small>Library</small></button>
+        <button class="m" onclick="libOpen()"><div class="ic"><svg class="i"><use href="#library"/></svg></div>লাইব্রেরী<small>Library</small></button>
       </nav>
     </section>
 
@@ -6395,6 +6395,7 @@ function openBioPerson(name){
       else if (v === 'topic') { d.t = curTopic; if (curSub) d.s = curSub; if (curTopic === 3 && bioPerson) d.p = bioPerson; }
       else if (v === 'asma') { d.a = asmaCur; }
       else if (v === 'tafsir') { d.m = tfvMode; }
+      else if (v === 'library') { var lx = window.libDesc && window.libDesc(); if (lx) for (var lk in lx) d[lk] = lx[lk]; }
     } catch (e) {}
     return d;
   }
@@ -6490,6 +6491,7 @@ function openBioPerson(name){
         case 'topic': rTopic(d); break;
         case 'asma': O.switchView('asma'); if (d.a) O.openAsma(d.a); break;
         case 'tafsir': tfvMode = d.m || 'editions'; O.switchView('tafsir'); break;
+        case 'library': O.switchView('library'); if (window.libRestore) window.libRestore(d); break;
         default: O.switchView(d.v || 'home');
       }
     } catch (e) { console.error(e); } finally { NAV.silent--; }
@@ -6544,6 +6546,8 @@ function openBioPerson(name){
       scrollBack(y); return r;
     };
   }
+
+  NAV.commit = function () { if (NAV.silent) return; commit(); };   // লাইব্রেরীর ভেতরের ধাপ history-তে জমা রাখতে
 
   /* ---- ← বাটন ---- */
   window.navBack = function () {
@@ -6736,8 +6740,13 @@ function openBioPerson(name){
   }
   function title(t) { $('libTitle').textContent = T(t); }
 
-  window.libOpen = function () { showCats(); };
+  function nc() { try { if (window.NAV && NAV.commit) NAV.commit(); } catch (e) {} }   // ধাপ বদলালে ব্রাউজার-history-তে জমা
+  window.libOpen = function () { lv = 'cats'; if (window.switchView) window.switchView('library'); showCats(); };
   window.libBack = function () {
+    if (window.NAV && NAV.commit) { navBack(); return; }   // একটি ধাপ পেছনে (ফোনের ব্যাকের মতোই)
+    libUp();
+  };
+  function libUp() {
     if (lv === 'hbook') showEra(curEra);
     else if (lv === 'elist') showEras();
     else if (lv === 'eras') showLangs();
@@ -6745,6 +6754,31 @@ function openBioPerson(name){
     else if (lv === 'book') showList();
     else if (lv === 'list') showCats();
     else navBack();
+  }
+  window.libDesc = function () {
+    var d = { lv: lv };
+    if (lv === 'list' || lv === 'book') d.c = cur ? cur[0] : '';
+    if (lv === 'book' && curBook) { d.bi = curBook.id; d.bt = curBook.title; }
+    if (lv === 'eras' || lv === 'elist' || lv === 'hbook') d.g = curLang;
+    if (lv === 'elist' || lv === 'hbook') d.e = curEra;
+    if (lv === 'hbook') { var arr = eraCache[curLang + curEra] || []; d.h = arr.indexOf(curH); }
+    return d;
+  };
+  window.libRestore = function (d) {
+    var l = d.lv || 'cats';
+    if (d.g) curLang = d.g;
+    var c = d.c ? CATS.filter(function (x) { return x[0] === d.c; })[0] : null;
+    if (l === 'cats') showCats();
+    else if (l === 'list') { if (c) openCat(c); else showCats(); }
+    else if (l === 'book') { if (c) cur = c; openBook({ id: d.bi, title: d.bt || '' }); }
+    else if (l === 'langs') showLangs();
+    else if (l === 'eras') showEras();
+    else if (l === 'elist') showEra(d.e);
+    else if (l === 'hbook') {
+      var arr = eraCache[curLang + d.e];
+      if (arr && arr[d.h]) { curEra = d.e; openHItem(arr[d.h]); } else showEra(d.e);
+    }
+    else showCats();
   };
 
   function showCats() {
@@ -6759,14 +6793,16 @@ function openBioPerson(name){
     });
     b.appendChild(g);
     window.scrollTo(0, 0);
+    nc();
   }
 
   function openCat(c) {
     if (c[0] === 'history') { cur = c; showLangs(); return; }
     if (!SRC[c[0]]) {
       var b = $('libBody'); b.innerHTML = '';
-      lv = 'list'; title(c[1]);
+      lv = 'list'; cur = c; title(c[1]);
       b.appendChild(hdEl('div', 'hd-msg', T('শীঘ্রই যোগ করা হবে')));
+      nc();
       return;
     }
     cur = c; page = 1; count = 0; showList(true);
@@ -6780,6 +6816,7 @@ function openBioPerson(name){
       count = 0; page = 1; load();
     }
     window.scrollTo(0, 0);
+    nc();
   }
 
   function api(path) {
@@ -6821,6 +6858,7 @@ function openBioPerson(name){
     var b = $('libBody');
     b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4><div class="lb-a" id="libAu">' + esc(authorOf(it)) + '</div><div id="libBd" class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div></div>';
     window.scrollTo(0, 0);
+    nc();
     api('get-item/' + it.id + '/bn/json').then(function (d) {
       var x = Array.isArray(d) ? d[0] : d;
       var desc = x.description || it.description || '';
@@ -7028,6 +7066,7 @@ function openBioPerson(name){
       b.appendChild(row);
     });
     window.scrollTo(0, 0);
+    nc();
   }
 
   function showEras() {
@@ -7040,6 +7079,7 @@ function openBioPerson(name){
       b.appendChild(row);
     });
     window.scrollTo(0, 0);
+    nc();
   }
 
   function renderEra(i, res) {
@@ -7064,6 +7104,7 @@ function openBioPerson(name){
   function showEra(i) {
     curEra = i; lv = 'elist'; title(pick(ERAS[i]));
     var b = $('libBody'), key = curLang + i, lang = curLang; window.scrollTo(0, 0);
+    nc();
     if (eraCache[key]) { renderEra(i); return; }
     b.innerHTML = '<div class="hd-msg">' + esc(ui('load')) + '</div>';
     loadEra(ERAS[i], lang).then(function (r) {
@@ -7084,6 +7125,7 @@ function openBioPerson(name){
       (it.url ? '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(ui('open')) + '</a>' : '') +
       (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(ui('pdf')) + '</a>' : '') + '</div></div>';
     window.scrollTo(0, 0);
+    nc();
     if (it.ihId) {
       api('get-item/' + it.ihId + '/bn/json').then(function (dd) {
         var x = Array.isArray(dd) ? dd[0] : dd; if (!x || curH !== it) return;
