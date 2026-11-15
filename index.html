@@ -6708,7 +6708,10 @@ function openBioPerson(name){
   var KEY = 'paV29H2gm56kvLPy', BASE = 'https://api3.islamhouse.com/v3/' + KEY + '/main/', LIMIT = 20;
   var CATS = [
     ['literature', 'সাহিত্য', 'Literature', '<path d="M20 4l-9 9"/><path d="M20 4c-4 0-9 2-11 7l4 4c5-2 7-7 7-11z"/><path d="M9 11l-5 9 9-5"/>'],
+    ['novel', 'উপন্যাস', 'Novels', '<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/>'],
+    ['poetry', 'কবিতা', 'Poetry', '<path d="M12 3l5 7-5 11-5-11z"/><circle cx="12" cy="11" r="1.5"/><path d="M12 12.5V21"/>'],
     ['islamic', 'ইসলামী বই', 'Islamic Books', '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 21h15"/><path d="M12 7l.9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3z"/>'],
+    ['darsi', 'দরসি কিতাব', 'Darsi Kitab', '<path d="M3 6.5C5 5 8 5 12 7c4-2 7-2 9-.5V19c-2-1.5-5-1.5-9 .5-4-2-7-2-9-.5z"/><path d="M12 7v12.5"/><path d="M6 10h3M15 10h3"/>'],
     ['history', 'ইসলামী ইতিহাস', 'Islamic History', '<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M3 10l9-6 9 6"/>'],
     ['gk', 'সাধারণ জ্ঞান', 'General Knowledge', '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'],
     ['science', 'বিজ্ঞান', 'Science', '<path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/>'],
@@ -7168,7 +7171,10 @@ function openBioPerson(name){
       'PDF খোঁজা হচ্ছে...': ['Looking for PDF...', 'جارٍ البحث عن PDF...'],
       'ডাউনলোড পাওয়া যায়নি': ['Download not available', 'التنزيل غير متاح'],
       'আজকের নতুন তালিকা লোড করা যায়নি, আগের তালিকা দেখানো হচ্ছে।': ['Could not load today\'s list; showing the previous one.', 'تعذر تحميل قائمة اليوم؛ تُعرض القائمة السابقة.'],
-      'বিষয়': ['Topic', 'الموضوع']
+      'বিষয়': ['Topic', 'الموضوع'],
+      'উপন্যাস': ['Novels', 'روايات'],
+      'কবিতা': ['Poetry', 'شعر'],
+      'দরসি কিতাব': ['Darsi Kitab (Islamic Curriculum)', 'الكتب الدراسية']
     });
   } catch (e) {}
 
@@ -7181,7 +7187,12 @@ function openBioPerson(name){
     travel: { bn: ['ভ্রমণ', 'ভ্রমণ কাহিনী', 'ভ্রমণকাহিনী', 'পর্যটন', 'সফরনামা', 'দেশ ভ্রমণ', 'হজ্জের সফর', 'হিমালয়', 'ইউরোপ ভ্রমণ', 'অভিযান', 'পৃথিবী ভ্রমণ', 'যাত্রা'], en: ['travel', 'travelogue', 'journey', 'voyage', 'exploration', 'bengal travel'] },
     others: { bn: ['প্রবন্ধ', 'স্বাস্থ্য', 'রান্না', 'কৃষি', 'আইন', 'শিক্ষা', 'মনোবিজ্ঞান', 'ব্যবসা', 'ব্যক্তিত্ব উন্নয়ন', 'ধর্ম', 'সমাজ', 'নারী'], en: ['essays', 'health', 'cooking', 'agriculture', 'psychology', 'self help'] }
   };
-  var DK = ['literature', 'gk', 'science', 'biography', 'kids', 'travel', 'others'];
+  DAILY.novel = { bn: ['উপন্যাস', 'বাংলা উপন্যাস', 'ঐতিহাসিক উপন্যাস', 'সামাজিক উপন্যাস', 'গোয়েন্দা উপন্যাস', 'বঙ্কিমচন্দ্র উপন্যাস', 'শরৎচন্দ্র উপন্যাস', 'বিভূতিভূষণ', 'হুমায়ূন আহমেদ', 'কিশোর উপন্যাস', 'প্রেমের উপন্যাস', 'উপন্যাস সমগ্র'], en: ['bengali novel', 'classic novel', 'historical novel', 'detective novel', 'romance novel', 'novel'], ws: true };
+  DAILY.poetry = { bn: ['কবিতা', 'কাব্যগ্রন্থ', 'কবিতা সমগ্র', 'রবীন্দ্রনাথ কবিতা', 'নজরুল কবিতা', 'জীবনানন্দ দাশ', 'ছড়া ও কবিতা', 'গীতাঞ্জলি', 'বিদ্রোহী কবিতা', 'প্রেমের কবিতা', 'কাব্য', 'গান ও কবিতা'], en: ['bengali poetry', 'poems', 'collected poems', 'poetry anthology', 'rabindranath tagore poems', 'nazrul poems'], ws: true };
+  DAILY.darsi = { bn: ['দরসে নিজামী', 'নাহু', 'সরফ', 'ফিকহ', 'উসূলে ফিকহ', 'মানতিক', 'বালাগাত', 'হিদায়া', 'তাফসীরে জালালাইন', 'মিশকাত শরীফ', 'কুদুরী', 'শরহে বেকায়া', 'নূরুল আনওয়ার', 'আরবি ব্যাকরণ', 'উসূলে হাদীস', 'কাফিয়া'],
+    en: ['dars-i nizami', 'arabic grammar nahw', 'hanafi fiqh hidayah', 'usul al-fiqh', 'mantiq logic arabic', 'balagha arabic rhetoric', 'tafsir jalalayn', 'mishkat al-masabih'],
+    ar: ['الهداية', 'متن القدوري', 'شرح الجامي', 'نور الأنوار', 'مختصر المعاني', 'شرح العقائد', 'تفسير الجلالين', 'مشكاة المصابيح', 'شرح الوقاية', 'الكافية في النحو'] };
+  var DK = ['literature', 'novel', 'poetry', 'gk', 'science', 'biography', 'kids', 'travel', 'darsi', 'others'];
   var dailyMem = {}, dailyMeta = {}, curD = null, readerBack = 'dbook', iaCache = {};
 
   function dayInfo() {
@@ -7244,11 +7255,26 @@ function openBioPerson(name){
     });
   }
 
+  function dWS(term) {
+    var url = 'https://bn.wikisource.org/w/api.php?action=query&list=search&srnamespace=0&srsearch=' + encodeURIComponent(term) + '&srlimit=20&format=json&origin=*';
+    return getJSON(url).then(function (d) {
+      if (!d) return null;
+      return ((d.query && d.query.search) || []).map(function (x) {
+        return { src: 'Wikisource', title: x.title, author: '', desc: strip(x.snippet), year: '', url: 'https://bn.wikisource.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), pdf: '', embed: '' };
+      });
+    });
+  }
+
   function fetchDaily(c) {
     var id = c[0], tp = DAILY[id], di = dayInfo(), ci = DK.indexOf(id), n = di.n;
     var t1 = tp.bn[(n + ci) % tp.bn.length], t2 = tp.bn[(n + ci + 5) % tp.bn.length], te = tp.en[(n + ci) % tp.en.length];
     var pg = Math.floor(n / tp.bn.length) % 5 + 1, st = (pg - 1) * 20;
     var jobs = [dArchive(t1, true, pg), dArchive(t2, true, pg), dGB(t1, true, st), dGB(t2, true, st), dOL(t1, true, pg), dArchive(te, false, pg), dGB(te, false, st)];
+    if (tp.ws) { jobs.push(dWS(t1)); jobs.push(dWS(t2)); }
+    if (tp.ar) {
+      var ta = tp.ar[(n + ci) % tp.ar.length], tb = tp.ar[(n + ci + 4) % tp.ar.length];
+      jobs.push(dArchive(ta, false, pg)); jobs.push(dArchive(tb, false, pg)); jobs.push(dGB(ta, false, st)); jobs.push(dOL(ta, false, pg));
+    }
     return Promise.all(jobs).then(function (res) {
       var ok = res.some(function (r) { return r !== null; });
       var seen = {}, bn = [], en = [];
@@ -7262,7 +7288,7 @@ function openBioPerson(name){
       });
       var rank = function (a, b) { return ((b.ia || b.pdf || b.embed) ? 1 : 0) - ((a.ia || a.pdf || a.embed) ? 1 : 0); };
       bn.sort(rank); en.sort(rank);
-      return { ok: ok, items: bn.slice(0, 36).concat(en.slice(0, 12)), topic: t1 + '، ' + t2 };
+      return { ok: ok, items: bn.slice(0, 36).concat(en.slice(0, tp.ar ? 24 : 12)), topic: t1 + '، ' + t2 };
     });
   }
 
