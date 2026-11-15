@@ -6747,7 +6747,10 @@ function openBioPerson(name){
     libUp();
   };
   function libUp() {
-    if (lv === 'hbook') showEra(curEra);
+    if (lv === 'reader') { if (readerBack === 'book') openBook(curBook); else openDItem(curD); }
+    else if (lv === 'dbook') showDaily(cur);
+    else if (lv === 'dlist') showCats();
+    else if (lv === 'hbook') showEra(curEra);
     else if (lv === 'elist') showEras();
     else if (lv === 'eras') showLangs();
     else if (lv === 'langs') showCats();
@@ -6756,9 +6759,11 @@ function openBioPerson(name){
     else navBack();
   }
   window.libDesc = function () {
-    var d = { lv: lv };
-    if (lv === 'list' || lv === 'book') d.c = cur ? cur[0] : '';
-    if (lv === 'book' && curBook) { d.bi = curBook.id; d.bt = curBook.title; }
+    var L = (lv === 'reader') ? readerBack : lv;
+    var d = { lv: L };
+    if (L === 'list' || L === 'book' || L === 'dlist' || L === 'dbook') d.c = cur ? cur[0] : '';
+    if (L === 'book' && curBook) { d.bi = curBook.id; d.bt = curBook.title; }
+    if (L === 'dbook') d.di = (dailyMem[cur ? cur[0] : ''] || []).indexOf(curD);
     if (lv === 'eras' || lv === 'elist' || lv === 'hbook') d.g = curLang;
     if (lv === 'elist' || lv === 'hbook') d.e = curEra;
     if (lv === 'hbook') { var arr = eraCache[curLang + curEra] || []; d.h = arr.indexOf(curH); }
@@ -6770,6 +6775,8 @@ function openBioPerson(name){
     var c = d.c ? CATS.filter(function (x) { return x[0] === d.c; })[0] : null;
     if (l === 'cats') showCats();
     else if (l === 'list') { if (c) openCat(c); else showCats(); }
+    else if (l === 'dlist') { if (c) openCat(c); else showCats(); }
+    else if (l === 'dbook') { if (c) { cur = c; var dl0 = dailyMem[c[0]]; if (dl0 && dl0[d.di]) openDItem(dl0[d.di]); else openCat(c); } else showCats(); }
     else if (l === 'book') { if (c) cur = c; openBook({ id: d.bi, title: d.bt || '' }); }
     else if (l === 'langs') showLangs();
     else if (l === 'eras') showEras();
@@ -6798,6 +6805,7 @@ function openBioPerson(name){
 
   function openCat(c) {
     if (c[0] === 'history') { cur = c; showLangs(); return; }
+    if (DAILY[c[0]]) { showDaily(c); return; }
     if (!SRC[c[0]]) {
       var b = $('libBody'); b.innerHTML = '';
       lv = 'list'; cur = c; title(c[1]);
@@ -6870,10 +6878,14 @@ function openBioPerson(name){
         atts.map(function (a) {
           var ext = String(a.extension_type || a.extension || (/\.pdf(\?|$)/i.test(a.url) ? 'pdf' : 'file')).toLowerCase();
           var sz = a.size ? ' (' + esc(a.size) + ')' : '';
-          if (ext === 'pdf') return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('PDF ডাউনলোড')) + sz + '</a>';
+          if (ext === 'pdf') return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('PDF ডাউনলোড')) + sz + '</a><button class="lb-btn alt" data-read="' + esc(a.url) + '">' + esc(T('অনলাইনে পড়ুন')) + '</button>';
           return '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext.toUpperCase()) + ' ' + esc(T('খুলুন')) + sz + '</a>';
         }).join('') +
         ((x.source_url || x.url) ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(x.source_url || x.url) + '">' + esc(T('ইসলামহাউসে দেখুন')) + '</a>' : '');
+      Array.prototype.forEach.call(bd.querySelectorAll('[data-read]'), function (btn) {
+        var u = btn.getAttribute('data-read');
+        btn.onclick = function () { openReader('https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(u), u, 'book', u); };
+      });
     }).catch(function (e) {
       var bd = $('libBd'); if (!bd) return;
       bd.innerHTML = esc(T('বইয়ের তালিকা লোড করা যায়নি।')) + '<br><small style="opacity:.7">' + esc(e && e.message || e) + '</small><div><button class="lb-btn" id="libR2">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
@@ -7126,6 +7138,13 @@ function openBioPerson(name){
       (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(ui('pdf')) + '</a>' : '') + '</div></div>';
     window.scrollTo(0, 0);
     nc();
+    var am = /archive\.org\/details\/([^\/?#]+)/.exec(it.url || '');
+    if (am && !it.pdf) {
+      resolveIA(decodeURIComponent(am[1])).then(function (u) {
+        if (!u || curH !== it) return;
+        var bx = $('hLinks'); if (bx) bx.insertAdjacentHTML('afterbegin', '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(ui('pdf')) + '</a>');
+      });
+    }
     if (it.ihId) {
       api('get-item/' + it.ihId + '/bn/json').then(function (dd) {
         var x = Array.isArray(dd) ? dd[0] : dd; if (!x || curH !== it) return;
@@ -7139,6 +7158,208 @@ function openBioPerson(name){
         box.innerHTML = h;
       }).catch(function () {});
     }
+  }
+
+  /* ===== প্রতিদিনের বই: সাহিত্য, সাধারণ জ্ঞান, বিজ্ঞান, জীবনী, শিশু-কিশোর, ভ্রমণ, অন্যান্য ===== */
+  try {
+    Object.assign(D, {
+      'আজকের বই': ['Today\'s books', 'كتب اليوم'],
+      'প্রতিদিন নতুন বই যোগ হয়। বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।': ['New books are added every day. Sourced from Archive.org, Google Books and Open Library.', 'تُضاف كتب جديدة كل يوم. المصادر: Archive.org وGoogle Books وOpen Library.'],
+      'PDF খোঁজা হচ্ছে...': ['Looking for PDF...', 'جارٍ البحث عن PDF...'],
+      'ডাউনলোড পাওয়া যায়নি': ['Download not available', 'التنزيل غير متاح'],
+      'আজকের নতুন তালিকা লোড করা যায়নি, আগের তালিকা দেখানো হচ্ছে।': ['Could not load today\'s list; showing the previous one.', 'تعذر تحميل قائمة اليوم؛ تُعرض القائمة السابقة.'],
+      'বিষয়': ['Topic', 'الموضوع']
+    });
+  } catch (e) {}
+
+  var DAILY = {
+    literature: { bn: ['উপন্যাস', 'ছোটগল্প', 'কবিতা', 'নাটক', 'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'শরৎচন্দ্র চট্টোপাধ্যায়', 'বঙ্কিমচন্দ্র', 'রচনাবলী', 'গল্পগুচ্ছ', 'সাহিত্য', 'জীবনানন্দ দাশ'], en: ['bengali literature', 'bengali novel', 'bengali poetry', 'short stories', 'world literature', 'classic novels'] },
+    gk: { bn: ['সাধারণ জ্ঞান', 'বিশ্বকোষ', 'অভিধান', 'বাংলাদেশ', 'ভূগোল', 'ইতিহাস', 'জ্ঞান-বিজ্ঞান', 'প্রশ্নোত্তর', 'অর্থনীতি', 'রাজনীতি', 'দর্শন', 'সমাজবিজ্ঞান'], en: ['general knowledge', 'encyclopedia', 'world geography', 'world history', 'philosophy', 'economics'] },
+    science: { bn: ['বিজ্ঞান', 'পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'গণিত', 'মহাকাশ', 'জ্যোতির্বিজ্ঞান', 'কম্পিউটার', 'চিকিৎসা', 'প্রযুক্তি', 'পরিবেশ', 'বিজ্ঞানী'], en: ['science', 'physics', 'chemistry', 'biology', 'mathematics', 'astronomy'] },
+    biography: { bn: ['জীবনী', 'আত্মজীবনী', 'জীবনচরিত', 'স্মৃতিকথা', 'মনীষী', 'বঙ্গবন্ধু', 'মহাত্মা গান্ধী', 'বিজ্ঞানীদের জীবনী', 'সাহাবী জীবনী', 'মনীষীদের জীবনী', 'আমার জীবন', 'জীবনকথা'], en: ['biography', 'autobiography', 'memoirs', 'lives of great men', 'life of', 'scientists biography'] },
+    kids: { bn: ['শিশুতোষ', 'ছোটদের গল্প', 'রূপকথা', 'ঠাকুরমার ঝুলি', 'ছড়া', 'কিশোর', 'শিশুসাহিত্য', 'কিশোর উপন্যাস', 'উপকথা', 'গোয়েন্দা', 'অ্যাডভেঞ্চার', 'নীতিকথা'], en: ['children stories', 'fairy tales', 'nursery rhymes', 'bengali folk tales', 'adventure for kids', 'fables'] },
+    travel: { bn: ['ভ্রমণ', 'ভ্রমণ কাহিনী', 'ভ্রমণকাহিনী', 'পর্যটন', 'সফরনামা', 'দেশ ভ্রমণ', 'হজ্জের সফর', 'হিমালয়', 'ইউরোপ ভ্রমণ', 'অভিযান', 'পৃথিবী ভ্রমণ', 'যাত্রা'], en: ['travel', 'travelogue', 'journey', 'voyage', 'exploration', 'bengal travel'] },
+    others: { bn: ['প্রবন্ধ', 'স্বাস্থ্য', 'রান্না', 'কৃষি', 'আইন', 'শিক্ষা', 'মনোবিজ্ঞান', 'ব্যবসা', 'ব্যক্তিত্ব উন্নয়ন', 'ধর্ম', 'সমাজ', 'নারী'], en: ['essays', 'health', 'cooking', 'agriculture', 'psychology', 'self help'] }
+  };
+  var DK = ['literature', 'gk', 'science', 'biography', 'kids', 'travel', 'others'];
+  var dailyMem = {}, dailyMeta = {}, curD = null, readerBack = 'dbook', iaCache = {};
+
+  function dayInfo() {
+    var d = new Date();
+    return { key: d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(), n: Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000), date: d };
+  }
+  function dayLabel(d) {
+    try { return d.toLocaleDateString(LANG === 'bn' ? 'bn-BD' : (LANG === 'en' ? 'en-GB' : 'ar'), { day: 'numeric', month: 'long', year: 'numeric' }); }
+    catch (e) { return d.toDateString(); }
+  }
+
+  // Archive.org-এর ফাইল তালিকা থেকে সরাসরি PDF লিংক খোঁজা (সম্ভব হলে)
+  function resolveIA(id) {
+    if (iaCache[id] !== undefined) return Promise.resolve(iaCache[id]);
+    return getJSON('https://archive.org/metadata/' + encodeURIComponent(id), 15000).then(function (m) {
+      if (!m) return '';
+      var u = '';
+      var restricted = m.metadata && String(m.metadata['access-restricted-item']).toLowerCase() === 'true';
+      if (!restricted && m.files) {
+        var pdfs = m.files.filter(function (f) { return f && /\.pdf$/i.test(f.name || '') && f.format !== 'Additional Text PDF'; });
+        var pk = pdfs.filter(function (f) { return f.format === 'Text PDF'; })[0] || pdfs.filter(function (f) { return f.format === 'Image Container PDF'; })[0] || pdfs[0];
+        if (pk) u = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + pk.name.split('/').map(encodeURIComponent).join('/');
+      }
+      iaCache[id] = u;
+      return u;
+    });
+  }
+
+  function dArchive(term, bn, page) {
+    var ph = '"' + term + '"';
+    var q = '(title:(' + ph + ') OR subject:(' + ph + ')) AND mediatype:texts' + (bn ? ' AND language:(Bengali OR ben OR bn)' : '');
+    var url = 'https://archive.org/advancedsearch.php?q=' + encodeURIComponent(q) +
+      '&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=description&fl%5B%5D=year&sort%5B%5D=downloads+desc&rows=30&page=' + page + '&output=json';
+    return getJSON(url).then(function (d) {
+      if (!d || !d.response) return null;
+      return (d.response.docs || []).map(function (x) {
+        return { src: 'Archive.org', title: strip(first(x.title)), author: strip(Array.isArray(x.creator) ? x.creator.join('، ') : x.creator), desc: strip(first(x.description)), year: first(x.year), url: 'https://archive.org/details/' + x.identifier, ia: x.identifier, embed: 'https://archive.org/embed/' + x.identifier, pdf: '' };
+      });
+    });
+  }
+  function dGB(term, bn, start) {
+    var url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(term) + (bn ? '&langRestrict=bn' : '') + '&printType=books&maxResults=20&startIndex=' + start;
+    return getJSON(url).then(function (d) {
+      if (!d) return null;
+      return (d.items || []).map(function (v) {
+        var i = v.volumeInfo || {}, a = v.accessInfo || {};
+        var pdf = (a.pdf && a.pdf.isAvailable && a.pdf.downloadLink) || '';
+        return { src: 'Google Books', title: (i.title || '') + (i.subtitle ? ': ' + i.subtitle : ''), author: (i.authors || []).join('، '), desc: strip(i.description), year: (i.publishedDate || '').slice(0, 4), url: String(i.infoLink || i.canonicalVolumeLink || '').replace(/^http:/, 'https:'), pdf: String(pdf).replace(/^http:/, 'https:'), embed: a.embeddable ? 'https://books.google.com/books?id=' + v.id + '&output=embed' : '' };
+      });
+    });
+  }
+  function dOL(term, bn, page) {
+    var url = 'https://openlibrary.org/search.json?q=' + encodeURIComponent(term) + (bn ? '&language=ben' : '') + '&page=' + page + '&limit=20&fields=key,title,author_name,first_publish_year,ia,has_fulltext';
+    return getJSON(url).then(function (d) {
+      if (!d) return null;
+      return (d.docs || []).map(function (x) {
+        var ia = (x.has_fulltext && x.ia && x.ia[0]) || '';
+        return { src: 'Open Library', title: x.title || '', author: (x.author_name || []).join('، '), desc: '', year: x.first_publish_year || '', url: ia ? 'https://archive.org/details/' + ia : 'https://openlibrary.org' + x.key, ia: ia, embed: ia ? 'https://archive.org/embed/' + ia : '', pdf: '' };
+      });
+    });
+  }
+
+  function fetchDaily(c) {
+    var id = c[0], tp = DAILY[id], di = dayInfo(), ci = DK.indexOf(id), n = di.n;
+    var t1 = tp.bn[(n + ci) % tp.bn.length], t2 = tp.bn[(n + ci + 5) % tp.bn.length], te = tp.en[(n + ci) % tp.en.length];
+    var pg = Math.floor(n / tp.bn.length) % 5 + 1, st = (pg - 1) * 20;
+    var jobs = [dArchive(t1, true, pg), dArchive(t2, true, pg), dGB(t1, true, st), dGB(t2, true, st), dOL(t1, true, pg), dArchive(te, false, pg), dGB(te, false, st)];
+    return Promise.all(jobs).then(function (res) {
+      var ok = res.some(function (r) { return r !== null; });
+      var seen = {}, bn = [], en = [];
+      res.forEach(function (r) {
+        (r || []).forEach(function (it) {
+          if (!it.title || !it.url) return;
+          var k = norm(it.title); if (!k || seen[k]) return;
+          seen[k] = 1;
+          (isBn(it.title) ? bn : en).push(it);
+        });
+      });
+      var rank = function (a, b) { return ((b.ia || b.pdf || b.embed) ? 1 : 0) - ((a.ia || a.pdf || a.embed) ? 1 : 0); };
+      bn.sort(rank); en.sort(rank);
+      return { ok: ok, items: bn.slice(0, 36).concat(en.slice(0, 12)), topic: t1 + '، ' + t2 };
+    });
+  }
+
+  function loadDaily(c) {
+    var di = dayInfo(), ck = 'lbd2_' + c[0] + '_' + di.key;
+    try { var s = localStorage.getItem(ck); if (s) { var o = JSON.parse(s); if (o && o.items && o.items.length) return Promise.resolve(o); } } catch (e) {}
+    return fetchDaily(c).then(function (o) {
+      if (o.items.length) {
+        try {
+          for (var i = localStorage.length - 1; i >= 0; i--) { var k = localStorage.key(i); if (k && k.indexOf('lbd2_' + c[0] + '_') === 0 && k !== ck) localStorage.removeItem(k); }
+          localStorage.setItem(ck, JSON.stringify(o));
+        } catch (e) {}
+      }
+      return o;
+    });
+  }
+  function lastCached(c) {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('lbd2_' + c[0] + '_') === 0) { var o = JSON.parse(localStorage.getItem(k)); if (o && o.items && o.items.length) return o; }
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function showDaily(c) {
+    lv = 'dlist'; cur = c; title(c[1]);
+    window.scrollTo(0, 0); nc();
+    var b = $('libBody'), key = dayInfo().key;
+    if (dailyMem[c[0]] && dailyMeta[c[0]] && dailyMeta[c[0]].day === key) { renderDaily(c); return; }
+    b.innerHTML = '<div class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div>';
+    loadDaily(c).then(function (o) {
+      if (lv !== 'dlist' || cur !== c) return;
+      var stale = false;
+      if (!o.items.length) { var lc = lastCached(c); if (lc) { o = lc; stale = true; } }
+      dailyMem[c[0]] = o.items;
+      dailyMeta[c[0]] = { day: stale ? '' : key, topic: o.topic, ok: o.ok, stale: stale };
+      renderDaily(c);
+    });
+  }
+
+  function renderDaily(c) {
+    var b = $('libBody'), items = dailyMem[c[0]] || [], m = dailyMeta[c[0]] || {};
+    if (!items.length) {
+      b.innerHTML = '<div class="hd-msg">' + esc(T(m.ok === false ? 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।' : 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।')) + '</div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
+      $('libRetry').onclick = function () { delete dailyMem[c[0]]; delete dailyMeta[c[0]]; showDaily(c); };
+      return;
+    }
+    b.innerHTML = '<div class="lb-card" style="margin-bottom:12px"><h4>' + esc(T('আজকের বই')) + '</h4><p style="margin:0">' + esc(dayLabel(new Date())) + (m.topic ? ' · ' + esc(T('বিষয়')) + ': ' + esc(m.topic) : '') + '</p>' +
+      (m.stale ? '<p style="margin:6px 0 0;font-size:12.5px">' + esc(T('আজকের নতুন তালিকা লোড করা যায়নি, আগের তালিকা দেখানো হচ্ছে।')) + '</p>' : '') + '</div>' +
+      '<div id="libItems"></div><div class="hd-msg">' + esc(T('প্রতিদিন নতুন বই যোগ হয়। বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।')) + '</div>';
+    var box = $('libItems');
+    items.forEach(function (it, n) {
+      var row = document.createElement('button'); row.className = 'hd-row';
+      row.innerHTML = '<span class="lb-no">' + num(n + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(it.title) + '</div>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') + '<div class="lb-d">' + esc(it.src + (it.year ? ' · ' + it.year : '')) + '</div></span>';
+      row.onclick = function () { openDItem(it); };
+      box.appendChild(row);
+    });
+  }
+
+  function openDItem(it) {
+    lv = 'dbook'; curD = it; title(cur ? cur[1] : 'লাইব্রেরী');
+    var b = $('libBody');
+    var d = it.desc || ''; if (d.length > 700) d = d.slice(0, 700).replace(/\s+\S*$/, '') + '…';
+    b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') +
+      '<div class="lb-d" style="margin:6px 0">' + esc(it.src + (it.year ? ' · ' + it.year : '')) + '</div>' + (d ? '<p>' + esc(d) + '</p>' : '') +
+      '<div><span id="dDl"></span><span id="dRd"></span></div></div>';
+    window.scrollTo(0, 0); nc();
+    var dl = $('dDl'), rd = $('dRd');
+    function setDl(u) {
+      if (curD !== it || !dl) return;
+      if (u) { it.pdf = u; dl.innerHTML = '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(T('PDF ডাউনলোড')) + '</a>'; }
+      else dl.innerHTML = '<span style="display:inline-block;margin:8px 8px 0 0;font-size:12.5px;color:var(--muted)">' + esc(T('ডাউনলোড পাওয়া যায়নি')) + '</span>';
+    }
+    if (it.pdf) setDl(it.pdf);
+    else if (it.ia) {
+      dl.innerHTML = '<span style="display:inline-block;margin:8px 8px 0 0;font-size:12.5px;color:var(--muted)">' + esc(T('PDF খোঁজা হচ্ছে...')) + '</span>';
+      resolveIA(it.ia).then(setDl);
+    } else setDl('');
+    if (it.embed) {
+      rd.innerHTML = '<button class="lb-btn alt">' + esc(T('অনলাইনে পড়ুন')) + '</button>';
+      rd.firstChild.onclick = function () { openReader(it.embed, it.url, 'dbook', it.pdf || ''); };
+    } else if (it.url) {
+      rd.innerHTML = '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(T('অনলাইনে পড়ুন')) + '</a>';
+    }
+  }
+
+  function openReader(embed, ext, back, pdf) {
+    lv = 'reader'; readerBack = back;
+    title(cur ? cur[1] : 'লাইব্রেরী');
+    var b = $('libBody');
+    b.innerHTML = '<iframe class="lb-frame" id="libFrame" allowfullscreen></iframe><div class="hd-msg">' + esc(T('পড়তে সমস্যা হলে নিচের বাটন ব্যবহার করুন।')) + '</div><div style="text-align:center">' +
+      (pdf ? '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(pdf) + '">' + esc(T('PDF ডাউনলোড')) + '</a>' : '') +
+      '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(ext || embed) + '">' + esc(T('নতুন ট্যাবে খুলুন')) + '</a></div>';
+    $('libFrame').src = embed;
+    window.scrollTo(0, 0); nc();
   }
 
 })();
