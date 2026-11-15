@@ -613,6 +613,16 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .zk-msg{padding:16px;font-size:14.5px;line-height:1.7;text-align:center}
 .zk-disc{font-size:12.5px;color:var(--muted);line-height:1.7;margin:16px 4px 0;text-align:center}
 
+
+/* ===== লাইব্রেরী ===== */
+.lb-no{min-width:30px;height:30px;border-radius:9px;background:var(--bg);color:var(--blue);font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
+.lb-t{font-size:15px;line-height:1.4;font-weight:600;text-align:left}
+.lb-d{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45;font-weight:400;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lb-btn{display:inline-block;margin:8px 8px 0 0;padding:9px 14px;border-radius:10px;background:var(--blue);color:#fff;border:0;font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+.lb-btn.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.lb-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.lb-card h4{margin:0 0 8px;font-size:18px;line-height:1.4}
+.lb-card p{margin:0 0 8px;font-size:14.5px;line-height:1.65;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -628,6 +638,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 <symbol id="tasbih" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><circle cx="18" cy="9" r="2"/><circle cx="6" cy="9" r="2"/><circle cx="16" cy="16.5" r="2"/><circle cx="8" cy="16.5" r="2"/><path d="M12 19v3"/></symbol>
 <symbol id="hijri" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M14.5 13.2a3 3 0 1 0 0 4.6 2.4 2.4 0 0 1 0-4.6z"/></symbol>
 <symbol id="zakat" viewBox="0 0 24 24"><path d="M9 3.5h6l-1.4 3h-3.2z"/><path d="M10.4 6.5C6.6 8.2 4.5 11.4 4.5 15a5 5 0 0 0 5 5h5a5 5 0 0 0 5-5c0-3.6-2.1-6.8-5.9-8.5"/><path d="M12 10.6v6.8M14.2 12.2c-.3-.8-1.1-1.2-2.2-1.2-1.3 0-2.2.7-2.2 1.6 0 2.2 4.4 1 4.4 3.1 0 .9-.9 1.6-2.2 1.6-1.1 0-1.9-.4-2.3-1.2"/></symbol>
+<symbol id="library" viewBox="0 0 24 24"><path d="M3.5 20.5h17"/><path d="M5 20.5V8h3.5v12.5M8.5 20.5V4.5H12v16M12 20.5l1.6-14.2 3.4.4-1.6 13.8M17.2 20.5V9.5h2.8v11"/></symbol>
 <symbol id="home" viewBox="0 0 24 24"><path d="M3.5 11L12 4l8.5 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></symbol>
 <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 <symbol id="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></symbol>
@@ -702,6 +713,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
         <button class="m" onclick="switchView('zakat')"><div class="ic"><svg class="i"><use href="#zakat"/></svg></div>যাকাত ক্যালকুলেটর<small>Zakat</small></button>
+        <button class="m" onclick="switchView('library');libOpen()"><div class="ic"><svg class="i"><use href="#library"/></svg></div>লাইব্রেরী<small>Library</small></button>
       </nav>
     </section>
 
@@ -1170,6 +1182,14 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
       <input class="pk-search" id="tfvSearch" type="search" placeholder="খুঁজুন..." autocomplete="off">
       <div id="tfvBody"></div>
     </div>
+  </div>
+
+  <div id="library-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="libBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
+      <h3 id="libTitle">লাইব্রেরী</h3>
+    </div>
+    <div class="hd-wrap" id="libBody"></div>
   </div>
 
   <div id="topic-view" class="view-section">
@@ -6665,6 +6685,128 @@ function openBioPerson(name){
   $('zkCalc').addEventListener('click', function () { calc(true); });
   $('zkReset').addEventListener('click', reset);
   metalPreview();
+})();
+</script>
+
+<script>
+/* ===== লাইব্রেরী ===== */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  try {
+    Object.assign(D, { 'লাইব্রেরী': ['Library', 'المكتبة'], 'সাহিত্য': ['Literature', 'الأدب'], 'ইসলামী বই': ['Islamic Books', 'الكتب الإسلامية'], 'ইসলামের ইতিহাস': ['Islamic History', 'التاريخ الإسلامي'], 'সাধারণ জ্ঞান': ['General Knowledge', 'ثقافة عامة'], 'বিজ্ঞান': ['Science', 'العلوم'], 'জীবনী': ['Biography', 'السير'], 'শিশু-কিশোর': ['Kids', 'الأطفال'], 'ভ্রমণ': ['Travel', 'السفر'], 'অন্যান্য': ['Others', 'أخرى'], 'শীঘ্রই যোগ করা হবে': ['Coming soon', 'قريبًا'], 'আরও দেখুন': ['Load more', 'عرض المزيد'], 'আবার চেষ্টা করুন': ['Try again', 'حاول مرة أخرى'], 'লোড হচ্ছে...': ['Loading...', 'جارٍ التحميل...'], 'বইয়ের তালিকা লোড করা যায়নি।': ['Could not load the book list.', 'تعذر تحميل قائمة الكتب.'], 'কোনো বই পাওয়া যায়নি।': ['No books found.', 'لم يتم العثور على كتب.'], 'ইসলামহাউসে দেখুন': ['View on IslamHouse', 'عرض في إسلام هاوس'], 'খুলুন': ['Open', 'افتح'] });
+    if (LANG !== 'bn') i18nWalk();
+  } catch (e) {}
+
+  var KEY = 'paV29H2gm56kvLPy', BASE = 'https://api3.islamhouse.com/v3/' + KEY + '/main/', LIMIT = 20;
+  var CATS = [
+    ['literature', 'সাহিত্য', 'Literature', '<path d="M20 4l-9 9"/><path d="M20 4c-4 0-9 2-11 7l4 4c5-2 7-7 7-11z"/><path d="M9 11l-5 9 9-5"/>'],
+    ['islamic', 'ইসলামী বই', 'Islamic Books', '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 21h15"/><path d="M12 7l.9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3z"/>'],
+    ['history', 'ইসলামের ইতিহাস', 'History', '<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M3 10l9-6 9 6"/>'],
+    ['gk', 'সাধারণ জ্ঞান', 'General Knowledge', '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'],
+    ['science', 'বিজ্ঞান', 'Science', '<path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/>'],
+    ['biography', 'জীবনী', 'Biography', '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'],
+    ['kids', 'শিশু-কিশোর', 'Kids', '<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9.5h.01M15 9.5h.01"/>'],
+    ['travel', 'ভ্রমণ', 'Travel', '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'],
+    ['others', 'অন্যান্য', 'Others', '<circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/>']
+  ];
+  var lv = 'cats', page = 1, count = 0, busy = false, cur = null;
+  var bnNum = function (n) { return String(n).replace(/\d/g, function (d) { return '০১২৩৪৫৬৭৮৯'[d]; }); };
+  var num = function (n) { return LANG === 'bn' ? bnNum(n) : String(n); };
+  var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); };
+  function title(t) { $('libTitle').textContent = T(t); }
+
+  window.libOpen = function () { showCats(); };
+  window.libBack = function () {
+    if (lv === 'book') showList();
+    else if (lv === 'list') showCats();
+    else navBack();
+  };
+
+  function showCats() {
+    lv = 'cats'; title('লাইব্রেরী');
+    var b = $('libBody'); b.innerHTML = '';
+    var g = document.createElement('nav'); g.className = 'grid';
+    CATS.forEach(function (c) {
+      var btn = document.createElement('button'); btn.className = 'm';
+      btn.innerHTML = '<div class="ic"><svg class="i" viewBox="0 0 24 24">' + c[3] + '</svg></div>' + esc(T(c[1])) + '<small>' + c[2] + '</small>';
+      btn.onclick = function () { openCat(c); };
+      g.appendChild(btn);
+    });
+    b.appendChild(g);
+    window.scrollTo(0, 0);
+  }
+
+  function openCat(c) {
+    if (c[0] !== 'islamic') {
+      var b = $('libBody'); b.innerHTML = '';
+      lv = 'list'; title(c[1]);
+      b.appendChild(hdEl('div', 'hd-msg', T('শীঘ্রই যোগ করা হবে')));
+      return;
+    }
+    cur = c; page = 1; count = 0; showList(true);
+  }
+
+  function showList(fresh) {
+    lv = 'list'; title('ইসলামী বই');
+    var b = $('libBody');
+    if (fresh || !$('libItems')) {
+      b.innerHTML = '<div id="libItems"></div><div id="libFoot"></div>';
+      count = 0; page = 1; load();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function api(path) {
+    return fetch(BASE + path).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  }
+
+  function load() {
+    if (busy) return; busy = true;
+    var foot = $('libFoot');
+    foot.innerHTML = '<div class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div>';
+    api('books/bn/bn/' + page + '/' + LIMIT + '/json').then(function (d) {
+      var arr = Array.isArray(d) ? d : (d.data || d.items || []);
+      var box = $('libItems');
+      arr.forEach(function (it) {
+        count++;
+        var row = document.createElement('button'); row.className = 'hd-row';
+        var desc = it.description || it.short_description || '';
+        row.innerHTML = '<span class="lb-no">' + num(count) + '</span><span><span class="lb-t">' + esc(it.title) + '</span>' + (desc ? '<div class="lb-d">' + esc(desc) + '</div>' : '') + '</span>';
+        row.onclick = function () { openBook(it); };
+        box.appendChild(row);
+      });
+      if (!arr.length && !count) foot.innerHTML = '<div class="hd-msg">' + esc(T('কোনো বই পাওয়া যায়নি।')) + '</div>';
+      else if (arr.length < LIMIT) foot.innerHTML = '';
+      else { foot.innerHTML = '<div style="text-align:center"><button class="lb-btn" id="libMore">' + esc(T('আরও দেখুন')) + '</button></div>'; $('libMore').onclick = function () { page++; load(); }; }
+      busy = false;
+    }).catch(function (e) {
+      foot.innerHTML = '<div class="hd-msg">' + esc(T('বইয়ের তালিকা লোড করা যায়নি।')) + '<br><small style="opacity:.7;word-break:break-all">' + esc(e && e.message || e) + '</small></div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
+      $('libRetry').onclick = load;
+      busy = false;
+    });
+  }
+
+  function openBook(it) {
+    lv = 'book'; title('ইসলামী বই');
+    var b = $('libBody');
+    b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4><div id="libBd" class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div></div>';
+    window.scrollTo(0, 0);
+    api('get-item/' + it.id + '/bn/json').then(function (d) {
+      var x = Array.isArray(d) ? d[0] : d;
+      var desc = x.description || it.description || '';
+      var atts = (x.attachments || []).filter(function (a) { return a && a.url; });
+      var bd = $('libBd'); if (!bd) return;
+      bd.className = '';
+      bd.innerHTML = (desc ? '<p>' + esc(desc) + '</p>' : '') +
+        atts.map(function (a) { return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(String(a.extension_type || a.extension || 'FILE').toUpperCase()) + ' ' + esc(T('খুলুন')) + (a.size ? ' (' + esc(a.size) + ')' : '') + '</a>'; }).join('') +
+        ((x.source_url || x.url) ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(x.source_url || x.url) + '">' + esc(T('ইসলামহাউসে দেখুন')) + '</a>' : '');
+    }).catch(function (e) {
+      var bd = $('libBd'); if (!bd) return;
+      bd.innerHTML = esc(T('বইয়ের তালিকা লোড করা যায়নি।')) + '<br><small style="opacity:.7">' + esc(e && e.message || e) + '</small><div><button class="lb-btn" id="libR2">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
+      $('libR2').onclick = function () { openBook(it); };
+    });
+  }
 })();
 </script>
 </body>
