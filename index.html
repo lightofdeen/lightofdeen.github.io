@@ -6697,7 +6697,7 @@ function openBioPerson(name){
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   try {
-    Object.assign(D, { 'লাইব্রেরী': ['Library', 'المكتبة'], 'সাহিত্য': ['Literature', 'الأدب'], 'ইসলামী বই': ['Islamic Books', 'الكتب الإسلامية'], 'ইসলামের ইতিহাস': ['Islamic History', 'التاريخ الإسلامي'], 'সাধারণ জ্ঞান': ['General Knowledge', 'ثقافة عامة'], 'বিজ্ঞান': ['Science', 'العلوم'], 'জীবনী': ['Biography', 'السير'], 'শিশু-কিশোর': ['Kids', 'الأطفال'], 'ভ্রমণ': ['Travel', 'السفر'], 'অন্যান্য': ['Others', 'أخرى'], 'শীঘ্রই যোগ করা হবে': ['Coming soon', 'قريبًا'], 'আরও দেখুন': ['Load more', 'عرض المزيد'], 'আবার চেষ্টা করুন': ['Try again', 'حاول مرة أخرى'], 'লোড হচ্ছে...': ['Loading...', 'جارٍ التحميل...'], 'বইয়ের তালিকা লোড করা যায়নি।': ['Could not load the book list.', 'تعذر تحميل قائمة الكتب.'], 'কোনো বই পাওয়া যায়নি।': ['No books found.', 'لم يتم العثور على كتب.'], 'ইসলামহাউসে দেখুন': ['View on IslamHouse', 'عرض في إسلام هاوس'], 'খুলুন': ['Open', 'افتح'], 'অনলাইনে পড়ুন': ['Read online', 'اقرأ عبر الإنترنت'], 'PDF ডাউনলোড': ['Download PDF', 'تنزيل PDF'], 'নতুন ট্যাবে খুলুন': ['Open in new tab', 'افتح في تبويب جديد'], 'পড়তে সমস্যা হলে নিচের বাটন ব্যবহার করুন।': ['If it does not load, use the buttons below.', 'إذا لم يظهر، استخدم الأزرار أدناه.'] });
+    Object.assign(D, { 'লাইব্রেরী': ['Library', 'المكتبة'], 'সাহিত্য': ['Literature', 'الأدب'], 'ইসলামী বই': ['Islamic Books', 'الكتب الإسلامية'], 'ইসলামের ইতিহাস': ['Islamic History', 'التاريخ الإسلامي'], 'সাধারণ জ্ঞান': ['General Knowledge', 'ثقافة عامة'], 'বিজ্ঞান': ['Science', 'العلوم'], 'জীবনী': ['Biography', 'السير'], 'শিশু-কিশোর': ['Kids', 'الأطفال'], 'ভ্রমণ': ['Travel', 'السفر'], 'অন্যান্য': ['Others', 'أخرى'], 'শীঘ্রই যোগ করা হবে': ['Coming soon', 'قريبًا'], 'আরও দেখুন': ['Load more', 'عرض المزيد'], 'আবার চেষ্টা করুন': ['Try again', 'حاول مرة أخرى'], 'লোড হচ্ছে...': ['Loading...', 'جارٍ التحميل...'], 'বইয়ের তালিকা লোড করা যায়নি।': ['Could not load the book list.', 'تعذر تحميل قائمة الكتب.'], 'কোনো বই পাওয়া যায়নি।': ['No books found.', 'لم يتم العثور على كتب.'], 'ইসলামহাউসে দেখুন': ['View on IslamHouse', 'عرض في إسلام هاوس'], 'খুলুন': ['Open', 'افتح'], 'অনলাইনে পড়ুন': ['Read online', 'اقرأ عبر الإنترنت'], 'PDF ডাউনলোড': ['Download PDF', 'تنزيل PDF'], 'নতুন ট্যাবে খুলুন': ['Open in new tab', 'افتح في تبويب جديد'], 'পড়তে সমস্যা হলে নিচের বাটন ব্যবহার করুন।': ['If it does not load, use the buttons below.', 'إذا لم يظهر، استخدم الأزرار أدناه.'], 'ইসলামী ইতিহাস': ['Islamic History', 'التاريخ الإسلامي'], 'বইটি খুলুন': ['Open book', 'افتح الكتاب'], 'বইগুলো Archive.org, Google Books ও Open Library থেকে সংগৃহীত। বাংলা বই আগে দেখানো হয়েছে।': ['Books are collected from Archive.org, Google Books and Open Library. Bengali books are listed first.', 'الكتب مجمّعة من Archive.org وGoogle Books وOpen Library. الكتب البنغالية أولاً.'], 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।': ['No books found. Please try again later.', 'لم يتم العثور على كتب. حاول لاحقًا.'], 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।': ['Check your internet connection and try again.', 'تحقق من اتصال الإنترنت وأعد المحاولة.'], 'বাংলা': ['Bengali', 'البنغالية'] });
     if (LANG !== 'bn') i18nWalk();
   } catch (e) {}
 
@@ -6705,7 +6705,7 @@ function openBioPerson(name){
   var CATS = [
     ['literature', 'সাহিত্য', 'Literature', '<path d="M20 4l-9 9"/><path d="M20 4c-4 0-9 2-11 7l4 4c5-2 7-7 7-11z"/><path d="M9 11l-5 9 9-5"/>'],
     ['islamic', 'ইসলামী বই', 'Islamic Books', '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 21h15"/><path d="M12 7l.9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3z"/>'],
-    ['history', 'ইসলামের ইতিহাস', 'History', '<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M3 10l9-6 9 6"/>'],
+    ['history', 'ইসলামী ইতিহাস', 'Islamic History', '<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M3 10l9-6 9 6"/>'],
     ['gk', 'সাধারণ জ্ঞান', 'General Knowledge', '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'],
     ['science', 'বিজ্ঞান', 'Science', '<path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/>'],
     ['biography', 'জীবনী', 'Biography', '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'],
@@ -6714,8 +6714,7 @@ function openBioPerson(name){
     ['others', 'অন্যান্য', 'Others', '<circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/>']
   ];
   var SRC = {
-    islamic: function (p) { return 'books/bn/bn/' + p + '/' + LIMIT + '/json'; },
-    history: function (p) { return 'get-category-items/5301/bn/bn/bn/' + p + '/' + LIMIT + '/json'; }
+    islamic: function (p) { return 'books/bn/bn/' + p + '/' + LIMIT + '/json'; }
   };
   var curBook = null;
   var lv = 'cats', page = 1, count = 0, busy = false, cur = null;
@@ -6739,7 +6738,9 @@ function openBioPerson(name){
 
   window.libOpen = function () { showCats(); };
   window.libBack = function () {
-    if (lv === 'read') openBook(curBook);
+    if (lv === 'hbook') showEra(curEra);
+    else if (lv === 'elist') showEras();
+    else if (lv === 'eras') showCats();
     else if (lv === 'book') showList();
     else if (lv === 'list') showCats();
     else navBack();
@@ -6760,6 +6761,7 @@ function openBioPerson(name){
   }
 
   function openCat(c) {
+    if (c[0] === 'history') { cur = c; showEras(); return; }
     if (!SRC[c[0]]) {
       var b = $('libBody'); b.innerHTML = '';
       lv = 'list'; title(c[1]);
@@ -6813,16 +6815,6 @@ function openBioPerson(name){
     });
   }
 
-  function openReader(url) {
-    lv = 'read'; title(curBook ? curBook.title : 'লাইব্রেরী');
-    var b = $('libBody');
-    var viewer = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(url);
-    b.innerHTML = '<iframe class="lb-frame" src="' + esc(viewer) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>' +
-      '<div class="hd-msg">' + esc(T('পড়তে সমস্যা হলে নিচের বাটন ব্যবহার করুন।')) + '</div>' +
-      '<div style="text-align:center"><a class="lb-btn" target="_blank" rel="noopener" href="' + esc(url) + '">' + esc(T('নতুন ট্যাবে খুলুন')) + '</a></div>';
-    window.scrollTo(0, 0);
-  }
-
   function openBook(it) {
     lv = 'book'; curBook = it; title(cur ? cur[1] : 'লাইব্রেরী');
     var b = $('libBody');
@@ -6833,14 +6825,13 @@ function openBioPerson(name){
       var desc = x.description || it.description || '';
       var atts = (x.attachments || []).filter(function (a) { return a && a.url; });
       var bd = $('libBd'); if (!bd) return;
-      setTimeout(function () { var rb = bd.querySelectorAll('[data-read]'); for (var i = 0; i < rb.length; i++) rb[i].onclick = (function (u) { return function () { openReader(u); }; })(rb[i].getAttribute('data-read')); }, 0);
       var au = authorOf(x); if (au && $('libAu')) $('libAu').textContent = au;
       bd.className = '';
       bd.innerHTML = (desc ? '<p>' + esc(desc) + '</p>' : '') +
         atts.map(function (a) {
           var ext = String(a.extension_type || a.extension || (/\.pdf(\?|$)/i.test(a.url) ? 'pdf' : 'file')).toLowerCase();
           var sz = a.size ? ' (' + esc(a.size) + ')' : '';
-          if (ext === 'pdf') return '<button class="lb-btn" data-read="' + esc(a.url) + '">' + esc(T('অনলাইনে পড়ুন')) + '</button><a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('PDF ডাউনলোড')) + sz + '</a>';
+          if (ext === 'pdf') return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('PDF ডাউনলোড')) + sz + '</a>';
           return '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext.toUpperCase()) + ' ' + esc(T('খুলুন')) + sz + '</a>';
         }).join('') +
         ((x.source_url || x.url) ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(x.source_url || x.url) + '">' + esc(T('ইসলামহাউসে দেখুন')) + '</a>' : '');
@@ -6850,6 +6841,183 @@ function openBioPerson(name){
       $('libR2').onclick = function () { openBook(it); };
     });
   }
+  /* ===== ইসলামী ইতিহাস: যুগ/সাম্রাজ্য অনুযায়ী (Archive.org + Google Books + Open Library) ===== */
+  var ERAS = [
+    { bn: 'ইসলামের সাধারণ ইতিহাস', en: 'General History of Islam', ar: 'التاريخ الإسلامي العام', per: 'সামগ্রিক ইতিহাস',
+      q: ['ইসলামের ইতিহাস', 'ইসলামী ইতিহাস', 'ইসলামি ইতিহাস'], e: ['history of islam'],
+      m: ['ইসলামের ইতিহাস', 'ইসলামী ইতিহাস', 'ইসলামি ইতিহাস', 'ইসলামিক ইতিহাস', 'history of islam', 'islamic history'] },
+    { bn: 'খুলাফায়ে রাশেদীন', en: 'Rightly Guided Caliphs', ar: 'الخلافة الراشدة', per: '৬৩২–৬৬১ খ্রি.',
+      q: ['খুলাফায়ে রাশেদীন', 'খোলাফায়ে রাশেদীন', 'খিলাফতে রাশেদা'], e: ['rightly guided caliphs'],
+      m: ['রাশেদ', 'রাশিদ', 'খুলাফা', 'খোলাফা', 'rightly guided', 'rashidun'] },
+    { bn: 'উমাইয়া সাম্রাজ্য', en: 'Umayyad Empire', ar: 'الدولة الأموية', per: '৬৬১–৭৫০ খ্রি.',
+      q: ['উমাইয়া', 'উমাইয়াহ', 'উমাইয়া খিলাফত'], e: ['umayyad'],
+      m: ['উমাইয়া', 'উমাইয়াহ', 'উমাইয়্যা', 'umayyad', 'ummayad'] },
+    { bn: 'আব্বাসীয় সাম্রাজ্য', en: 'Abbasid Empire', ar: 'الدولة العباسية', per: '৭৫০–১২৫৮ খ্রি.',
+      q: ['আব্বাসীয়', 'আব্বাসী', 'আব্বাসিয়া'], e: ['abbasid'],
+      m: ['আব্বাসীয়', 'আব্বাসী', 'আব্বাসিয়া', 'আব্বাসিয়', 'abbasid', 'abbasside'] },
+    { bn: 'আন্দালুস (মুসলিম স্পেন)', en: 'Al-Andalus (Muslim Spain)', ar: 'الأندلس', per: '৭১১–১৪৯২ খ্রি.',
+      q: ['আন্দালুস', 'স্পেনে মুসলিম', 'কর্ডোভা'], e: ['al-andalus muslim spain'],
+      m: ['আন্দালুস', 'স্পেন', 'কর্ডোভা', 'কুর্তুবা', 'গ্রানাডা', 'andalus', 'muslim spain', 'moors', 'cordoba', 'córdoba'] },
+    { bn: 'ফাতেমি সাম্রাজ্য', en: 'Fatimid Empire', ar: 'الدولة الفاطمية', per: '৯০৯–১১৭১ খ্রি.',
+      q: ['ফাতেমি', 'ফাতিমি', 'ফাতেমীয়'], e: ['fatimid'],
+      m: ['ফাতেমি', 'ফাতিমি', 'ফাতেমীয়', 'ফাতিমীয়', 'ফাতেমী', 'ফাতিমী', 'fatimid'] },
+    { bn: 'সেলজুক সাম্রাজ্য', en: 'Seljuk Empire', ar: 'السلاجقة', per: '১০৩৭–১১৯৪ খ্রি.',
+      q: ['সেলজুক', 'সালজুক', 'সেলজুকি'], e: ['seljuk'],
+      m: ['সেলজুক', 'সালজুক', 'সেলজুকি', 'সালজুকি', 'seljuk', 'saljuq', 'seljuq'] },
+    { bn: 'ক্রুসেড ও আইয়ুবী সাম্রাজ্য', en: 'Crusades & Ayyubid Empire', ar: 'الحروب الصليبية والأيوبيون', per: '১০৯৫–১২৬০ খ্রি.',
+      q: ['ক্রুসেড', 'সালাহউদ্দিন আইয়ুবী', 'সালাহুদ্দীন আইয়ুবী'], e: ['crusades saladin'],
+      m: ['ক্রুসেড', 'সালাহ', 'সালাউদ্দিন', 'সালাহুদ্দীন', 'আইয়ুবী', 'আইয়ুবি', 'crusade', 'saladin', 'ayyubid', 'salah al-din'] },
+    { bn: 'দিল্লি সালতানাত', en: 'Delhi Sultanate', ar: 'سلطنة دلهي', per: '১২০৬–১৫২৬ খ্রি.',
+      q: ['দিল্লি সালতানাত', 'দিল্লির সুলতান', 'সুলতানি আমল'], e: ['delhi sultanate'],
+      m: ['দিল্লি সালতানাত', 'দিল্লী সালতানাত', 'দিল্লির সুলতান', 'সুলতানি আমল', 'সুলতানী আমল', 'delhi sultanate'] },
+    { bn: 'মঙ্গোল আক্রমণ ও বাগদাদের পতন', en: 'Mongol Invasion & Fall of Baghdad', ar: 'المغول وسقوط بغداد', per: '১২০৬–১২৫৮ খ্রি.',
+      q: ['মঙ্গোল', 'বাগদাদের পতন', 'হালাকু খান'], e: ['mongol invasion baghdad'],
+      m: ['মঙ্গোল', 'মোঙ্গল', 'তাতার', 'হালাকু', 'হুলাগু', 'বাগদাদের পতন', 'mongol', 'hulagu', 'tatar', 'fall of baghdad'] },
+    { bn: 'মামলুক সালতানাত', en: 'Mamluk Sultanate', ar: 'سلطنة المماليك', per: '১২৫০–১৫১৭ খ্রি.',
+      q: ['মামলুক', 'মামলুক সালতানাত', 'বাইবার্স'], e: ['mamluk'],
+      m: ['মামলুক', 'মামলুকি', 'বাইবার্স', 'বায়বার্স', 'mamluk', 'baybars'] },
+    { bn: 'উসমানীয় সাম্রাজ্য', en: 'Ottoman Empire', ar: 'الدولة العثمانية', per: '১২৯৯–১৯২৪ খ্রি.',
+      q: ['উসমানীয়', 'ওসমানীয়', 'উসমানী খিলাফত', 'অটোমান'], e: ['ottoman empire'],
+      m: ['উসমানীয়', 'ওসমানীয়', 'উসমানী', 'ওসমানী', 'উসমানিয়া', 'ওসমানিয়া', 'অটোমান', 'ওসমান', 'ottoman', 'osmanli'] },
+    { bn: 'বাংলার সুলতানি ও মুসলিম শাসন', en: 'Bengal Sultanate & Muslim Rule', ar: 'سلطنة البنغال', per: '১৩৩৮–১৭৫৭ খ্রি.',
+      q: ['বাংলার মুসলিম', 'বাংলার সুলতান', 'বাংলায় মুসলিম শাসন'], e: ['muslim rule in bengal'],
+      m: ['বাংলার মুসলিম', 'বাংলার সুলতান', 'বাংলায় মুসলিম', 'বাংলার সুলতানি', 'বাংলায় ইসলাম', 'সুলতানি বাংলা', 'bengal sultanate', 'muslim rule in bengal', 'muslims in bengal', 'sultans of bengal'] },
+    { bn: 'মুঘল সাম্রাজ্য', en: 'Mughal Empire', ar: 'الإمبراطورية المغولية', per: '১৫২৬–১৮৫৭ খ্রি.',
+      q: ['মুঘল', 'মোগল', 'মোঘল'], e: ['mughal empire'],
+      m: ['মুঘল', 'মোগল', 'মোঘল', 'মুগল', 'mughal', 'moghul', 'mogul'] }
+  ];
+  var eraCache = {}, curEra = 0, curH = null;
+  function pick(e) { return LANG === 'bn' ? e.bn : (LANG === 'en' ? e.en : e.ar); }
+
+  function getJSON(url, ms) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var t = ctl ? setTimeout(function () { ctl.abort(); }, ms || 12000) : null;
+    return fetch(url, ctl ? { signal: ctl.signal } : {}).then(function (r) {
+      if (t) clearTimeout(t);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).catch(function () { if (t) clearTimeout(t); return null; });
+  }
+  function first(v) { return Array.isArray(v) ? (v[0] || '') : (v || ''); }
+  function strip(h) { return String(h || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+
+  // API ১: Archive.org
+  function srcArchive(terms, bn) {
+    var ph = terms.map(function (t) { return '"' + t + '"'; }).join(' OR ');
+    var q = '(title:(' + ph + ') OR subject:(' + ph + ')) AND mediatype:texts' + (bn ? ' AND language:(Bengali OR ben OR bn)' : '');
+    var url = 'https://archive.org/advancedsearch.php?q=' + encodeURIComponent(q) +
+      '&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=description&fl%5B%5D=year&sort%5B%5D=downloads+desc&rows=30&page=1&output=json';
+    return getJSON(url).then(function (d) {
+      if (!d || !d.response) return null;
+      return (d.response.docs || []).map(function (x) {
+        return { src: 'Archive.org', title: strip(first(x.title)), author: strip(Array.isArray(x.creator) ? x.creator.join('، ') : x.creator), desc: strip(first(x.description)), year: first(x.year), url: 'https://archive.org/details/' + x.identifier, pdf: '' };
+      });
+    });
+  }
+  // API ২: Google Books
+  function srcGB(term, bn) {
+    var url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent('intitle:"' + term + '"') + (bn ? '&langRestrict=bn' : '') + '&printType=books&maxResults=20';
+    return getJSON(url).then(function (d) {
+      if (!d) return null;
+      return (d.items || []).map(function (v) {
+        var i = v.volumeInfo || {}, a = v.accessInfo || {};
+        var pdf = (a.pdf && a.pdf.isAvailable && a.pdf.downloadLink) || '';
+        return { src: 'Google Books', title: (i.title || '') + (i.subtitle ? ': ' + i.subtitle : ''), author: (i.authors || []).join('، '), desc: strip(i.description), year: (i.publishedDate || '').slice(0, 4), url: String(i.infoLink || i.canonicalVolumeLink || '').replace(/^http:/, 'https:'), pdf: String(pdf).replace(/^http:/, 'https:') };
+      });
+    });
+  }
+  // API ৩: Open Library
+  function srcOL(term, bn) {
+    var url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(term) + (bn ? '&language=ben' : '') + '&limit=20&fields=key,title,author_name,first_publish_year,ia,has_fulltext';
+    return getJSON(url).then(function (d) {
+      if (!d) return null;
+      return (d.docs || []).map(function (x) {
+        var read = x.has_fulltext && x.ia && x.ia[0];
+        return { src: 'Open Library', title: x.title || '', author: (x.author_name || []).join('، '), desc: '', year: x.first_publish_year || '', url: read ? 'https://archive.org/details/' + x.ia[0] : 'https://openlibrary.org' + x.key, pdf: '' };
+      });
+    });
+  }
+
+  function norm(t) { return String(t || '').toLowerCase().replace(/[^\u0980-\u09FFa-z0-9\u0600-\u06FF]+/g, ''); }
+  var isBn = function (t) { return /[\u0980-\u09FF]/.test(t); };
+
+  function loadEra(e) {
+    var jobs = [srcArchive(e.q, true), srcArchive(e.e, false)];
+    e.q.slice(0, 2).forEach(function (t) { jobs.push(srcGB(t, true)); jobs.push(srcOL(t, true)); });
+    e.e.slice(0, 1).forEach(function (t) { jobs.push(srcGB(t, false)); jobs.push(srcOL(t, false)); });
+    return Promise.all(jobs).then(function (res) {
+      var ok = res.some(function (r) { return r !== null; });
+      var seen = {}, out = [];
+      res.forEach(function (r) {
+        (r || []).forEach(function (it) {
+          if (!it.title || !it.url) return;
+          var tl = it.title.toLowerCase();
+          if (!e.m.some(function (k) { return tl.indexOf(k.toLowerCase()) >= 0; })) return;
+          var k = norm(it.title); if (!k || seen[k]) return;
+          seen[k] = 1; it.bn = isBn(it.title); out.push(it);
+        });
+      });
+      out.sort(function (a, b) { return (b.bn ? 1 : 0) - (a.bn ? 1 : 0); });
+      return { ok: ok, items: out.slice(0, 60) };
+    });
+  }
+
+  function showEras() {
+    lv = 'eras'; title('ইসলামী ইতিহাস');
+    var b = $('libBody'); b.innerHTML = '';
+    ERAS.forEach(function (e, i) {
+      var row = document.createElement('button'); row.className = 'hd-row';
+      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(pick(e)) + '</div>' + (e.per ? '<div class="lb-d">' + esc(e.per) + '</div>' : '') + '</span>';
+      row.onclick = function () { showEra(i); };
+      b.appendChild(row);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function renderEra(i, res) {
+    var e = ERAS[i], b = $('libBody');
+    var items = eraCache[i] || (res && res.items) || [];
+    if (!items.length) {
+      var msg = (res && !res.ok) ? 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।' : 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।';
+      b.innerHTML = '<div class="hd-msg">' + esc(T(msg)) + '</div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
+      $('libRetry').onclick = function () { delete eraCache[i]; showEra(i); };
+      return;
+    }
+    b.innerHTML = '<div id="libItems"></div><div class="hd-msg">' + esc(T('বইগুলো Archive.org, Google Books ও Open Library থেকে সংগৃহীত। বাংলা বই আগে দেখানো হয়েছে।')) + '</div>';
+    var box = $('libItems');
+    items.forEach(function (it, n) {
+      var row = document.createElement('button'); row.className = 'hd-row';
+      var meta = it.src + (it.year ? ' · ' + it.year : '') + (it.bn ? '' : ' · EN');
+      row.innerHTML = '<span class="lb-no">' + num(n + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(it.title) + '</div>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') + '<div class="lb-d">' + esc(meta) + '</div></span>';
+      row.onclick = function () { openHItem(it); };
+      box.appendChild(row);
+    });
+  }
+
+  function showEra(i) {
+    curEra = i; lv = 'elist'; title(pick(ERAS[i]));
+    var b = $('libBody'); window.scrollTo(0, 0);
+    if (eraCache[i]) { renderEra(i); return; }
+    b.innerHTML = '<div class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div>';
+    loadEra(ERAS[i]).then(function (r) {
+      if (lv !== 'elist' || curEra !== i) return;
+      if (r.items.length) eraCache[i] = r.items;
+      renderEra(i, r);
+    });
+  }
+
+  function openHItem(it) {
+    lv = 'hbook'; curH = it; title(pick(ERAS[curEra]));
+    var b = $('libBody');
+    var d = it.desc || ''; if (d.length > 700) d = d.slice(0, 700).replace(/\s+\S*$/, '') + '…';
+    b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') +
+      '<div class="lb-d" style="margin:6px 0">' + esc(it.src + (it.year ? ' · ' + it.year : '')) + '</div>' +
+      (d ? '<p>' + esc(d) + '</p>' : '') +
+      '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(T('বইটি খুলুন')) + '</a>' +
+      (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(T('PDF ডাউনলোড')) + '</a>' : '') + '</div>';
+    window.scrollTo(0, 0);
+  }
+
 })();
 </script>
 </body>
