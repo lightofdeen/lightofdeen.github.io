@@ -8581,5 +8581,102 @@ function openBioPerson(name){
   sk.addEventListener('change',function(){var d=au.duration||0;if(d)au.currentTime=d*sk.value/1000;seeking=false});
 })();
 </script>
+<script id="auto-i18n">
+/* ===== অটো ভাষা-অনুবাদ স্তর =====
+   • যেকোনো বাংলা লেখা (টেক্সট, placeholder, aria-label, title, alt) ভাষা বদলালে নিজে থেকেই অনুবাদ হয়
+   • আগে অভিধান D → তারপর সংরক্ষিত ক্যাশ → না পেলে অনলাইনে অনুবাদ করে ক্যাশে রাখে
+   • নতুন যোগ করা/পরে তৈরি হওয়া এলিমেন্টও MutationObserver দিয়ে অটো অনুবাদ হয়
+   • অনুবাদ থেকে বাদ দিতে চাইলে এলিমেন্টে data-no-i18n লিখুন */
+(function(){
+'use strict';
+const LET=/[\u0980-\u09E5\u09F0-\u09FF]/, BND='০১২৩৪৫৬৭৮৯', MAXLEN=600, CK='lodTrCache2';
+const SKIP='script,style,noscript,textarea,.lang-wrap,#langMenu,[data-no-i18n]';
+const ATTR=['placeholder','aria-label','title','alt'];
+let cache={};try{cache=JSON.parse(localStorage.getItem(CK)||'{}')}catch(e){}
+let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{const k=Object.keys(cache);if(k.length>4000)k.slice(0,k.length-3000).forEach(x=>delete cache[x]);localStorage.setItem(CK,JSON.stringify(cache));}catch(e){}},800);}
+const dig=s=>bn(s.replace(/[০-৯]/g,c=>DIG[LANG][BND.indexOf(c)]));
+const pending=new Set(),failed=new Set(),queue=[];let running=0,rt;
+
+async function remote(t,l){
+  try{const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl='+l+'&dt=t&q='+encodeURIComponent(t));const j=await r.json();const o=j[0].map(x=>x[0]).join('');if(o)return o;}catch(e){}
+  try{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(t)+'&langpair=bn|'+l);const j=await r.json();const o=j.responseData&&j.responseData.translatedText;if(o&&!/MYMEMORY WARNING/i.test(o))return o;}catch(e){}
+  return null;
+}
+function pump(){
+  while(running<4&&queue.length){
+    const [l,t]=queue.shift(),k=l+'|'+t;running++;
+    remote(t,l).then(o=>{
+      if(o){cache[k]=o;save();}else failed.add(k);
+      pending.delete(k);running--;
+      clearTimeout(rt);rt=setTimeout(()=>walk(document.body),200);pump();
+    });
+  }
+}
+// অনুবাদ ফেরত দেয়; অনলাইনে আনার অপেক্ষায় থাকলে null
+function lookup(src){
+  const m=src.match(/^(\s*)([\s\S]*?)(\s*)$/),core=m[2];
+  if(!core)return src;
+  if(!LET.test(core))return m[1]+dig(core)+m[3];
+  const flat=core.replace(/\s+/g,' ');
+  let r=T(core);if(r===core&&flat!==core)r=T(flat);
+  if(r===core){
+    const k=LANG+'|'+flat;r=cache[k];
+    if(r===undefined){
+      if(core.length>MAXLEN||failed.has(k))return src;
+      if(!pending.has(k)){pending.add(k);queue.push([LANG,flat]);pump();}
+      return null;
+    }
+  }
+  return m[1]+dig(r)+m[3];
+}
+function procText(n){
+  const p=n.parentElement;if(!p||p.closest(SKIP))return;
+  const v=n.nodeValue;let src;
+  if(n.__s!==undefined&&v===n.__s)src=n.__o;
+  else{if(n.__o===undefined&&!LET.test(v))return;n.__o=src=v;}
+  const out=LANG==='bn'?src:lookup(src);
+  n.__s=out===null?src:out;
+  if(n.nodeValue!==n.__s)n.nodeValue=n.__s;
+}
+function procAttr(e,a){
+  if(!e.hasAttribute||!e.hasAttribute(a)||e.closest(SKIP))return;
+  const ks='_s_'+a,ko='_o_'+a,v=e.getAttribute(a);let src;
+  if(e[ks]!==undefined&&v===e[ks])src=e[ko];
+  else{if(e[ko]===undefined&&!LET.test(v))return;e[ko]=src=v;}
+  const out=LANG==='bn'?src:lookup(src);
+  e[ks]=out===null?src:out;
+  if(v!==e[ks])e.setAttribute(a,e[ks]);
+}
+function walk(root){
+  if(!root)return;
+  if(root.nodeType===3){procText(root);return;}
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];let x;
+  while((x=tw.nextNode()))a.push(x);
+  a.forEach(procText);
+  const q='[placeholder],[aria-label],[title],[alt]';
+  if(root.matches&&root.matches(q))ATTR.forEach(t=>procAttr(root,t));
+  root.querySelectorAll(q).forEach(e=>ATTR.forEach(t=>procAttr(e,t)));
+}
+// পুরনো i18nWalk যেসব নোড অনুবাদ করে রেখেছে সেগুলোকে নিজের হিসাবে নেওয়া
+(function adopt(){
+  const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let x;
+  while((x=tw.nextNode()))if(x.__o!==undefined&&x.__s===undefined)x.__s=x.nodeValue;
+  document.querySelectorAll('[placeholder],[aria-label],[title],[alt]').forEach(e=>ATTR.forEach(a=>{if(e['_o_'+a]!==undefined&&e['_s_'+a]===undefined)e['_s_'+a]=e.getAttribute(a);}));
+})();
+window.i18nWalk=function(){walk(document.body);};
+const _al=window.applyLang;
+window.applyLang=function(){const r=_al.apply(this,arguments);walk(document.body);return r;};
+new MutationObserver(ms=>{
+  ms.forEach(m=>{
+    if(m.type==='characterData')procText(m.target);
+    else if(m.type==='attributes')procAttr(m.target,m.attributeName);
+    else m.addedNodes.forEach(nd=>{if(nd.nodeType===1||nd.nodeType===3)walk(nd);});
+  });
+}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:ATTR});
+walk(document.body);
+window.addEventListener('load',()=>walk(document.body));
+})();
+</script>
+
 </body>
   </html>
