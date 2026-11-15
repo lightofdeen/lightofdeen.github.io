@@ -617,6 +617,8 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 /* ===== লাইব্রেরী ===== */
 .lb-no{min-width:30px;height:30px;border-radius:9px;background:var(--bg);color:var(--blue);font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
 .lb-t{font-size:15px;line-height:1.4;font-weight:600;text-align:left}
+.lb-tx{text-align:left;min-width:0}
+.lb-a{font-size:12px;color:var(--blue);margin-top:2px;line-height:1.4;font-weight:500;opacity:.9}
 .lb-d{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45;font-weight:400;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .lb-btn{display:inline-block;margin:8px 8px 0 0;padding:9px 14px;border-radius:10px;background:var(--blue);color:#fff;border:0;font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
 .lb-btn.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
@@ -6714,6 +6716,19 @@ function openBioPerson(name){
   var bnNum = function (n) { return String(n).replace(/\d/g, function (d) { return '০১২৩৪৫৬৭৮৯'[d]; }); };
   var num = function (n) { return LANG === 'bn' ? bnNum(n) : String(n); };
   var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); };
+  function authorOf(x) {
+    if (!x) return '';
+    var v = x.author || x.writer || x.author_name || '';
+    if (v && typeof v === 'object') v = v.title || v.name || '';
+    if (!v) {
+      var arr = x.prepared_by || x.authors || x.writers || [];
+      if (!Array.isArray(arr)) arr = [arr];
+      var pick = arr.filter(function (a) { return a && /author|writer/i.test(a.kind || a.type || ''); });
+      if (!pick.length) pick = arr;
+      v = pick.map(function (a) { return typeof a === 'string' ? a : (a && (a.title || a.name)) || ''; }).filter(Boolean).join('، ');
+    }
+    return String(v || '').trim();
+  }
   function title(t) { $('libTitle').textContent = T(t); }
 
   window.libOpen = function () { showCats(); };
@@ -6772,7 +6787,8 @@ function openBioPerson(name){
         count++;
         var row = document.createElement('button'); row.className = 'hd-row';
         var desc = it.description || it.short_description || '';
-        row.innerHTML = '<span class="lb-no">' + num(count) + '</span><span><span class="lb-t">' + esc(it.title) + '</span>' + (desc ? '<div class="lb-d">' + esc(desc) + '</div>' : '') + '</span>';
+        var au = authorOf(it);
+        row.innerHTML = '<span class="lb-no">' + num(count) + '</span><span class="lb-tx"><div class="lb-t">' + esc(it.title) + '</div>' + (au ? '<div class="lb-a">' + esc(au) + '</div>' : '') + (desc ? '<div class="lb-d">' + esc(desc) + '</div>' : '') + '</span>';
         row.onclick = function () { openBook(it); };
         box.appendChild(row);
       });
@@ -6790,13 +6806,14 @@ function openBioPerson(name){
   function openBook(it) {
     lv = 'book'; title('ইসলামী বই');
     var b = $('libBody');
-    b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4><div id="libBd" class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div></div>';
+    b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4><div class="lb-a" id="libAu">' + esc(authorOf(it)) + '</div><div id="libBd" class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div></div>';
     window.scrollTo(0, 0);
     api('get-item/' + it.id + '/bn/json').then(function (d) {
       var x = Array.isArray(d) ? d[0] : d;
       var desc = x.description || it.description || '';
       var atts = (x.attachments || []).filter(function (a) { return a && a.url; });
       var bd = $('libBd'); if (!bd) return;
+      var au = authorOf(x); if (au && $('libAu')) $('libAu').textContent = au;
       bd.className = '';
       bd.innerHTML = (desc ? '<p>' + esc(desc) + '</p>' : '') +
         atts.map(function (a) { return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(String(a.extension_type || a.extension || 'FILE').toUpperCase()) + ' ' + esc(T('খুলুন')) + (a.size ? ' (' + esc(a.size) + ')' : '') + '</a>'; }).join('') +
