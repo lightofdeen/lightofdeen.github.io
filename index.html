@@ -6740,7 +6740,8 @@ function openBioPerson(name){
   window.libBack = function () {
     if (lv === 'hbook') showEra(curEra);
     else if (lv === 'elist') showEras();
-    else if (lv === 'eras') showCats();
+    else if (lv === 'eras') showLangs();
+    else if (lv === 'langs') showCats();
     else if (lv === 'book') showList();
     else if (lv === 'list') showCats();
     else navBack();
@@ -6761,7 +6762,7 @@ function openBioPerson(name){
   }
 
   function openCat(c) {
-    if (c[0] === 'history') { cur = c; showEras(); return; }
+    if (c[0] === 'history') { cur = c; showLangs(); return; }
     if (!SRC[c[0]]) {
       var b = $('libBody'); b.innerHTML = '';
       lv = 'list'; title(c[1]);
@@ -6886,8 +6887,19 @@ function openBioPerson(name){
       q: ['মুঘল', 'মোগল', 'মোঘল'], e: ['mughal empire'],
       m: ['মুঘল', 'মোগল', 'মোঘল', 'মুগল', 'mughal', 'moghul', 'mogul'] }
   ];
-  var eraCache = {}, curEra = 0, curH = null;
-  function pick(e) { return LANG === 'bn' ? e.bn : (LANG === 'en' ? e.en : e.ar); }
+  var eraCache = {}, curEra = 0, curH = null, curLang = 'bn', ihCache = null;
+  function pick(e) { return curLang === 'en' ? e.en : (LANG === 'bn' ? e.bn : (LANG === 'en' ? e.en : e.ar)); }
+  var UI = {
+    bn: { load: 'লোড হচ্ছে...', none: 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।', net: 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।', retry: 'আবার চেষ্টা করুন', open: 'বইটি খুলুন', pdf: 'PDF ডাউনলোড', ih: 'ইসলামহাউসে দেখুন', note: 'বইগুলো IslamHouse, Archive.org, Google Books, Open Library ও বাংলা উইকিসংকলন থেকে সংগৃহীত।' },
+    en: { load: 'Loading...', none: 'No books found. Please try again later.', net: 'Check your internet connection and try again.', retry: 'Try again', open: 'Open book', pdf: 'Download PDF', ih: 'View on IslamHouse', note: 'Books are collected from Archive.org, Google Books and Open Library.' }
+  };
+  function ui(k) { return curLang === 'en' ? UI.en[k] : T(UI.bn[k]); }
+  function perOf(e) {
+    if (curLang !== 'en') return e.per;
+    return e.per === 'সামগ্রিক ইতিহাস' ? 'Overview' : e.per.replace(/[০-৯]/g, function (d) { return '০১২৩৪৫৬৭৮৯'.indexOf(d); }).replace('খ্রি.', 'CE');
+  }
+  var FOLD = { bn: ['বাংলা বই', 'Bengali Books', 'الكتب البنغالية', 'বাংলা ভাষার ইসলামী ইতিহাসের বই'], en: ['ইংরেজি বই', 'English Books', 'الكتب الإنجليزية', 'Islamic history books in English'] };
+  function foldName(l) { var f = FOLD[l]; return LANG === 'bn' ? f[0] : (LANG === 'en' ? f[1] : f[2]); }
 
   function getJSON(url, ms) {
     var ctl = window.AbortController ? new AbortController() : null;
@@ -6941,33 +6953,89 @@ function openBioPerson(name){
   function norm(t) { return String(t || '').toLowerCase().replace(/[^\u0980-\u09FFa-z0-9\u0600-\u06FF]+/g, ''); }
   var isBn = function (t) { return /[\u0980-\u09FF]/.test(t); };
 
-  function loadEra(e) {
-    var jobs = [srcArchive(e.q, true), srcArchive(e.e, false)];
-    e.q.slice(0, 2).forEach(function (t) { jobs.push(srcGB(t, true)); jobs.push(srcOL(t, true)); });
-    e.e.slice(0, 1).forEach(function (t) { jobs.push(srcGB(t, false)); jobs.push(srcOL(t, false)); });
+  // API ৪: IslamHouse (বাংলা বইয়ের তালিকা একবার এনে ক্যাশ করা হয়)
+  function srcIH() {
+    if (!ihCache) {
+      var jobs = [];
+      for (var p = 1; p <= 10; p++) jobs.push(api('books/bn/bn/' + p + '/' + LIMIT + '/json').catch(function () { return null; }));
+      ihCache = Promise.all(jobs).then(function (rs) {
+        if (!rs.some(function (r) { return r !== null; })) return null;
+        var out = [];
+        rs.forEach(function (d) {
+          if (!d) return;
+          var raw = Array.isArray(d) ? d : (d.data || d.items || []);
+          raw.forEach(function (x) {
+            if (x && x.title && x.id) out.push({ src: 'IslamHouse', title: strip(x.title), author: authorOf(x), desc: strip(x.description || x.short_description), year: '', url: x.source_url || x.url || '', pdf: '', ihId: x.id });
+          });
+        });
+        return out;
+      });
+      ihCache.then(function (r) { if (!r) ihCache = null; });
+    }
+    return ihCache;
+  }
+  // API ৫: বাংলা উইকিসংকলন
+  function srcWS(terms) {
+    return Promise.all(terms.map(function (t) {
+      return getJSON('https://bn.wikisource.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(t) + '&srlimit=15&format=json&origin=*');
+    })).then(function (rs) {
+      if (!rs.some(function (r) { return r !== null; })) return null;
+      var out = [];
+      rs.forEach(function (d) {
+        ((d && d.query && d.query.search) || []).forEach(function (x) {
+          out.push({ src: 'Wikisource', title: x.title, author: '', desc: strip(x.snippet), year: '', url: 'https://bn.wikisource.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), pdf: '' });
+        });
+      });
+      return out;
+    });
+  }
+
+  function loadEra(e, lang) {
+    var jobs = [];
+    if (lang === 'bn') {
+      jobs.push(srcArchive(e.q, false));
+      e.q.forEach(function (t) { jobs.push(srcGB(t, false)); jobs.push(srcOL(t, false)); });
+      jobs.push(srcIH()); jobs.push(srcWS(e.q.slice(0, 2)));
+    } else {
+      jobs.push(srcArchive(e.e, false));
+      e.e.forEach(function (t) { jobs.push(srcGB(t, false)); jobs.push(srcOL(t, false)); });
+    }
     return Promise.all(jobs).then(function (res) {
       var ok = res.some(function (r) { return r !== null; });
       var seen = {}, out = [];
       res.forEach(function (r) {
         (r || []).forEach(function (it) {
-          if (!it.title || !it.url) return;
+          if (!it.title || !(it.url || it.ihId)) return;
+          var b = isBn(it.title);
+          if ((lang === 'bn') !== b) return;
           var tl = it.title.toLowerCase();
           if (!e.m.some(function (k) { return tl.indexOf(k.toLowerCase()) >= 0; })) return;
           var k = norm(it.title); if (!k || seen[k]) return;
-          seen[k] = 1; it.bn = isBn(it.title); out.push(it);
+          seen[k] = 1; out.push(it);
         });
       });
-      out.sort(function (a, b) { return (b.bn ? 1 : 0) - (a.bn ? 1 : 0); });
-      return { ok: ok, items: out.slice(0, 60) };
+      return { ok: ok, items: out.slice(0, 80) };
     });
   }
 
+  function showLangs() {
+    lv = 'langs'; title('ইসলামী ইতিহাস');
+    var b = $('libBody'); b.innerHTML = '';
+    ['bn', 'en'].forEach(function (l, i) {
+      var row = document.createElement('button'); row.className = 'hd-row';
+      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">📁 ' + esc(foldName(l)) + '</div><div class="lb-d">' + esc(FOLD[l][3]) + '</div></span>';
+      row.onclick = function () { curLang = l; showEras(); };
+      b.appendChild(row);
+    });
+    window.scrollTo(0, 0);
+  }
+
   function showEras() {
-    lv = 'eras'; title('ইসলামী ইতিহাস');
+    lv = 'eras'; title(foldName(curLang));
     var b = $('libBody'); b.innerHTML = '';
     ERAS.forEach(function (e, i) {
       var row = document.createElement('button'); row.className = 'hd-row';
-      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(pick(e)) + '</div>' + (e.per ? '<div class="lb-d">' + esc(e.per) + '</div>' : '') + '</span>';
+      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(pick(e)) + '</div>' + (e.per ? '<div class="lb-d">' + esc(perOf(e)) + '</div>' : '') + '</span>';
       row.onclick = function () { showEra(i); };
       b.appendChild(row);
     });
@@ -6975,19 +7043,18 @@ function openBioPerson(name){
   }
 
   function renderEra(i, res) {
-    var e = ERAS[i], b = $('libBody');
-    var items = eraCache[i] || (res && res.items) || [];
+    var b = $('libBody'), key = curLang + i;
+    var items = eraCache[key] || (res && res.items) || [];
     if (!items.length) {
-      var msg = (res && !res.ok) ? 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।' : 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।';
-      b.innerHTML = '<div class="hd-msg">' + esc(T(msg)) + '</div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
-      $('libRetry').onclick = function () { delete eraCache[i]; showEra(i); };
+      b.innerHTML = '<div class="hd-msg">' + esc((res && !res.ok) ? ui('net') : ui('none')) + '</div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(ui('retry')) + '</button></div>';
+      $('libRetry').onclick = function () { delete eraCache[key]; showEra(i); };
       return;
     }
-    b.innerHTML = '<div id="libItems"></div><div class="hd-msg">' + esc(T('বইগুলো Archive.org, Google Books ও Open Library থেকে সংগৃহীত। বাংলা বই আগে দেখানো হয়েছে।')) + '</div>';
+    b.innerHTML = '<div id="libItems"></div><div class="hd-msg">' + esc(ui('note')) + '</div>';
     var box = $('libItems');
     items.forEach(function (it, n) {
       var row = document.createElement('button'); row.className = 'hd-row';
-      var meta = it.src + (it.year ? ' · ' + it.year : '') + (it.bn ? '' : ' · EN');
+      var meta = it.src + (it.year ? ' · ' + it.year : '');
       row.innerHTML = '<span class="lb-no">' + num(n + 1) + '</span><span class="lb-tx"><div class="lb-t">' + esc(it.title) + '</div>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') + '<div class="lb-d">' + esc(meta) + '</div></span>';
       row.onclick = function () { openHItem(it); };
       box.appendChild(row);
@@ -6996,12 +7063,12 @@ function openBioPerson(name){
 
   function showEra(i) {
     curEra = i; lv = 'elist'; title(pick(ERAS[i]));
-    var b = $('libBody'); window.scrollTo(0, 0);
-    if (eraCache[i]) { renderEra(i); return; }
-    b.innerHTML = '<div class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div>';
-    loadEra(ERAS[i]).then(function (r) {
-      if (lv !== 'elist' || curEra !== i) return;
-      if (r.items.length) eraCache[i] = r.items;
+    var b = $('libBody'), key = curLang + i, lang = curLang; window.scrollTo(0, 0);
+    if (eraCache[key]) { renderEra(i); return; }
+    b.innerHTML = '<div class="hd-msg">' + esc(ui('load')) + '</div>';
+    loadEra(ERAS[i], lang).then(function (r) {
+      if (lv !== 'elist' || curEra !== i || curLang !== lang) return;
+      if (r.items.length) eraCache[key] = r.items;
       renderEra(i, r);
     });
   }
@@ -7013,9 +7080,23 @@ function openBioPerson(name){
     b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4>' + (it.author ? '<div class="lb-a">' + esc(it.author) + '</div>' : '') +
       '<div class="lb-d" style="margin:6px 0">' + esc(it.src + (it.year ? ' · ' + it.year : '')) + '</div>' +
       (d ? '<p>' + esc(d) + '</p>' : '') +
-      '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(T('বইটি খুলুন')) + '</a>' +
-      (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(T('PDF ডাউনলোড')) + '</a>' : '') + '</div>';
+      '<div id="hLinks">' +
+      (it.url ? '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(ui('open')) + '</a>' : '') +
+      (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(ui('pdf')) + '</a>' : '') + '</div></div>';
     window.scrollTo(0, 0);
+    if (it.ihId) {
+      api('get-item/' + it.ihId + '/bn/json').then(function (dd) {
+        var x = Array.isArray(dd) ? dd[0] : dd; if (!x || curH !== it) return;
+        var box = $('hLinks'); if (!box) return;
+        var h = (x.attachments || []).filter(function (a) { return a && a.url; }).map(function (a) {
+          var ext = String(a.extension_type || a.extension || (/\.pdf(\?|$)/i.test(a.url) ? 'pdf' : 'file')).toLowerCase();
+          return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext === 'pdf' ? ui('pdf') : ext.toUpperCase() + ' ' + T('খুলুন')) + '</a>';
+        }).join('');
+        var src = x.source_url || x.url;
+        if (src) h += '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(src) + '">' + esc(ui('ih')) + '</a>';
+        box.innerHTML = h;
+      }).catch(function () {});
+    }
   }
 
 })();
