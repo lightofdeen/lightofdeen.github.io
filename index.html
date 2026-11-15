@@ -290,7 +290,7 @@ html[dir=rtl] button.rd-back:active svg{transform:scaleX(-1) translateX(-2px)}
 .qibla-card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:24px 16px;text-align:center;position:relative}
 .qibla-dial{width:min(78vw,300px);aspect-ratio:1;margin:8px auto 0;border-radius:50%;border:3px solid var(--line);background:var(--bg);position:relative;transition:transform .15s linear}
 .qibla-ticks{position:absolute;inset:6px;border-radius:50%;background:repeating-conic-gradient(var(--muted) 0 .6deg,transparent .6deg 10deg);-webkit-mask:radial-gradient(circle,transparent 90%,#000 91%);mask:radial-gradient(circle,transparent 90%,#000 91%);opacity:.55}
-.qd{position:absolute;font-weight:700;font-size:15px;color:var(--muted)}
+.qd{position:absolute;z-index:2;background:var(--bg);padding:0 4px;border-radius:6px;font-weight:700;font-size:13px;color:var(--muted);white-space:nowrap}
 .qd.n{top:12%;left:50%;transform:translateX(-50%);color:#e53935}
 .qd.s{bottom:12%;left:50%;transform:translateX(-50%)}
 .qd.e{right:12%;top:50%;transform:translateY(-50%)}
@@ -1023,26 +1023,26 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
     <div class="qibla-wrap">
       <div class="qibla-top">
         <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
-        <h3>ক্বিবলা কম্পাস</h3>
+        <h3 id="qiblaTitle">ক্বিবলা কম্পাস</h3>
         <span style="width:40px"></span>
       </div>
 
       <div class="qibla-card">
         <div class="qibla-dial" id="qiblaDial">
           <div class="qibla-ticks"></div>
-          <span class="qd n">N</span><span class="qd e">E</span><span class="qd s">S</span><span class="qd w">W</span>
+          <span class="qd n" id="qdN">উত্তর</span><span class="qd e" id="qdE">পূর্ব</span><span class="qd s" id="qdS">দক্ষিণ</span><span class="qd w" id="qdW">পশ্চিম</span>
           <!-- কাবার দিক নির্দেশক (ডায়ালের সাথে ঘোরে) -->
           <div class="qibla-pointer" id="qiblaPointer"><span class="kaaba">🕋</span><i></i></div>
         </div>
         <div class="qibla-fixed-mark"></div>
 
         <div class="qibla-info">
-          <div><small>ক্বিবলার দিক</small><b id="qiblaDeg">--°</b></div>
-          <div><small>আপনার মুখ</small><b id="qiblaHeading">--°</b></div>
+          <div><small id="qiblaLblDir">ক্বিবলার দিক</small><b id="qiblaDeg">--°</b></div>
+          <div><small id="qiblaLblFace">আপনার মুখ</small><b id="qiblaHeading">--°</b></div>
         </div>
         <p class="qibla-status" id="qiblaStatus">ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন</p>
         <button class="qibla-start" id="qiblaStart" onclick="startQibla()">📍 ক্বিবলা খুঁজুন</button>
-        <p class="qibla-hint">ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।</p>
+        <p class="qibla-hint" id="qiblaHint">ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।</p>
       </div>
     </div>
   </div>
@@ -1814,14 +1814,54 @@ function switchView(viewName) {
   if (viewName === 'hijri') showHijri(true);
   if (viewName === 'amal') renderAmal();
   if (viewName === 'dua') { document.getElementById('duaSearch').value=''; renderDuas(''); }
-  if (viewName !== 'qibla') stopQibla();
+  if (viewName === 'qibla') startQibla(); else stopQibla();
   if (viewName !== 'surah' && typeof player !== 'undefined') player.pause();
   window.scrollTo(0, 0);
 }
 
 // ===== Qibla Compass =====
 const KAABA = { lat: 21.422487, lng: 39.826206 };
-let qiblaBearing = null, qiblaWatching = false, lastHeading = 0;
+let qiblaBearing = null, qiblaWatching = false, qiblaStarting = false, qiblaSeq = 0, qiblaExact = false, lastHeading = 0, dialRot = 0, gotHeading = false, qiblaNoSensorTimer = null;
+
+const QI = {
+  bn: { title: 'ক্বিবলা কম্পাস', n: 'উত্তর', e: 'পূর্ব', s: 'দক্ষিণ', w: 'পশ্চিম', dir: 'ক্বিবলার দিক', face: 'আপনার মুখ',
+    start: '📍 ক্বিবলা খুঁজুন', idle: 'ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন', getloc: 'লোকেশন নেওয়া হচ্ছে...',
+    turn: 'ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন', ok: '✅ আপনি ক্বিবলার দিকে মুখ করে আছেন',
+    nosensor: 'কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে {d}° ডানে', sensorDenied: 'কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি। বাটনে চাপ দিয়ে আবার চেষ্টা করুন।',
+    approx: 'লোকেশন পাওয়া যায়নি, {p}-এর অবস্থান ধরে দেখানো হচ্ছে। ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন', place: 'আপনার অবস্থান অনুযায়ী ক্বিবলা',
+    hint: 'ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।' },
+  en: { title: 'Qibla Compass', n: 'North', e: 'East', s: 'South', w: 'West', dir: 'Qibla direction', face: 'You are facing',
+    start: '📍 Find Qibla', idle: 'Tap the button below to find the Qibla', getloc: 'Getting your location...',
+    turn: 'Turn your phone until 🕋 points up', ok: '✅ You are facing the Qibla',
+    nosensor: 'Compass sensor not found. Qibla is {d}° clockwise from North', sensorDenied: 'Compass sensor permission was not granted. Tap the button to try again.',
+    approx: 'Location unavailable, using {p}. Turn your phone until 🕋 points up', place: 'Qibla for your location',
+    hint: 'Hold your phone flat. When the 🕋 icon lines up with the mark at the top, that is the Qibla. If the compass is off, move your phone in a figure-8 (∞) to calibrate.' },
+  ar: { title: 'بوصلة القبلة', n: 'شمال', e: 'شرق', s: 'جنوب', w: 'غرب', dir: 'اتجاه القبلة', face: 'اتجاهك',
+    start: '📍 ابحث عن القبلة', idle: 'اضغط الزر أدناه لتحديد القبلة', getloc: 'جارٍ تحديد موقعك...',
+    turn: 'أدر هاتفك حتى تشير 🕋 إلى الأعلى', ok: '✅ أنت متجه نحو القبلة',
+    nosensor: 'لم يتم العثور على مستشعر البوصلة. القبلة {d}° يمين الشمال', sensorDenied: 'لم يتم منح إذن مستشعر البوصلة. اضغط الزر للمحاولة مرة أخرى.',
+    approx: 'تعذّر تحديد الموقع، يُستخدم موقع {p}. أدر هاتفك حتى تشير 🕋 إلى الأعلى', place: 'القبلة حسب موقعك',
+    hint: 'أمسك الهاتف بشكل مسطح. عندما تتطابق أيقونة 🕋 مع العلامة في الأعلى فهذا اتجاه القبلة. إذا كانت البوصلة غير دقيقة فحرّك هاتفك على شكل ٨ (∞) للمعايرة.' }
+};
+let qiblaStatusKey = 'idle', qiblaStatusVars = null;
+function qi(k, v) {
+  let t = (QI[LANG] || QI.bn)[k] || QI.bn[k] || '';
+  if (v) for (const x in v) t = t.replace('{' + x + '}', v[x]);
+  return t;
+}
+function setQiblaStatus(key, vars) {
+  qiblaStatusKey = key; qiblaStatusVars = vars || null;
+  document.getElementById('qiblaStatus').textContent = qi(key, vars);
+}
+function qiblaTexts() {
+  const set = (id, k) => { const e = document.getElementById(id); if (e) e.textContent = qi(k); };
+  set('qiblaTitle', 'title'); set('qdN', 'n'); set('qdE', 'e'); set('qdS', 's'); set('qdW', 'w');
+  set('qiblaLblDir', 'dir'); set('qiblaLblFace', 'face'); set('qiblaStart', 'start'); set('qiblaHint', 'hint');
+  document.getElementById('qiblaStatus').textContent = qi(qiblaStatusKey, qiblaStatusVars);
+  if (qiblaBearing !== null) document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
+  if (gotHeading) document.getElementById('qiblaHeading').textContent = bn(Math.round(lastHeading)) + '°';
+}
+qiblaTexts();
 
 function calcQibla(lat, lng) {
   const r = Math.PI / 180;
@@ -1830,29 +1870,62 @@ function calcQibla(lat, lng) {
   const x = Math.cos(lat * r) * Math.tan(KAABA.lat * r) - Math.sin(lat * r) * Math.cos(dL);
   return (Math.atan2(y, x) / r + 360) % 360;
 }
+function applyQiblaPos(lat, lng) {
+  qiblaBearing = calcQibla(lat, lng);
+  document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
+  document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)';
+}
+function savedQiblaPos() {
+  try { const o = JSON.parse(localStorage.getItem('lodQiblaPos') || 'null'); if (o && isFinite(o.lat) && isFinite(o.lng)) return o; } catch (e) {}
+  return null;
+}
 
-function setQiblaStatus(t) { document.getElementById('qiblaStatus').textContent = t; }
-
+// খুললেই চালু: প্রথমে সেন্সর, সঙ্গে সঙ্গে জানা অবস্থান থেকে দিক, তারপর GPS দিয়ে সঠিক করা
 async function startQibla() {
-  if (!navigator.geolocation) { setQiblaStatus(T('আপনার ব্রাউজার লোকেশন সাপোর্ট করে না')); return; }
-  setQiblaStatus(T('লোকেশন নেওয়া হচ্ছে...'));
+  if (qiblaWatching && qiblaExact) return;
+  if (qiblaStarting) return;
+  qiblaStarting = true;
+  const seq = ++qiblaSeq;
+  const btn = document.getElementById('qiblaStart');
+  setQiblaStatus('getloc');
+  try {
+    // ১) কম্পাস সেন্সর (iOS-এ ইউজারের ট্যাপের ভেতরেই অনুমতি চাইতে হয়)
+    let sensorOk = true;
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      try { sensorOk = (await DeviceOrientationEvent.requestPermission()) === 'granted'; } catch (e) { sensorOk = false; }
+    }
+    if (seq !== qiblaSeq) return;
+    if (!sensorOk) { setQiblaStatus('sensorDenied'); btn.style.display = ''; }
 
-  // iOS-এ সেন্সর পারমিশন ইউজারের ট্যাপের ভেতরেই চাইতে হয়
-  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-    try {
-      const res = await DeviceOrientationEvent.requestPermission();
-      if (res !== 'granted') { setQiblaStatus(T('কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি')); return; }
-    } catch (e) { setQiblaStatus(T('সেন্সরের অনুমতি পাওয়া যায়নি')); return; }
-  }
+    // ২) জানা অবস্থান (আগের GPS বা বেছে নেওয়া জেলা) থেকে সঙ্গে সঙ্গে দিক দেখানো
+    const sv = savedQiblaPos();
+    const base = sv ? { lat: sv.lat, lng: sv.lng } : { lat: LOC.lat, lng: LOC.lng };
+    applyQiblaPos(base.lat, base.lng);
+    if (sensorOk) listenCompass();
 
-  navigator.geolocation.getCurrentPosition(pos => {
-    qiblaBearing = calcQibla(pos.coords.latitude, pos.coords.longitude);
-    document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
-    document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)';
-    listenCompass();
-  }, () => {
-    setQiblaStatus(T('লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)'));
-  }, { enableHighAccuracy: true, timeout: 15000 });
+    // ৩) GPS দিয়ে সঠিক অবস্থান (আগে দ্রুত/কম নির্ভুল, না পেলে নির্ভুল)
+    getPos({ enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 })
+      .catch(() => getPos({ enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }))
+      .then(pos => {
+        if (seq !== qiblaSeq) return;
+        qiblaExact = true;
+        applyQiblaPos(pos.coords.latitude, pos.coords.longitude);
+        try { localStorage.setItem('lodQiblaPos', JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude, t: Date.now() })); } catch (e) {}
+        if (sensorOk && !gotHeading) setQiblaStatus('turn');
+      })
+      .catch(() => {
+        if (seq !== qiblaSeq) return;
+        if (!sensorOk) return;
+        if (sv) { if (!gotHeading) setQiblaStatus('turn'); }
+        else if (!gotHeading) setQiblaStatus('approx', { p: LOC.name });
+      });
+  } finally { if (seq === qiblaSeq) qiblaStarting = false; }
+}
+function getPos(opts) {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error('nogeo'));
+    navigator.geolocation.getCurrentPosition(res, rej, opts);
+  });
 }
 
 function listenCompass() {
@@ -1860,33 +1933,37 @@ function listenCompass() {
   qiblaWatching = true;
   window.addEventListener('deviceorientationabsolute', onOrient, true);
   window.addEventListener('deviceorientation', onOrient, true);
-  setQiblaStatus(T('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন'));
+  setQiblaStatus('turn');
   document.getElementById('qiblaStart').style.display = 'none';
-  setTimeout(() => { if (qiblaWatching && !gotHeading) setQiblaStatus(T('কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ') + bn(Math.round(qiblaBearing)) + T('° ডানে')); }, 3000);
+  clearTimeout(qiblaNoSensorTimer);
+  qiblaNoSensorTimer = setTimeout(() => { if (qiblaWatching && !gotHeading && qiblaBearing !== null) setQiblaStatus('nosensor', { d: bn(Math.round(qiblaBearing)) }); }, 3500);
 }
 
-let gotHeading = false;
 function onOrient(e) {
   let h = null;
   if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;           // iOS
   else if (e.absolute === true && e.alpha !== null) h = (360 - e.alpha) % 360;          // Android absolute
   else if (e.type === 'deviceorientation' && e.alpha !== null && !('ondeviceorientationabsolute' in window)) h = (360 - e.alpha) % 360;
-  if (h === null) return;
+  if (h === null || qiblaBearing === null) return;
   gotHeading = true;
   lastHeading = h;
-  document.getElementById('qiblaDial').style.transform = 'rotate(' + (-h) + 'deg)';
+  // ৩৫৯°→০° পার হওয়ার সময় ডায়াল যেন উল্টো পাক না খায়
+  dialRot += ((-h - dialRot) % 360 + 540) % 360 - 180;
+  document.getElementById('qiblaDial').style.transform = 'rotate(' + dialRot + 'deg)';
   document.getElementById('qiblaHeading').textContent = bn(Math.round(h)) + '°';
   const diff = Math.abs(((qiblaBearing - h + 540) % 360) - 180);
   const aligned = diff < 5;
   document.getElementById('qiblaDial').parentElement.classList.toggle('aligned', aligned);
-  if (aligned) { setQiblaStatus(T('✅ আপনি ক্বিবলার দিকে মুখ করে আছেন')); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} }
-  else setQiblaStatus(T('ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন'));
+  if (aligned) { if (qiblaStatusKey !== 'ok') { setQiblaStatus('ok'); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} } }
+  else if (qiblaStatusKey !== 'turn') setQiblaStatus('turn');
 }
 
 function stopQibla() {
   window.removeEventListener('deviceorientationabsolute', onOrient, true);
   window.removeEventListener('deviceorientation', onOrient, true);
-  qiblaWatching = false; gotHeading = false;
+  clearTimeout(qiblaNoSensorTimer);
+  qiblaSeq++; qiblaWatching = false; qiblaStarting = false; qiblaExact = false; gotHeading = false;
+  setQiblaStatus('idle');
   const b = document.getElementById('qiblaStart'); if (b) b.style.display = '';
 }
 
@@ -3238,7 +3315,7 @@ function resetTasbih() {
 
 // ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
 const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
-const I18N_SKIP='#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
+const I18N_SKIP='#qibla-view,#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
 function i18nWalk(){
   const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
   while((x=tw.nextNode()))nodes.push(x);
@@ -3262,6 +3339,7 @@ function applyLang(l){
   LANG=l;try{localStorage.setItem('lang',l)}catch(e){}
   const h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
   i18nWalk();
+  try{qiblaTexts()}catch(e){}
   document.title=TITLES[l];
   $('langCode').textContent={bn:'বাংলা',en:'English',ar:'العربية'}[l];
   document.querySelectorAll('#langMenu button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
