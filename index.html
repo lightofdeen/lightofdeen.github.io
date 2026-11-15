@@ -7508,7 +7508,7 @@ function openBioPerson(name){
 
   function av(r){
     var i=RECS.indexOf(r)+1;
-    return '<span class="au-av"><b class="au-n">'+bnd(i)+'</b><img src="reciters/'+r[0]+'.jpg" alt="" loading="lazy" onload="this.previousSibling.style.display=\'none\'" onerror="this.remove()"></span>';
+    return '<span class="au-av"><b class="au-n">'+bnd(i)+'</b><img src="'+r[0]+'.jpg" alt="" data-x="0" onload="this.previousSibling.style.display=\'none\'" onerror="var E=[\'png\',\'jpeg\',\'webp\'],k=+this.dataset.x;if(k<E.length){this.dataset.x=k+1;this.src=\''+r[0]+'.\'+E[k]}else this.remove()"></span>';
   }
   function toast(m){var e=$('lodToast');if(!e)return;e.textContent=m;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('show')},2600)}
 
