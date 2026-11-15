@@ -1343,7 +1343,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 
 <div class="au-mini" id="auMini" role="region" aria-label="অডিও প্লেয়ার"><div>
   <div class="au-mr">
-    <div class="au-mt" id="auMT" onclick="switchView('audio')"><b id="auMTitle">—</b><span id="auMSub">—</span></div>
+    <div class="au-mt" id="auMT" onclick="auOpenPlaying()"><b id="auMTitle">—</b><span id="auMSub">—</span></div>
     <button class="au-mb" id="auPrev" aria-label="আগের সূরা"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
     <button class="au-mb big" id="auPlay" aria-label="চালান/থামান"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
     <button class="au-mb" id="auNext" aria-label="পরের সূরা"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l10.500-7z"/></svg></button>
@@ -6476,6 +6476,7 @@ function openBioPerson(name){
       else if (v === 'hadith') { d.l = hd.level; if (hd.level !== 'books' && hd.book) d.b = hd.book.id; if (hd.level === 'list') d.c = hd.chapter; }
       else if (v === 'topic') { d.t = curTopic; if (curSub) d.s = curSub; if (curTopic === 3 && bioPerson) d.p = bioPerson; }
       else if (v === 'asma') { d.a = asmaCur; }
+      else if (v === 'audio') { var ar_ = window.auDesc ? window.auDesc() : ''; if (ar_) d.r = ar_; }
       else if (v === 'tafsir') { d.m = tfvMode; }
       else if (v === 'library') { var lx = window.libDesc && window.libDesc(); if (lx) for (var lk in lx) d[lk] = lx[lk]; }
     } catch (e) {}
@@ -6572,6 +6573,7 @@ function openBioPerson(name){
         case 'hadith': ret = rHadith(d); break;
         case 'topic': rTopic(d); break;
         case 'asma': O.switchView('asma'); if (d.a) O.openAsma(d.a); break;
+        case 'audio': O.switchView('audio'); if (d.r && window.auGo) window.auGo(d.r); break;
         case 'tafsir': tfvMode = d.m || 'editions'; O.switchView('tafsir'); break;
         case 'library': O.switchView('library'); if (window.libRestore) window.libRestore(d); break;
         default: O.switchView(d.v || 'home');
@@ -7589,7 +7591,7 @@ function openBioPerson(name){
     h+='<p class="au-note">'+esc(tr('অডিও ইন্টারনেট থেকে স্ট্রিম হয়; মোবাইল ডেটা খরচ হতে পারে।'))+'</p>';
     $('audRoot').innerHTML=h;
     $('audRoot').querySelectorAll('.au-rec').forEach(function(b){
-      b.onclick=function(){var r=RECS.filter(function(x){return x[0]===b.getAttribute('data-r')})[0];st.filter='';renderSurahs(r)};
+      b.onclick=function(){var r=byId(b.getAttribute('data-r'));st.filter='';renderSurahs(r);if(window.NAV&&NAV.commit)NAV.commit();};
     });
     mark();
   }
@@ -7621,12 +7623,23 @@ function openBioPerson(name){
     mark();
   }
 
-  window.auShow=function(rerender){
-    if(st.view==='surahs'&&st.cur)renderSurahs(st.cur); else renderRecs();
+  function byId(id){return RECS.filter(function(x){return x[0]===id})[0]}
+  /* keep=true হলে (ভাষা বদল) এখনকার স্ক্রিনই থাকে; নইলে সবসময় কারী তালিকা থেকে শুরু */
+  window.auShow=function(keep){
+    if(keep){ if(st.view==='surahs'&&st.cur)renderSurahs(st.cur); else renderRecs(); return; }
+    if(window.auWant){ var w=byId(window.auWant); window.auWant=null; if(w){st.filter='';renderSurahs(w);return} }
+    renderRecs();
   };
+  window.auGo=function(id){ var r=byId(id); if(r){st.filter='';renderSurahs(r)} else renderRecs(); };
+  window.auDesc=function(){ return (st.view==='surahs'&&st.cur)?st.cur[0]:''; };
+  window.auOpenPlaying=function(){
+    var a=$('audio-view'); if(a&&a.classList.contains('active'))return;
+    window.auWant=st.rec?st.rec[0]:null; switchView('audio');
+  };
+  /* ← বাটন: সবসময় ঠিক এক ধাপ পিছনে (সূরা তালিকা → কারী তালিকা → হোম) */
   window.auBack=function(){
-    if(st.view==='surahs'){st.filter='';renderRecs();window.scrollTo(0,0)}
-    else if(typeof navBack==='function')navBack(); else switchView('home');
+    if(st.view==='surahs'&&!window.NAV){st.filter='';renderRecs();window.scrollTo(0,0);return}
+    if(typeof navBack==='function')navBack(); else switchView('home');
   };
 
   /* মিনি প্লেয়ারের বাটন */
