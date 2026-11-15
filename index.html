@@ -7574,11 +7574,10 @@ function openBioPerson(name){
     ['science', 'বিজ্ঞান', 'Science', '<path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><path d="M7 15h10"/>'],
     ['biography', 'জীবনী', 'Biography', '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'],
     ['kids', 'শিশু-কিশোর', 'Kids', '<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9.5h.01M15 9.5h.01"/>'],
-    ['travel', 'ভ্রমণ', 'Travel', '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'],
-    ['others', 'অন্যান্য', 'Others', '<circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/>']
+    ['travel', 'ভ্রমণ', 'Travel', '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>']
   ];
   var SRC = {
-    islamic: function (p) { return 'books/bn/bn/' + p + '/' + LIMIT + '/json'; }
+    islamic: function (p) { return 'books/' + curLang + '/' + curLang + '/' + p + '/' + LIMIT + '/json'; }
   };
   var curBook = null;
   var lv = 'cats', page = 1, count = 0, busy = false, cur = null;
@@ -7609,21 +7608,21 @@ function openBioPerson(name){
   function libUp() {
     if (lv === 'reader') { if (readerBack === 'book') openBook(curBook); else openDItem(curD); }
     else if (lv === 'dbook') showDaily(cur);
-    else if (lv === 'dlist') showCats();
+    else if (lv === 'dlist') showLangs();
     else if (lv === 'hbook') showEra(curEra);
     else if (lv === 'elist') showEras();
     else if (lv === 'eras') showLangs();
     else if (lv === 'langs') showCats();
     else if (lv === 'book') showList();
-    else if (lv === 'list') showCats();
+    else if (lv === 'list') showLangs();
     else navBack();
   }
   window.libDesc = function () {
     var L = (lv === 'reader') ? readerBack : lv;
     var d = { lv: L };
-    if (L === 'list' || L === 'book' || L === 'dlist' || L === 'dbook') d.c = cur ? cur[0] : '';
+    if (L === 'list' || L === 'book' || L === 'dlist' || L === 'dbook' || L === 'langs') { d.c = cur ? cur[0] : ''; d.g = curLang; }
     if (L === 'book' && curBook) { d.bi = curBook.id; d.bt = curBook.title; }
-    if (L === 'dbook') d.di = (dailyMem[cur ? cur[0] : ''] || []).indexOf(curD);
+    if (L === 'dbook') d.di = (dailyMem[cur ? cur[0] + '_' + curLang : ''] || []).indexOf(curD);
     if (lv === 'eras' || lv === 'elist' || lv === 'hbook') d.g = curLang;
     if (lv === 'elist' || lv === 'hbook') d.e = curEra;
     if (lv === 'hbook') { var arr = eraCache[curLang + curEra] || []; d.h = arr.indexOf(curH); }
@@ -7632,13 +7631,13 @@ function openBioPerson(name){
   window.libRestore = function (d) {
     var l = d.lv || 'cats';
     if (d.g) curLang = d.g;
+    if (d.lv === 'eras' || d.lv === 'elist' || d.lv === 'hbook') cur = CATS.filter(function (x) { return x[0] === 'history'; })[0];
     var c = d.c ? CATS.filter(function (x) { return x[0] === d.c; })[0] : null;
     if (l === 'cats') showCats();
-    else if (l === 'list') { if (c) openCat(c); else showCats(); }
-    else if (l === 'dlist') { if (c) openCat(c); else showCats(); }
-    else if (l === 'dbook') { if (c) { cur = c; var dl0 = dailyMem[c[0]]; if (dl0 && dl0[d.di]) openDItem(dl0[d.di]); else openCat(c); } else showCats(); }
+    else if (l === 'list' || l === 'dlist') { if (c) { cur = c; openFolder(curLang); } else showCats(); }
+    else if (l === 'dbook') { if (c) { cur = c; var dl0 = dailyMem[c[0] + '_' + curLang]; if (dl0 && dl0[d.di]) openDItem(dl0[d.di]); else openFolder(curLang); } else showCats(); }
     else if (l === 'book') { if (c) cur = c; openBook({ id: d.bi, title: d.bt || '' }); }
-    else if (l === 'langs') showLangs();
+    else if (l === 'langs') { if (c) cur = c; showLangs(); }
     else if (l === 'eras') showEras();
     else if (l === 'elist') showEra(d.e);
     else if (l === 'hbook') {
@@ -7652,7 +7651,7 @@ function openBioPerson(name){
     lv = 'cats'; title('লাইব্রেরী');
     var b = $('libBody'); b.innerHTML = '';
     var g = document.createElement('nav'); g.className = 'grid';
-    CATS.forEach(function (c) {
+    CATS.filter(function (c) { return !isDead(c[0]); }).forEach(function (c) {
       var btn = document.createElement('button'); btn.className = 'm';
       btn.innerHTML = '<div class="ic"><svg class="i" viewBox="0 0 24 24">' + c[3] + '</svg></div>' + esc(T(c[1])) + '<small>' + c[2] + '</small>';
       btn.onclick = function () { openCat(c); };
@@ -7663,17 +7662,22 @@ function openBioPerson(name){
     nc();
   }
 
-  function openCat(c) {
-    if (c[0] === 'history') { cur = c; showLangs(); return; }
-    if (DAILY[c[0]]) { showDaily(c); return; }
-    if (!SRC[c[0]]) {
-      var b = $('libBody'); b.innerHTML = '';
-      lv = 'list'; cur = c; title(c[1]);
-      b.appendChild(hdEl('div', 'hd-msg', T('শীঘ্রই যোগ করা হবে')));
-      nc();
-      return;
-    }
-    cur = c; page = 1; count = 0; showList(true);
+  // কোনো আইকনে দুই ভাষার কোনোটিতেই বই না পাওয়া গেলে (৩ দিন) আইকনটি লুকানো থাকে
+  var EKEY = 'lodLibEmpty', EDAY = 3 * 864e5;
+  function emptyMap() { try { return JSON.parse(localStorage.getItem(EKEY) || '{}') || {}; } catch (e) { return {}; } }
+  function markEmpty(id, l, empty) {
+    try { var o = emptyMap(); o[id] = o[id] || {}; if (empty) o[id][l] = Date.now(); else delete o[id][l]; localStorage.setItem(EKEY, JSON.stringify(o)); } catch (e) {}
+  }
+  function isDead(id) {
+    var o = emptyMap()[id], n = Date.now();
+    return !!(o && o.bn && o.en && n - o.bn < EDAY && n - o.en < EDAY);
+  }
+  function openCat(c) { cur = c; showLangs(); }
+  function openFolder(l) {
+    curLang = l;
+    if (cur[0] === 'history') { showEras(); return; }
+    if (cur[0] === 'islamic') { page = 1; count = 0; showList(true); return; }
+    showDaily(cur);
   }
 
   function showList(fresh) {
@@ -7727,7 +7731,7 @@ function openBioPerson(name){
     b.innerHTML = '<div class="lb-card"><h4>' + esc(it.title) + '</h4><div class="lb-a" id="libAu">' + esc(authorOf(it)) + '</div><div id="libBd" class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div></div>';
     window.scrollTo(0, 0);
     nc();
-    api('get-item/' + it.id + '/bn/json').then(function (d) {
+    api('get-item/' + it.id + '/' + curLang + '/json').then(function (d) {
       var x = Array.isArray(d) ? d[0] : d;
       var desc = x.description || it.description || '';
       var atts = (x.attachments || []).filter(function (a) { return a && a.url; });
@@ -7929,12 +7933,14 @@ function openBioPerson(name){
   }
 
   function showLangs() {
-    lv = 'langs'; title('ইসলামী ইতিহাস');
+    lv = 'langs'; if (!cur) cur = CATS.filter(function (x) { return x[0] === 'history'; })[0];
+    title(cur[1]);
     var b = $('libBody'); b.innerHTML = '';
     ['bn', 'en'].forEach(function (l, i) {
       var row = document.createElement('button'); row.className = 'hd-row';
-      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">📁 ' + esc(foldName(l)) + '</div><div class="lb-d">' + esc(FOLD[l][3]) + '</div></span>';
-      row.onclick = function () { curLang = l; showEras(); };
+      var ds = cur[0] === 'history' ? FOLD[l][3] : (l === 'bn' ? T('বাংলা ভাষার ইসলামী বই') : 'Islamic books in English');
+      row.innerHTML = '<span class="lb-no">' + num(i + 1) + '</span><span class="lb-tx"><div class="lb-t">📁 ' + esc(foldName(l)) + '</div><div class="lb-d">' + esc(ds) + '</div></span>';
+      row.onclick = function () { openFolder(l); };
       b.appendChild(row);
     });
     window.scrollTo(0, 0);
@@ -8024,6 +8030,9 @@ function openBioPerson(name){
   try {
     Object.assign(D, {
       'আজকের বই': ['Today\'s books', 'كتب اليوم'],
+      'শুধু ইসলামী বই দেখানো হয়।': ['Only Islamic books are shown.', 'تُعرض الكتب الإسلامية فقط.'],
+      'বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।': ['Books are collected from Archive.org, Google Books and Open Library.', 'الكتب من Archive.org وGoogle Books وOpen Library.'],
+      'বাংলা ভাষার ইসলামী বই': ['Islamic books in Bengali', 'كتب إسلامية بالبنغالية'],
       'প্রতিদিন নতুন বই যোগ হয়। বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।': ['New books are added every day. Sourced from Archive.org, Google Books and Open Library.', 'تُضاف كتب جديدة كل يوم. المصادر: Archive.org وGoogle Books وOpen Library.'],
       'PDF খোঁজা হচ্ছে...': ['Looking for PDF...', 'جارٍ البحث عن PDF...'],
       'ডাউনলোড পাওয়া যায়নি': ['Download not available', 'التنزيل غير متاح'],
@@ -8035,21 +8044,26 @@ function openBioPerson(name){
     });
   } catch (e) {}
 
-  var DAILY = {
-    literature: { bn: ['উপন্যাস', 'ছোটগল্প', 'কবিতা', 'নাটক', 'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'শরৎচন্দ্র চট্টোপাধ্যায়', 'বঙ্কিমচন্দ্র', 'রচনাবলী', 'গল্পগুচ্ছ', 'সাহিত্য', 'জীবনানন্দ দাশ'], en: ['bengali literature', 'bengali novel', 'bengali poetry', 'short stories', 'world literature', 'classic novels'] },
-    gk: { bn: ['সাধারণ জ্ঞান', 'বিশ্বকোষ', 'অভিধান', 'বাংলাদেশ', 'ভূগোল', 'ইতিহাস', 'জ্ঞান-বিজ্ঞান', 'প্রশ্নোত্তর', 'অর্থনীতি', 'রাজনীতি', 'দর্শন', 'সমাজবিজ্ঞান'], en: ['general knowledge', 'encyclopedia', 'world geography', 'world history', 'philosophy', 'economics'] },
-    science: { bn: ['বিজ্ঞান', 'পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'গণিত', 'মহাকাশ', 'জ্যোতির্বিজ্ঞান', 'কম্পিউটার', 'চিকিৎসা', 'প্রযুক্তি', 'পরিবেশ', 'বিজ্ঞানী'], en: ['science', 'physics', 'chemistry', 'biology', 'mathematics', 'astronomy'] },
-    biography: { bn: ['জীবনী', 'আত্মজীবনী', 'জীবনচরিত', 'স্মৃতিকথা', 'মনীষী', 'বঙ্গবন্ধু', 'মহাত্মা গান্ধী', 'বিজ্ঞানীদের জীবনী', 'সাহাবী জীবনী', 'মনীষীদের জীবনী', 'আমার জীবন', 'জীবনকথা'], en: ['biography', 'autobiography', 'memoirs', 'lives of great men', 'life of', 'scientists biography'] },
-    kids: { bn: ['শিশুতোষ', 'ছোটদের গল্প', 'রূপকথা', 'ঠাকুরমার ঝুলি', 'ছড়া', 'কিশোর', 'শিশুসাহিত্য', 'কিশোর উপন্যাস', 'উপকথা', 'গোয়েন্দা', 'অ্যাডভেঞ্চার', 'নীতিকথা'], en: ['children stories', 'fairy tales', 'nursery rhymes', 'bengali folk tales', 'adventure for kids', 'fables'] },
-    travel: { bn: ['ভ্রমণ', 'ভ্রমণ কাহিনী', 'ভ্রমণকাহিনী', 'পর্যটন', 'সফরনামা', 'দেশ ভ্রমণ', 'হজ্জের সফর', 'হিমালয়', 'ইউরোপ ভ্রমণ', 'অভিযান', 'পৃথিবী ভ্রমণ', 'যাত্রা'], en: ['travel', 'travelogue', 'journey', 'voyage', 'exploration', 'bengal travel'] },
-    others: { bn: ['প্রবন্ধ', 'স্বাস্থ্য', 'রান্না', 'কৃষি', 'আইন', 'শিক্ষা', 'মনোবিজ্ঞান', 'ব্যবসা', 'ব্যক্তিত্ব উন্নয়ন', 'ধর্ম', 'সমাজ', 'নারী'], en: ['essays', 'health', 'cooking', 'agriculture', 'psychology', 'self help'] }
+  // প্রতিটি আইকনের বিষয় (শুধু ইসলামী)
+  var TOPICS = {
+    literature: { bn: ['ইসলামী সাহিত্য', 'ইসলামী গল্প', 'ইসলামী প্রবন্ধ', 'মুসলিম সাহিত্য', 'ইসলামী গল্পগ্রন্থ'], en: ['islamic literature', 'islamic short stories', 'muslim literature', 'islamic stories'] },
+    novel: { bn: ['ইসলামী উপন্যাস', 'ঐতিহাসিক ইসলামী উপন্যাস', 'মুসলিম উপন্যাস', 'ইসলামী ঐতিহাসিক উপন্যাস'], en: ['islamic novel', 'muslim historical novel', 'islamic fiction'] },
+    poetry: { bn: ['ইসলামী কবিতা', 'হামদ ও নাত', 'নাতে রাসূল', 'ইসলামী কাব্য', 'ইসলামী গজল'], en: ['islamic poetry', 'naat poetry', 'nasheed hamd naat', 'muslim poetry'] },
+    gk: { bn: ['ইসলামী সাধারণ জ্ঞান', 'ইসলামী প্রশ্নোত্তর', 'ইসলামী কুইজ', 'ইসলামী বিশ্বকোষ', 'ইসলামী অভিধান'], en: ['islamic general knowledge', 'islamic quiz', 'islamic encyclopedia', 'islamic questions and answers'] },
+    science: { bn: ['ইসলাম ও বিজ্ঞান', 'কুরআন ও বিজ্ঞান', 'মুসলিম বিজ্ঞানী', 'হাদীস ও বিজ্ঞান', 'ইসলামে বিজ্ঞান'], en: ['islam and science', 'quran and science', 'muslim scientists', 'science in islam'] },
+    biography: { bn: ['সাহাবীদের জীবনী', 'নবী-রাসূলদের জীবনী', 'সীরাত', 'ইসলামী মনীষীদের জীবনী', 'রাসূলুল্লাহ সাল্লাল্লাহু আলাইহি ওয়াসাল্লাম জীবনী', 'ইমামদের জীবনী'], en: ['life of prophet muhammad', 'seerah', 'companions of the prophet', 'islamic scholars biography', 'biography of muslim'] },
+    kids: { bn: ['ইসলামী শিশুতোষ', 'শিশুদের ইসলামী গল্প', 'নবীদের কাহিনী', 'ছোটদের ইসলামী বই', 'কিশোরদের ইসলামী গল্প', 'ইসলামী ছড়া'], en: ['islamic stories for children', 'stories of the prophets for kids', 'islamic children books', 'muslim kids'] },
+    travel: { bn: ['হজ্জের সফরনামা', 'ওমরাহ সফরনামা', 'ইসলামী ভ্রমণ', 'ইবনে বতুতা', 'মক্কা মদিনা সফর'], en: ['hajj travelogue', 'journey to makkah', 'ibn battuta travels', 'muslim traveller', 'umrah journey'] },
+    darsi: { bn: ['দরসে নিজামী', 'নাহু', 'সরফ', 'ফিকহ', 'উসূলে ফিকহ', 'মানতিক', 'বালাগাত', 'হিদায়া', 'মিশকাত শরীফ', 'কুদুরী', 'তাফসীরে জালালাইন'], en: ['dars-i nizami', 'arabic grammar nahw sarf', 'hanafi fiqh hidayah', 'usul al-fiqh', 'tafsir jalalayn', 'mishkat al-masabih'] }
   };
-  DAILY.novel = { bn: ['উপন্যাস', 'বাংলা উপন্যাস', 'ঐতিহাসিক উপন্যাস', 'সামাজিক উপন্যাস', 'গোয়েন্দা উপন্যাস', 'বঙ্কিমচন্দ্র উপন্যাস', 'শরৎচন্দ্র উপন্যাস', 'বিভূতিভূষণ', 'হুমায়ূন আহমেদ', 'কিশোর উপন্যাস', 'প্রেমের উপন্যাস', 'উপন্যাস সমগ্র'], en: ['bengali novel', 'classic novel', 'historical novel', 'detective novel', 'romance novel', 'novel'], ws: true };
-  DAILY.poetry = { bn: ['কবিতা', 'কাব্যগ্রন্থ', 'কবিতা সমগ্র', 'রবীন্দ্রনাথ কবিতা', 'নজরুল কবিতা', 'জীবনানন্দ দাশ', 'ছড়া ও কবিতা', 'গীতাঞ্জলি', 'বিদ্রোহী কবিতা', 'প্রেমের কবিতা', 'কাব্য', 'গান ও কবিতা'], en: ['bengali poetry', 'poems', 'collected poems', 'poetry anthology', 'rabindranath tagore poems', 'nazrul poems'], ws: true };
-  DAILY.darsi = { bn: ['দরসে নিজামী', 'নাহু', 'সরফ', 'ফিকহ', 'উসূলে ফিকহ', 'মানতিক', 'বালাগাত', 'হিদায়া', 'তাফসীরে জালালাইন', 'মিশকাত শরীফ', 'কুদুরী', 'শরহে বেকায়া', 'নূরুল আনওয়ার', 'আরবি ব্যাকরণ', 'উসূলে হাদীস', 'কাফিয়া'],
-    en: ['dars-i nizami', 'arabic grammar nahw', 'hanafi fiqh hidayah', 'usul al-fiqh', 'mantiq logic arabic', 'balagha arabic rhetoric', 'tafsir jalalayn', 'mishkat al-masabih'],
-    ar: ['الهداية', 'متن القدوري', 'شرح الجامي', 'نور الأنوار', 'مختصر المعاني', 'شرح العقائد', 'تفسير الجلالين', 'مشكاة المصابيح', 'شرح الوقاية', 'الكافية في النحو'] };
-  var DK = ['literature', 'novel', 'poetry', 'gk', 'science', 'biography', 'kids', 'travel', 'darsi', 'others'];
+  var DK = ['literature', 'novel', 'poetry', 'gk', 'science', 'biography', 'kids', 'travel', 'darsi'];
+  // ইসলামী কি না যাচাই: নামে/বর্ণনায় ইসলামী শব্দ থাকতে হবে
+  var ISL_BN = ['ইসলাম', 'মুসলিম', 'মুসলমান', 'কুরআন', 'কোরআন', 'কুরান', 'হাদিস', 'হাদীস', 'নবী', 'রাসূল', 'রাসুল', 'রসুল', 'সাহাবী', 'সাহাবা', 'সাহাবি', 'আল্লাহ', 'ইমাম', 'ফিকহ', 'ফিক্হ', 'তাফসীর', 'তাফসির', 'সীরাত', 'সিরাত', 'হজ্জ', 'হজ্ব', 'হাজী', 'ওমরাহ', 'উমরাহ', 'নামাজ', 'নামায', 'সালাত', 'রোজা', 'সিয়াম', 'যাকাত', 'দোয়া', 'দুআ', 'দ্বীন', 'দীন', 'শরীয়ত', 'শরিয়ত', 'সুন্নাহ', 'সুন্নত', 'খলিফা', 'খিলাফত', 'আউলিয়া', 'সুফি', 'মসজিদ', 'হামদ', 'নাতে', 'গজল', 'মাদরাসা', 'মাদ্রাসা', 'নিজামী', 'নাহু', 'মানতিক', 'বালাগাত', 'হিদায়া', 'মিশকাত', 'কুদুরী', 'জালালাইন', 'উসূল', 'মক্কা', 'মদিনা', 'মদীনা', 'কাবা', 'ইবনে', 'ইবন', 'আবু বকর', 'ওমর', 'উমর', 'উসমান', 'খালিদ বিন', 'সালাহ', 'ইকবাল', 'পীর', 'ওলী', 'ঈমান', 'জান্নাত', 'জাহান্নাম', 'আখিরাত', 'কিয়ামত', 'ফেরেশতা', 'মুহাম্মদ', 'মুহাম্মাদ', 'মোহাম্মদ', 'সাল্লাল্লাহু'];
+  var ISL_EN = ['islam', 'muslim', 'moslem', 'quran', "qur'an", 'koran', 'hadith', 'sunnah', 'muhammad', 'mohammed', 'messenger of allah', 'allah', 'sahaba', 'companions of the prophet', 'prophets of', 'stories of the prophets', 'caliph', 'imam', 'fiqh', 'tafsir', 'seerah', 'sirah', 'hajj', 'umrah', 'ramadan', 'sufi', 'shariah', 'sharia', 'salat', 'zakat', 'mosque', 'ummah', 'deen', 'nasheed', 'naat', 'madrasa', 'madrassa', 'nizami', 'nahw', 'sarf', 'hidayah', 'mishkat', 'jalalayn', 'usul', 'makkah', 'mecca', 'medina', 'kaaba', 'ibn ', 'battuta', 'saladin', 'iqbal', 'ottoman', 'iman', 'jannah', 'akhirah', 'hijrah', 'tawhid', 'aqeedah', 'aqidah', 'abu bakr', 'umar', 'uthman', 'khalid ibn'];
+  var ISL = new RegExp(ISL_BN.join('|') + '|\\b(?:' + ISL_EN.join('|') + ')', 'i');
+  var hitCount = function (t) { var m = String(t || '').match(new RegExp(ISL.source, 'ig')); return m ? m.length : 0; };
+  var isLat = function (t) { var a = (String(t).match(/[A-Za-z\u00C0-\u024F]/g) || []).length, o = String(t).replace(/[\s\d\W_]/g, '').length; return o > 0 && a / o > 0.7; };
+  function isIslamic(it) { return ISL.test(it.title) || hitCount(String(it.desc || '').slice(0, 400)) >= 2; }
   var dailyMem = {}, dailyMeta = {}, curD = null, readerBack = 'dbook', iaCache = {};
 
   function dayInfo() {
@@ -8122,40 +8136,37 @@ function openBioPerson(name){
     });
   }
 
-  function fetchDaily(c) {
-    var id = c[0], tp = DAILY[id], di = dayInfo(), ci = DK.indexOf(id), n = di.n;
-    var t1 = tp.bn[(n + ci) % tp.bn.length], t2 = tp.bn[(n + ci + 5) % tp.bn.length], te = tp.en[(n + ci) % tp.en.length];
-    var pg = Math.floor(n / tp.bn.length) % 5 + 1, st = (pg - 1) * 20;
-    var jobs = [dArchive(t1, true, pg), dArchive(t2, true, pg), dGB(t1, true, st), dGB(t2, true, st), dOL(t1, true, pg), dArchive(te, false, pg), dGB(te, false, st)];
-    if (tp.ws) { jobs.push(dWS(t1)); jobs.push(dWS(t2)); }
-    if (tp.ar) {
-      var ta = tp.ar[(n + ci) % tp.ar.length], tb = tp.ar[(n + ci + 4) % tp.ar.length];
-      jobs.push(dArchive(ta, false, pg)); jobs.push(dArchive(tb, false, pg)); jobs.push(dGB(ta, false, st)); jobs.push(dOL(ta, false, pg));
-    }
+  function fetchDaily(c, lang) {
+    var id = c[0], tp = TOPICS[id], di = dayInfo(), ci = DK.indexOf(id), n = di.n, bn = lang === 'bn';
+    var list = bn ? tp.bn : tp.en, k = Math.min(4, list.length), terms = [];
+    for (var i = 0; i < k; i++) terms.push(list[(n + ci + i) % list.length]);
+    var jobs = [];
+    terms.forEach(function (t) { jobs.push(dArchive(t, bn, 1)); jobs.push(dGB(t, bn, 0)); jobs.push(dOL(t, bn, 1)); });
     return Promise.all(jobs).then(function (res) {
       var ok = res.some(function (r) { return r !== null; });
-      var seen = {}, bn = [], en = [];
+      var seen = {}, out = [];
       res.forEach(function (r) {
         (r || []).forEach(function (it) {
           if (!it.title || !it.url) return;
-          var k = norm(it.title); if (!k || seen[k]) return;
-          seen[k] = 1;
-          (isBn(it.title) ? bn : en).push(it);
+          if (bn ? !isBn(it.title) : (isBn(it.title) || !isLat(it.title))) return;   // ভাষা মিলতে হবে
+          if (!isIslamic(it)) return;                                                // শুধু ইসলামী বই
+          var k2 = norm(it.title); if (!k2 || seen[k2]) return;
+          seen[k2] = 1; out.push(it);
         });
       });
       var rank = function (a, b) { return ((b.ia || b.pdf || b.embed) ? 1 : 0) - ((a.ia || a.pdf || a.embed) ? 1 : 0); };
-      bn.sort(rank); en.sort(rank);
-      return { ok: ok, items: bn.slice(0, 36).concat(en.slice(0, tp.ar ? 24 : 12)), topic: t1 + '، ' + t2 };
+      out.sort(rank);
+      return { ok: ok, items: out.slice(0, 60), topic: terms.join('، ') };
     });
   }
 
   function loadDaily(c) {
-    var di = dayInfo(), ck = 'lbd2_' + c[0] + '_' + di.key;
+    var di = dayInfo(), ck = 'lbd3_' + c[0] + '_' + curLang + '_' + di.key, lang = curLang;
     try { var s = localStorage.getItem(ck); if (s) { var o = JSON.parse(s); if (o && o.items && o.items.length) return Promise.resolve(o); } } catch (e) {}
-    return fetchDaily(c).then(function (o) {
+    return fetchDaily(c, lang).then(function (o) {
       if (o.items.length) {
         try {
-          for (var i = localStorage.length - 1; i >= 0; i--) { var k = localStorage.key(i); if (k && k.indexOf('lbd2_' + c[0] + '_') === 0 && k !== ck) localStorage.removeItem(k); }
+          for (var i = localStorage.length - 1; i >= 0; i--) { var k = localStorage.key(i); if (k && k.indexOf('lbd3_' + c[0] + '_' + lang + '_') === 0 && k !== ck) localStorage.removeItem(k); }
           localStorage.setItem(ck, JSON.stringify(o));
         } catch (e) {}
       }
@@ -8166,7 +8177,7 @@ function openBioPerson(name){
     try {
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.indexOf('lbd2_' + c[0] + '_') === 0) { var o = JSON.parse(localStorage.getItem(k)); if (o && o.items && o.items.length) return o; }
+        if (k && k.indexOf('lbd3_' + c[0] + '_' + curLang + '_') === 0) { var o = JSON.parse(localStorage.getItem(k)); if (o && o.items && o.items.length) return o; }
       }
     } catch (e) {}
     return null;
@@ -8175,29 +8186,30 @@ function openBioPerson(name){
   function showDaily(c) {
     lv = 'dlist'; cur = c; title(c[1]);
     window.scrollTo(0, 0); nc();
-    var b = $('libBody'), key = dayInfo().key;
-    if (dailyMem[c[0]] && dailyMeta[c[0]] && dailyMeta[c[0]].day === key) { renderDaily(c); return; }
+    var b = $('libBody'), key = dayInfo().key, lang = curLang, mk = c[0] + '_' + lang;
+    if (dailyMem[mk] && dailyMeta[mk] && dailyMeta[mk].day === key) { renderDaily(c); return; }
     b.innerHTML = '<div class="hd-msg">' + esc(T('লোড হচ্ছে...')) + '</div>';
     loadDaily(c).then(function (o) {
-      if (lv !== 'dlist' || cur !== c) return;
+      if (lv !== 'dlist' || cur !== c || curLang !== lang) return;
       var stale = false;
       if (!o.items.length) { var lc = lastCached(c); if (lc) { o = lc; stale = true; } }
-      dailyMem[c[0]] = o.items;
-      dailyMeta[c[0]] = { day: stale ? '' : key, topic: o.topic, ok: o.ok, stale: stale };
+      dailyMem[mk] = o.items;
+      dailyMeta[mk] = { day: stale ? '' : key, topic: o.topic, ok: o.ok, stale: stale };
+      if (o.ok) markEmpty(c[0], lang, !o.items.length);
       renderDaily(c);
     });
   }
 
   function renderDaily(c) {
-    var b = $('libBody'), items = dailyMem[c[0]] || [], m = dailyMeta[c[0]] || {};
+    var mk = c[0] + '_' + curLang, b = $('libBody'), items = dailyMem[mk] || [], m = dailyMeta[mk] || {};
     if (!items.length) {
       b.innerHTML = '<div class="hd-msg">' + esc(T(m.ok === false ? 'ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।' : 'কোনো বই পাওয়া যায়নি। পরে আবার চেষ্টা করুন।')) + '</div><div style="text-align:center"><button class="lb-btn" id="libRetry">' + esc(T('আবার চেষ্টা করুন')) + '</button></div>';
-      $('libRetry').onclick = function () { delete dailyMem[c[0]]; delete dailyMeta[c[0]]; showDaily(c); };
+      $('libRetry').onclick = function () { delete dailyMem[mk]; delete dailyMeta[mk]; showDaily(c); };
       return;
     }
-    b.innerHTML = '<div class="lb-card" style="margin-bottom:12px"><h4>' + esc(T('আজকের বই')) + '</h4><p style="margin:0">' + esc(dayLabel(new Date())) + (m.topic ? ' · ' + esc(T('বিষয়')) + ': ' + esc(m.topic) : '') + '</p>' +
+    b.innerHTML = '<div class="lb-card" style="margin-bottom:12px"><h4>📁 ' + esc(foldName(curLang)) + '</h4><p style="margin:0">' + esc(T('শুধু ইসলামী বই দেখানো হয়।')) + (m.topic ? ' · ' + esc(T('বিষয়')) + ': ' + esc(m.topic) : '') + '</p>' +
       (m.stale ? '<p style="margin:6px 0 0;font-size:12.5px">' + esc(T('আজকের নতুন তালিকা লোড করা যায়নি, আগের তালিকা দেখানো হচ্ছে।')) + '</p>' : '') + '</div>' +
-      '<div id="libItems"></div><div class="hd-msg">' + esc(T('প্রতিদিন নতুন বই যোগ হয়। বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।')) + '</div>';
+      '<div id="libItems"></div><div class="hd-msg">' + esc(T('বই Archive.org, Google Books ও Open Library থেকে সংগৃহীত।')) + '</div>';
     var box = $('libItems');
     items.forEach(function (it, n) {
       var row = document.createElement('button'); row.className = 'hd-row';
