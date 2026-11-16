@@ -840,10 +840,14 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'MuhammadiQuranic','Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
         <button class="m" onclick="switchView('zakat')"><div class="ic"><svg class="i"><use href="#zakat"/></svg></div>যাকাত ক্যালকুলেটর<small>Zakat</small></button>
-        <button class="m" onclick="libOpen()"><div class="ic"><svg class="i"><use href="#library"/></svg></div>লাইব্রেরী<small>Library</small></button>
       </nav>
     </section>
 
+
+    <section id="libsec">
+      <div class="sh"><h2>লাইব্রেরী</h2><span onclick="libOpen()" style="color:var(--blue);cursor:pointer">সব বই দেখুন →</span></div>
+      <nav class="grid" id="libHome" aria-label="লাইব্রেরী"></nav>
+    </section>
 
     <section id="dua">
       <div class="sh"><h2>দৈনন্দিন দোয়া</h2><span onclick="switchView('dua')" style="color:var(--blue);cursor:pointer">সব দোয়া দেখুন →</span></div>
@@ -8497,6 +8501,20 @@ function openBioPerson(name){
     $('libFrame').src = embed;
     window.scrollTo(0, 0); nc();
   }
+
+  // হোমপেজের লাইব্রেরী আইকন গ্রিড (সব সেবার আইকনের মতো)
+  window.libOpenCat = function (c) { lv = 'cats'; if (window.switchView) window.switchView('library'); openCat(c); };
+  function homeCats() {
+    var g = $('libHome'); if (!g) return; g.innerHTML = '';
+    CATS.filter(function (c) { return !isDead(c[0]); }).forEach(function (c) {
+      var btn = document.createElement('button'); btn.className = 'm';
+      btn.innerHTML = '<div class="ic"><svg class="i" viewBox="0 0 24 24">' + c[3] + '</svg></div>' + esc(T(c[1])) + '<small>' + c[2] + '</small>';
+      btn.onclick = function () { window.libOpenCat(c); };
+      g.appendChild(btn);
+    });
+  }
+  try { Object.assign(D, { 'সব বই দেখুন →': ['View all books →', 'عرض كل الكتب →'] }); } catch (e) {}
+  homeCats();
 
 })();
 </script>
