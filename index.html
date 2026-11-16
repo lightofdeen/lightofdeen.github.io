@@ -8088,8 +8088,8 @@ function openBioPerson(name){
       bd.innerHTML = (desc ? '<p>' + esc(desc) + '</p>' : '') +
         atts.map(function (a) {
           var ext = String(a.extension_type || a.extension || (/\.pdf(\?|$)/i.test(a.url) ? 'pdf' : 'file')).toLowerCase();
-          var sz = a.size ? ' (' + esc(a.size) + ')' : '';
-          if (ext === 'pdf') return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('ডাউনলোড করুন')) + sz + '</a><button class="lb-btn alt" data-read="' + esc(a.url) + '">' + esc(T('অনলাইনে পড়ুন')) + '</button>';
+          if (a.size) szCache[a.url] = fmtSize(a.size); var sz = a.size ? ' (' + esc(fmtSize(a.size)) + ')' : '';
+          if (ext === 'pdf') return '<a class="lb-btn" data-dl="1"' + (a.size ? ' data-sz="1"' : '') + ' target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(T('ডাউনলোড করুন')) + sz + '</a><button class="lb-btn alt" data-read="' + esc(a.url) + '">' + esc(T('অনলাইনে পড়ুন')) + '</button>';
           return '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext.toUpperCase()) + ' ' + esc(T('খুলুন')) + sz + '</a>';
         }).join('') +
         ((x.source_url || x.url) ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(x.source_url || x.url) + '">' + esc(T('ইসলামহাউসে দেখুন')) + '</a>' : '');
@@ -8103,6 +8103,63 @@ function openBioPerson(name){
       $('libR2').onclick = function () { openBook(it); };
     });
   }
+  /* ===== PDF ডাউনলোড: ক্লিকেই ডাউনলোড + বাটনে ফাইল সাইজ ===== */
+  var szCache = {};
+  function fmtSize(v) {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string' && !/^\s*\d+(\.\d+)?\s*$/.test(v)) return v.trim();
+    var n = Number(v); if (!(n > 0)) return '';
+    if (n < 1024 * 1024) return Math.max(1, Math.round(n / 1024)) + ' KB';
+    if (n < 1024 * 1024 * 1024) return (n / 1048576).toFixed(n < 10485760 ? 1 : 0).replace(/\.0$/, '') + ' MB';
+    return (n / 1073741824).toFixed(1) + ' GB';
+  }
+  function sizeOf(u) {
+    if (szCache[u]) return Promise.resolve(szCache[u]);
+    if (!window.fetch) return Promise.resolve('');
+    var ac = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ac) ac.abort(); }, 8000);
+    return fetch(u, { method: 'HEAD', signal: ac && ac.signal }).then(function (r) {
+      clearTimeout(tm); var l = r.headers.get('content-length'); if (l) szCache[u] = fmtSize(l); return szCache[u] || '';
+    }).catch(function () { clearTimeout(tm); return ''; });
+  }
+  function decorDl(a) {
+    if (!a || a.getAttribute('data-sz')) return;
+    var u = a.getAttribute('href'); if (!u) return;
+    a.setAttribute('data-dl', '1'); a.setAttribute('data-sz', '1');
+    if (/\(\s*[\d.,]+\s*[KMG]?B\s*\)\s*$/i.test(a.textContent)) return;
+    sizeOf(u).then(function (z) { if (z && a.getAttribute('data-sz') === '1' && !a.getAttribute('data-busy')) a.textContent = a.textContent.replace(/\s*\([^)]*\)\s*$/, '') + ' (' + z + ')'; });
+  }
+  new MutationObserver(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('#libBody a.lb-btn[data-dl]:not([data-sz])'), decorDl);
+  }).observe($('libBody'), { childList: true, subtree: true });
+  // ক্লিক করলেই সরাসরি ডাউনলোড (না পারলে নতুন ট্যাবে খোলে)
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-dl]'); if (!a) return;
+    var u = a.getAttribute('href'); if (!u || a.getAttribute('data-busy')) { e.preventDefault(); return; }
+    e.preventDefault();
+    var lab = a.textContent, name = '';
+    try { name = decodeURIComponent(u.split('?')[0].split('/').pop()) || 'book.pdf'; } catch (x) { name = 'book.pdf'; }
+    if (!/\.pdf$/i.test(name)) name += '.pdf';
+    function fallback() { a.removeAttribute('data-busy'); a.textContent = lab; window.open(u, '_blank', 'noopener'); }
+    if (!window.fetch) return fallback();
+    a.setAttribute('data-busy', '1'); a.textContent = T('ডাউনলোড হচ্ছে...');
+    fetch(u).then(function (r) {
+      if (!r.ok) throw 0;
+      var tot = Number(r.headers.get('content-length')) || 0;
+      if (!r.body || !r.body.getReader || !tot) return r.blob();
+      var rd = r.body.getReader(), ch = [], got = 0;
+      return (function pump() { return rd.read().then(function (x) {
+        if (x.done) return new Blob(ch, { type: 'application/pdf' });
+        ch.push(x.value); got += x.value.length; a.textContent = T('ডাউনলোড হচ্ছে...') + ' ' + Math.round(got * 100 / tot) + '%'; return pump();
+      }); })();
+    }).then(function (b) {
+      var o = URL.createObjectURL(new Blob([b], { type: 'application/pdf' })), t = document.createElement('a');
+      t.href = o; t.download = name; document.body.appendChild(t); t.click(); document.body.removeChild(t);
+      setTimeout(function () { URL.revokeObjectURL(o); }, 60000);
+      a.removeAttribute('data-busy'); a.textContent = lab;
+    }).catch(fallback);
+  });
+  try { Object.assign(D, { 'ডাউনলোড হচ্ছে...': ['Downloading...', 'جارٍ التنزيل...'] }); } catch (e) {}
+
   /* ===== বই-কার্ড: কভার ছবি + ডাউনলোড করুন / অনলাইনে পড়ুন ===== */
   try { Object.assign(D, { 'ডাউনলোড করুন': ['Download', 'تحميل'], 'অনলাইনে পড়ুন': ['Read online', 'اقرأ أونلاين'], 'আরবি ভাষার ইসলামী বই': ['Islamic books in Arabic', 'كتب إسلامية بالعربية'] }); } catch (e) {}
   var isImg = function (a) { return /^(jpe?g|png|gif|webp)$/i.test(String(a.extension_type || a.extension || '')) || /\.(jpe?g|png|gif|webp)(\?|$)/i.test(a.url || ''); };
@@ -8136,7 +8193,7 @@ function openBioPerson(name){
       var x = Array.isArray(d) ? d[0] : d, at = ((x && x.attachments) || []).filter(function (a) { return a && a.url; });
       var im = at.filter(isImg)[0]; if (im) img = im.url;
       var pf = at.filter(function (a) { return /pdf/i.test(String(a.extension_type || a.extension || '')) || /\.pdf(\?|$)/i.test(a.url); })[0];
-      return pf ? pf.url : '';
+      if (pf && pf.size) szCache[pf.url] = fmtSize(pf.size); return pf ? pf.url : '';
     }).catch(function () { return ''; });
     else p = Promise.resolve('');
     return (it._f = p.then(function (u) { return { pdf: u || '', img: img, embed: it.embed || (ia ? 'https://archive.org/embed/' + ia : '') || (u ? 'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(u) : '') }; }));
@@ -8156,7 +8213,7 @@ function openBioPerson(name){
     rd.onclick = function () { getFiles(it).then(function (f) { if (f.embed) { ctx(k, it); openReader(f.embed, it.url || f.pdf, BACK[k], f.pdf); } else openCard(it, k); }); };
     bt.appendChild(dl); bt.appendChild(rd); d.appendChild(top); d.appendChild(bt);
     d._go = function () { getFiles(it).then(function (f) {
-      if (f.pdf) { dl.href = f.pdf; dl.className = 'lb-btn'; } else dl.textContent = T('ডাউনলোড পাওয়া যায়নি');
+      if (f.pdf) { dl.href = f.pdf; dl.className = 'lb-btn'; decorDl(dl); } else dl.textContent = T('ডাউনলোড পাওয়া যায়নি');
       if (f.img && !it.cover) { it.cover = f.img; im.src = f.img; }
     }); };
     if (bkIO) bkIO.observe(d); else d._go();
@@ -8405,14 +8462,14 @@ function openBioPerson(name){
       (d ? '<p>' + esc(d) + '</p>' : '') +
       '<div id="hLinks">' +
       (it.url ? '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(it.url) + '">' + esc(ui('open')) + '</a>' : '') +
-      (it.pdf ? '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(ui('pdf')) + '</a>' : '') + '</div></div>';
+      (it.pdf ? '<a class="lb-btn alt" data-dl="1" target="_blank" rel="noopener" href="' + esc(it.pdf) + '">' + esc(ui('pdf')) + '</a>' : '') + '</div></div>';
     window.scrollTo(0, 0);
     nc();
     var am = /archive\.org\/details\/([^\/?#]+)/.exec(it.url || '');
     if (am && !it.pdf) {
       resolveIA(decodeURIComponent(am[1])).then(function (u) {
         if (!u || curH !== it) return;
-        var bx = $('hLinks'); if (bx) bx.insertAdjacentHTML('afterbegin', '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(ui('pdf')) + '</a>');
+        var bx = $('hLinks'); if (bx) bx.insertAdjacentHTML('afterbegin', '<a class="lb-btn" data-dl="1" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(ui('pdf')) + '</a>');
       });
     }
     if (it.ihId) {
@@ -8421,7 +8478,7 @@ function openBioPerson(name){
         var box = $('hLinks'); if (!box) return;
         var h = (x.attachments || []).filter(function (a) { return a && a.url; }).map(function (a) {
           var ext = String(a.extension_type || a.extension || (/\.pdf(\?|$)/i.test(a.url) ? 'pdf' : 'file')).toLowerCase();
-          return '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext === 'pdf' ? ui('pdf') : ext.toUpperCase() + ' ' + T('খুলুন')) + '</a>';
+          if (a.size) szCache[a.url] = fmtSize(a.size); return '<a class="lb-btn"' + (ext === 'pdf' ? ' data-dl="1"' : '') + ' target="_blank" rel="noopener" href="' + esc(a.url) + '">' + esc(ext === 'pdf' ? ui('pdf') : ext.toUpperCase() + ' ' + T('খুলুন')) + '</a>';
         }).join('');
         var src = x.source_url || x.url;
         if (src) h += '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(src) + '">' + esc(ui('ih')) + '</a>';
@@ -8492,7 +8549,7 @@ function openBioPerson(name){
       if (!restricted && m.files) {
         var pdfs = m.files.filter(function (f) { return f && /\.pdf$/i.test(f.name || '') && f.format !== 'Additional Text PDF'; });
         var pk = pdfs.filter(function (f) { return f.format === 'Text PDF'; })[0] || pdfs.filter(function (f) { return f.format === 'Image Container PDF'; })[0] || pdfs[0];
-        if (pk) u = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + pk.name.split('/').map(encodeURIComponent).join('/');
+        if (pk) { u = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + pk.name.split('/').map(encodeURIComponent).join('/'); if (pk.size) szCache[u] = fmtSize(pk.size); }
       }
       iaCache[id] = u;
       return u;
@@ -8634,7 +8691,7 @@ function openBioPerson(name){
     var dl = $('dDl'), rd = $('dRd');
     function setDl(u) {
       if (curD !== it || !dl) return;
-      if (u) { it.pdf = u; dl.innerHTML = '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(T('ডাউনলোড করুন')) + '</a>'; }
+      if (u) { it.pdf = u; dl.innerHTML = '<a class="lb-btn" data-dl="1" target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(T('ডাউনলোড করুন')) + '</a>'; }
       else dl.innerHTML = '<span style="display:inline-block;margin:8px 8px 0 0;font-size:12.5px;color:var(--muted)">' + esc(T('ডাউনলোড পাওয়া যায়নি')) + '</span>';
     }
     if (it.pdf) setDl(it.pdf);
@@ -8655,7 +8712,7 @@ function openBioPerson(name){
     title(cur ? cur[1] : 'লাইব্রেরী');
     var b = $('libBody');
     b.innerHTML = '<iframe class="lb-frame" id="libFrame" allowfullscreen></iframe><div class="hd-msg">' + esc(T('পড়তে সমস্যা হলে নিচের বাটন ব্যবহার করুন।')) + '</div><div style="text-align:center">' +
-      (pdf ? '<a class="lb-btn" target="_blank" rel="noopener" href="' + esc(pdf) + '">' + esc(T('ডাউনলোড করুন')) + '</a>' : '') +
+      (pdf ? '<a class="lb-btn" data-dl="1" target="_blank" rel="noopener" href="' + esc(pdf) + '">' + esc(T('ডাউনলোড করুন')) + '</a>' : '') +
       '<a class="lb-btn alt" target="_blank" rel="noopener" href="' + esc(ext || embed) + '">' + esc(T('নতুন ট্যাবে খুলুন')) + '</a></div>';
     $('libFrame').src = embed;
     window.scrollTo(0, 0); nc();
