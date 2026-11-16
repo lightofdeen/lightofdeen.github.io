@@ -353,24 +353,32 @@ html[dir=rtl] button.rd-back:active svg{transform:scaleX(-1) translateX(-2px)}
 .qibla-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .qibla-top h3{font-size:17px}
 .qibla-back{background:var(--blue);color:#fff;border:0;padding:8px 14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit}
-.qibla-card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:24px 16px;text-align:center;position:relative}
-.qibla-dial{width:min(78vw,300px);aspect-ratio:1;margin:8px auto 0;border-radius:50%;border:3px solid var(--line);background:var(--bg);position:relative;transition:transform .15s linear}
-.qibla-ticks{position:absolute;inset:6px;border-radius:50%;background:repeating-conic-gradient(var(--muted) 0 .6deg,transparent .6deg 10deg);-webkit-mask:radial-gradient(circle,transparent 90%,#000 91%);mask:radial-gradient(circle,transparent 90%,#000 91%);opacity:.55}
-.qd{position:absolute;z-index:2;background:var(--bg);padding:0 4px;border-radius:6px;font-weight:700;font-size:13px;color:var(--muted);white-space:nowrap}
-.qd.n{top:12%;left:50%;transform:translateX(-50%);color:#e53935}
-.qd.s{bottom:12%;left:50%;transform:translateX(-50%)}
-.qd.e{right:12%;top:50%;transform:translateY(-50%)}
-.qd.w{left:12%;top:50%;transform:translateY(-50%)}
+.qibla-card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:16px 16px 24px;text-align:center;position:relative}
+.qibla-stage{--d:min(78vw,300px);position:relative;width:var(--d);aspect-ratio:1;margin:30px auto 0}
+.qibla-dial{position:absolute;inset:0;border-radius:50%;border:2px solid var(--line);background:radial-gradient(circle,var(--card) 0%,var(--bg) 100%);transition:transform .15s linear}
+.qibla-ticks,.qibla-major{position:absolute;border-radius:50%}
+.qibla-ticks{inset:5px;background:repeating-conic-gradient(var(--muted) 0 .5deg,transparent .5deg 5deg);-webkit-mask:radial-gradient(circle,transparent 93%,#000 94%);mask:radial-gradient(circle,transparent 93%,#000 94%);opacity:.5}
+.qibla-major{inset:5px;background:repeating-conic-gradient(var(--blue) 0 1deg,transparent 1deg 45deg);-webkit-mask:radial-gradient(circle,transparent 86%,#000 87%);mask:radial-gradient(circle,transparent 86%,#000 87%);transform:rotate(-.5deg)}
+.qd{position:absolute;left:50%;top:50%;font-weight:600;font-size:11px;color:var(--muted);white-space:nowrap;line-height:1;transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--d)*-.355))}
+.qd.c{font-size:12.5px;font-weight:700;color:var(--text)}
+.qd.n{color:#e53935}
 .qibla-pointer{position:absolute;inset:0;transform:rotate(0deg)}
-.qibla-pointer .kaaba{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:30px;background:var(--card);border-radius:50%;line-height:1}
-.qibla-pointer i{position:absolute;top:34px;left:50%;width:4px;height:calc(50% - 34px);margin-left:-2px;background:linear-gradient(var(--blue),transparent);border-radius:4px}
-.qibla-fixed-mark{position:absolute;left:50%;top:6px;margin-left:-9px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid #e53935}
+.qibla-pointer svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 4px color-mix(in srgb,var(--blue) 35%,transparent))}
+.qibla-hub{position:absolute;left:50%;top:50%;width:19%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:calc(var(--d)*.085);box-shadow:0 0 0 4px var(--card),0 4px 12px color-mix(in srgb,var(--blue) 40%,transparent);pointer-events:none;z-index:3}
+.qibla-fixed-mark{position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:4;background:var(--blue);color:var(--on-blue,#fff);padding:5px 16px;border-radius:12px;font-weight:700;font-size:14px;white-space:nowrap;box-shadow:0 4px 12px color-mix(in srgb,var(--blue) 35%,transparent)}
+.qibla-fixed-mark::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:var(--blue)}
 .qibla-info{display:flex;justify-content:space-around;margin-top:20px}
 .qibla-info small{display:block;color:var(--muted);font-size:12px}
 .qibla-info b{font-size:22px;color:var(--blue)}
 .qibla-status{margin:14px 0 4px;font-size:14px;color:var(--text);min-height:22px}
 .qibla-start{background:var(--blue);color:#fff;border:0;padding:12px 24px;border-radius:16px;font-size:16px;font-family:inherit;cursor:pointer;margin-top:8px}
 .qibla-hint{font-size:12px;color:var(--muted);margin-top:14px}
+/* মাজহাব নির্বাচন */
+.madhab{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 4px 4px}
+.madhab button{font-family:inherit;border:1.5px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;padding:8px 6px;font-size:12.5px;line-height:1.35;cursor:pointer;transition:background .15s,border-color .15s}
+.madhab button small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.madhab button.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue);font-weight:700}
+.madhab button.on small{color:var(--blue)}
 .qibla-card.aligned{box-shadow:0 0 0 3px #43a047,var(--shadow)}
 
 /* Surah reader */
@@ -881,7 +889,11 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <div class="t" data-p="maghrib"><svg class="i"><use href="#sunset"/></svg>মাগরিব<b>--</b><em></em></div>
         <div class="t" data-p="isha"><svg class="i"><use href="#moon"/></svg>ইশা<b>--</b><em></em></div>
       </div>
-      <p class="note"><span id="noteLoc">ঢাকা</span> · হানাফি আসর · ১৮° · সূর্যোদয় <span id="sunriseT">--</span></p>
+      <div class="madhab" id="madhabRow" role="group" aria-label="মাজহাব">
+        <button type="button" data-m="hanafi"><span class="mn">হানাফি মাজহাব</span><small class="ma">--</small></button>
+        <button type="button" data-m="shafi"><span class="mn">মালিকি, শাফি'ই, হাম্বলি</span><small class="ma">--</small></button>
+      </div>
+      <p class="note"><span id="noteLoc">ঢাকা</span> · <span id="noteMadhab">হানাফি আসর</span> · ১৮° · সূর্যোদয় <span id="sunriseT">--</span></p>
     </div>
 
     <section id="menu">
@@ -1125,13 +1137,23 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
       </div>
 
       <div class="qibla-card">
+        <div class="qibla-stage">
         <div class="qibla-dial" id="qiblaDial">
-          <div class="qibla-ticks"></div>
-          <span class="qd n" id="qdN">উত্তর</span><span class="qd e" id="qdE">পূর্ব</span><span class="qd s" id="qdS">দক্ষিণ</span><span class="qd w" id="qdW">পশ্চিম</span>
-          <!-- কাবার দিক নির্দেশক (ডায়ালের সাথে ঘোরে) -->
-          <div class="qibla-pointer" id="qiblaPointer"><span class="kaaba">🕋</span><i></i></div>
+          <div class="qibla-ticks"></div><div class="qibla-major"></div>
+          <span class="qd c n" id="qdN" style="--a:0deg">উত্তর</span>
+          <span class="qd" id="qdNE" style="--a:45deg">উত্তর-পূর্ব</span>
+          <span class="qd c" id="qdE" style="--a:90deg">পূর্ব</span>
+          <span class="qd" id="qdSE" style="--a:135deg">দক্ষিণ-পূর্ব</span>
+          <span class="qd c" id="qdS" style="--a:180deg">দক্ষিণ</span>
+          <span class="qd" id="qdSW" style="--a:225deg">দক্ষিণ-পশ্চিম</span>
+          <span class="qd c" id="qdW" style="--a:270deg">পশ্চিম</span>
+          <span class="qd" id="qdNW" style="--a:315deg">উত্তর-পশ্চিম</span>
+          <!-- কাবার দিক নির্দেশক সূচ (ডায়ালের সাথে ঘোরে) -->
+          <div class="qibla-pointer" id="qiblaPointer"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,13 55.5,50 44.5,50" fill="var(--blue)"/><polygon points="44.5,50 55.5,50 50,76" fill="var(--blue)" opacity=".28"/></svg></div>
         </div>
-        <div class="qibla-fixed-mark"></div>
+        <div class="qibla-hub">🕋</div>
+        <div class="qibla-fixed-mark" id="qiblaChip">--</div>
+      </div>
 
         <div class="qibla-info">
           <div><small id="qiblaLblDir">ক্বিবলার দিক</small><b id="qiblaDeg">--°</b></div>
@@ -1139,7 +1161,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         </div>
         <p class="qibla-status" id="qiblaStatus">ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন</p>
         <button class="qibla-start" id="qiblaStart" onclick="startQibla()">📍 ক্বিবলা খুঁজুন</button>
-        <p class="qibla-hint" id="qiblaHint">ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।</p>
+        <p class="qibla-hint" id="qiblaHint">ফোনটি সমতলভাবে ধরুন। সূচটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।</p>
       </div>
     </div>
   </div>
@@ -1563,7 +1585,7 @@ let LANG='bn';try{LANG=localStorage.getItem('lang')||'bn'}catch(e){}
 if(!['bn','en','ar'].includes(LANG))LANG='bn';
 const DIG={bn:'০১২৩৪৫৬৭৮৯',en:'0123456789',ar:'٠١٢٣٤٥٦٧٨٩'};
 const bn=n=>String(n).replace(/\d/g,d=>DIG[LANG][d]);
-const D={"বর্তমান নামাজ":["Current prayer","الصلاة الحالية"],"শেষ হতে বাকি":["Ends in","ينتهي بعد"],"শুরু হতে বাকি":["Starts in","يبدأ بعد"],"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the 🕋 icon lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما تتطابق أيقونة 🕋 مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন": ["Turn your phone until 🕋 points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
+const D={"হানাফি মাজহাব":["Hanafi","الحنفي"],"মালিকি, শাফি'ই, হাম্বলি":["Maliki, Shafi'i, Hanbali","المالكي والشافعي والحنبلي"],"হানাফি আসর":["Hanafi Asr","عصر حنفي"],"শাফি'ই/মালিকি/হাম্বলি আসর":["Shafi'i/Maliki/Hanbali Asr","عصر (شافعي/مالكي/حنبلي)"],"আসর":["Asr","العصر"],"বর্তমান নামাজ":["Current prayer","الصلاة الحالية"],"শেষ হতে বাকি":["Ends in","ينتهي بعد"],"শুরু হতে বাকি":["Starts in","يبدأ بعد"],"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। সূচটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the needle lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما يتطابق المؤشر مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে সবুজ সূচ উপরের দিকে আনুন": ["Turn your phone until the needle points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
 Object.assign(D,{
 'বিশেষ বিভাগসমূহ':['Special Sections','أقسام مميزة'],
 'বিষয়ভিত্তিক আয়াত':['Topical Verses','الآيات الموضوعية'],'কুরআনের আয়াত বিষয় অনুযায়ী':['Quranic verses by topic','آيات القرآن حسب الموضوع'],
@@ -1678,7 +1700,10 @@ function bnTime12(h, m, withSec, s) {
 function periodBn(h) { if (LANG !== 'bn') return LANG === 'en' ? (h < 12 ? 'AM' : 'PM') : (h < 12 ? 'ص' : 'م'); return h < 4 ? 'রাত' : h < 6 ? 'ভোর' : h < 12 ? 'সকাল' : h < 15 ? 'দুপুর' : h < 17 ? 'বিকাল' : h < 19 ? 'সন্ধ্যা' : 'রাত'; }
 
 // নামাজের সময় গণনা (ঢাকা, হানাফি আসর, ফজর/ইশা ১৮°)
-function calcPrayerTimes(y, m, d) {
+let MADHAB = 'hanafi';
+try { const mv = localStorage.getItem('lodMadhab'); if (mv === 'hanafi' || mv === 'shafi') MADHAB = mv; } catch (e) {}
+function calcPrayerTimes(y, m, d, mdh) {
+  const asrK = (mdh || MADHAB) === 'hanafi' ? 2 : 1; // হানাফি: ছায়া ২ গুণ; মালিকি/শাফি'ই/হাম্বলি: ১ গুণ
   const r = Math.PI / 180, sin = x => Math.sin(x * r), cos = x => Math.cos(x * r), tan = x => Math.tan(x * r);
   const acos = x => Math.acos(Math.max(-1, Math.min(1, x))) / r, asin = x => Math.asin(x) / r, fix = (a, b) => a - b * Math.floor(a / b);
   const JD = Date.UTC(y, m, d, 12) / 86400000 + 2440587.5, D = JD - 2451545;
@@ -1688,7 +1713,7 @@ function calcPrayerTimes(y, m, d) {
   const eqt = q / 15 - RA, decl = asin(sin(e) * sin(L));
   const noon = 12 + DHAKA.tz - LOC.lng / 15 - eqt;
   const T = a => acos((-sin(a) - sin(decl) * sin(LOC.lat)) / (cos(decl) * cos(LOC.lat))) / 15;
-  const asrAng = -Math.atan(1 / (2 + tan(Math.abs(LOC.lat - decl)))) / r;
+  const asrAng = -Math.atan(1 / (asrK + tan(Math.abs(LOC.lat - decl)))) / r;
   return { fajr: noon - T(18), sunrise: noon - T(0.833), dhuhr: noon + 1 / 60, asr: noon + T(asrAng), maghrib: noon + T(0.833) + 1 / 60, isha: noon + T(18) };
 }
 const PRAYERS = [['fajr','ফজর'],['dhuhr','যোহর'],['asr','আসর'],['maghrib','মাগরিব'],['isha','ইশা']];
@@ -1697,11 +1722,28 @@ function fmtHM(mins) { const h = Math.floor(mins / 60), m = mins % 60; return (h
 
 let ptCache = { key: '', t: null };
 function getTimes(dn) {
-  const key = dn.getUTCFullYear() + '-' + dn.getUTCMonth() + '-' + dn.getUTCDate() + '|' + LOC.lat.toFixed(3) + ',' + LOC.lng.toFixed(3);
+  const key = MADHAB + '|' + dn.getUTCFullYear() + '-' + dn.getUTCMonth() + '-' + dn.getUTCDate() + '|' + LOC.lat.toFixed(3) + ',' + LOC.lng.toFixed(3);
   if (ptCache.key !== key) ptCache = { key, t: calcPrayerTimes(dn.getUTCFullYear(), dn.getUTCMonth(), dn.getUTCDate()) };
   return ptCache.t;
 }
 
+function setMadhab(m) {
+  MADHAB = m; try { localStorage.setItem('lodMadhab', m); } catch (e) {}
+  tick();
+}
+function updMadhabUI(dn) {
+  const row = document.getElementById('madhabRow'); if (!row) return;
+  const asrOf = m => { const t = calcPrayerTimes(dn.getUTCFullYear(), dn.getUTCMonth(), dn.getUTCDate(), m).asr, pm = hrsToMin(t); return T('আসর') + ' ' + bnTime12(Math.floor(pm / 60), pm % 60); };
+  row.querySelectorAll('button').forEach(b => {
+    const m = b.dataset.m;
+    b.classList.toggle('on', m === MADHAB);
+    b.setAttribute('aria-pressed', m === MADHAB ? 'true' : 'false');
+    b.querySelector('.mn').textContent = T(m === 'hanafi' ? 'হানাফি মাজহাব' : "মালিকি, শাফি'ই, হাম্বলি");
+    b.querySelector('.ma').textContent = asrOf(m);
+  });
+  document.getElementById('noteMadhab').textContent = T(MADHAB === 'hanafi' ? 'হানাফি আসর' : "শাফি'ই/মালিকি/হাম্বলি আসর");
+}
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('#madhabRow button'); if (b) setMadhab(b.dataset.m); });
 function tick() {
   const dn = dhakaNow(), H = dn.getUTCHours(), M = dn.getUTCMinutes(), S = dn.getUTCSeconds();
   const el = id => document.getElementById(id);
@@ -1733,6 +1775,7 @@ function tick() {
   el('cdText').textContent = bn(String(Math.floor(left / 3600)).padStart(2, '0')) + ':' + bn(String(Math.floor(left % 3600 / 60)).padStart(2, '0')) + ':' + bn(String(left % 60).padStart(2, '0'));
   el('cdMin').textContent = T(waiting ? 'শুরু হতে বাকি' : 'শেষ হতে বাকি') + ' · ' + bn(Math.ceil(left / 60)) + ' ' + T('মিনিট');
   try { renderHomeDua(dn); } catch (e) {}
+  try { updMadhabUI(dn); } catch (e) {}
 
   document.querySelectorAll('#prayerTimes .t').forEach((box, i) => {
     const k = PRAYERS[i][0], pm = mins[k];
@@ -1921,24 +1964,24 @@ const KAABA = { lat: 21.422487, lng: 39.826206 };
 let qiblaBearing = null, qiblaWatching = false, qiblaStarting = false, qiblaSeq = 0, qiblaExact = false, lastHeading = 0, dialRot = 0, gotHeading = false, qiblaNoSensorTimer = null;
 
 const QI = {
-  bn: { title: 'ক্বিবলা কম্পাস', n: 'উত্তর', e: 'পূর্ব', s: 'দক্ষিণ', w: 'পশ্চিম', dir: 'ক্বিবলার দিক', face: 'আপনার মুখ',
+  bn: { title: 'ক্বিবলা কম্পাস', n: 'উত্তর', e: 'পূর্ব', s: 'দক্ষিণ', w: 'পশ্চিম', ne: 'উত্তর-পূর্ব', se: 'দক্ষিণ-পূর্ব', sw: 'দক্ষিণ-পশ্চিম', nw: 'উত্তর-পশ্চিম', dir: 'ক্বিবলার দিক', face: 'আপনার মুখ',
     start: '📍 ক্বিবলা খুঁজুন', idle: 'ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন', getloc: 'লোকেশন নেওয়া হচ্ছে...',
-    turn: 'ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন', ok: '✅ আপনি ক্বিবলার দিকে মুখ করে আছেন',
+    turn: 'ফোন ঘুরিয়ে সবুজ সূচ উপরের দিকে আনুন', ok: '✅ আপনি ক্বিবলার দিকে মুখ করে আছেন',
     nosensor: 'কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে {d}° ডানে', sensorDenied: 'কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি। বাটনে চাপ দিয়ে আবার চেষ্টা করুন।',
-    approx: 'লোকেশন পাওয়া যায়নি, {p}-এর অবস্থান ধরে দেখানো হচ্ছে। ফোন ঘুরিয়ে 🕋 উপরের দিকে আনুন', place: 'আপনার অবস্থান অনুযায়ী ক্বিবলা',
-    hint: 'ফোনটি সমতলভাবে ধরুন। 🕋 আইকনটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।' },
-  en: { title: 'Qibla Compass', n: 'North', e: 'East', s: 'South', w: 'West', dir: 'Qibla direction', face: 'You are facing',
+    approx: 'লোকেশন পাওয়া যায়নি, {p}-এর অবস্থান ধরে দেখানো হচ্ছে। ফোন ঘুরিয়ে সবুজ সূচ উপরের দিকে আনুন', place: 'আপনার অবস্থান অনুযায়ী ক্বিবলা',
+    hint: 'ফোনটি সমতলভাবে ধরুন। সূচটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।' },
+  en: { title: 'Qibla Compass', n: 'North', e: 'East', s: 'South', w: 'West', ne: 'North-East', se: 'South-East', sw: 'South-West', nw: 'North-West', dir: 'Qibla direction', face: 'You are facing',
     start: '📍 Find Qibla', idle: 'Tap the button below to find the Qibla', getloc: 'Getting your location...',
-    turn: 'Turn your phone until 🕋 points up', ok: '✅ You are facing the Qibla',
+    turn: 'Turn your phone until the needle points up', ok: '✅ You are facing the Qibla',
     nosensor: 'Compass sensor not found. Qibla is {d}° clockwise from North', sensorDenied: 'Compass sensor permission was not granted. Tap the button to try again.',
-    approx: 'Location unavailable, using {p}. Turn your phone until 🕋 points up', place: 'Qibla for your location',
-    hint: 'Hold your phone flat. When the 🕋 icon lines up with the mark at the top, that is the Qibla. If the compass is off, move your phone in a figure-8 (∞) to calibrate.' },
-  ar: { title: 'بوصلة القبلة', n: 'شمال', e: 'شرق', s: 'جنوب', w: 'غرب', dir: 'اتجاه القبلة', face: 'اتجاهك',
+    approx: 'Location unavailable, using {p}. Turn your phone until the needle points up', place: 'Qibla for your location',
+    hint: 'Hold your phone flat. When the needle lines up with the mark at the top, that is the Qibla. If the compass is off, move your phone in a figure-8 (∞) to calibrate.' },
+  ar: { title: 'بوصلة القبلة', n: 'شمال', e: 'شرق', s: 'جنوب', w: 'غرب', ne: 'شمال شرق', se: 'جنوب شرق', sw: 'جنوب غرب', nw: 'شمال غرب', dir: 'اتجاه القبلة', face: 'اتجاهك',
     start: '📍 ابحث عن القبلة', idle: 'اضغط الزر أدناه لتحديد القبلة', getloc: 'جارٍ تحديد موقعك...',
-    turn: 'أدر هاتفك حتى تشير 🕋 إلى الأعلى', ok: '✅ أنت متجه نحو القبلة',
+    turn: 'أدر هاتفك حتى يشير المؤشر إلى الأعلى', ok: '✅ أنت متجه نحو القبلة',
     nosensor: 'لم يتم العثور على مستشعر البوصلة. القبلة {d}° يمين الشمال', sensorDenied: 'لم يتم منح إذن مستشعر البوصلة. اضغط الزر للمحاولة مرة أخرى.',
-    approx: 'تعذّر تحديد الموقع، يُستخدم موقع {p}. أدر هاتفك حتى تشير 🕋 إلى الأعلى', place: 'القبلة حسب موقعك',
-    hint: 'أمسك الهاتف بشكل مسطح. عندما تتطابق أيقونة 🕋 مع العلامة في الأعلى فهذا اتجاه القبلة. إذا كانت البوصلة غير دقيقة فحرّك هاتفك على شكل ٨ (∞) للمعايرة.' }
+    approx: 'تعذّر تحديد الموقع، يُستخدم موقع {p}. أدر هاتفك حتى يشير المؤشر إلى الأعلى', place: 'القبلة حسب موقعك',
+    hint: 'أمسك الهاتف بشكل مسطح. عندما يتطابق المؤشر مع العلامة في الأعلى فهذا اتجاه القبلة. إذا كانت البوصلة غير دقيقة فحرّك هاتفك على شكل ٨ (∞) للمعايرة.' }
 };
 let qiblaStatusKey = 'idle', qiblaStatusVars = null;
 function qi(k, v) {
@@ -1952,7 +1995,7 @@ function setQiblaStatus(key, vars) {
 }
 function qiblaTexts() {
   const set = (id, k) => { const e = document.getElementById(id); if (e) e.textContent = qi(k); };
-  set('qiblaTitle', 'title'); set('qdN', 'n'); set('qdE', 'e'); set('qdS', 's'); set('qdW', 'w');
+  set('qiblaTitle', 'title'); set('qdN', 'n'); set('qdE', 'e'); set('qdS', 's'); set('qdW', 'w'); set('qdNE', 'ne'); set('qdSE', 'se'); set('qdSW', 'sw'); set('qdNW', 'nw'); updChip();
   set('qiblaLblDir', 'dir'); set('qiblaLblFace', 'face'); set('qiblaStart', 'start'); set('qiblaHint', 'hint');
   document.getElementById('qiblaStatus').textContent = qi(qiblaStatusKey, qiblaStatusVars);
   if (qiblaBearing !== null) document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
@@ -1960,6 +2003,13 @@ function qiblaTexts() {
 }
 qiblaTexts();
 
+const DIRK = ['n','ne','e','se','s','sw','w','nw'];
+function dirKey(deg) { return DIRK[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
+function updChip() {
+  const c = document.getElementById('qiblaChip'); if (!c) return;
+  const deg = gotHeading ? lastHeading : qiblaBearing;
+  c.textContent = deg === null || deg === undefined ? '--' : qi(dirKey(deg));
+}
 function calcQibla(lat, lng) {
   const r = Math.PI / 180;
   const dL = (KAABA.lng - lng) * r;
@@ -1970,7 +2020,7 @@ function calcQibla(lat, lng) {
 function applyQiblaPos(lat, lng) {
   qiblaBearing = calcQibla(lat, lng);
   document.getElementById('qiblaDeg').textContent = bn(Math.round(qiblaBearing)) + '°';
-  document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)';
+  document.getElementById('qiblaPointer').style.transform = 'rotate(' + qiblaBearing + 'deg)'; updChip();
 }
 function savedQiblaPos() {
   try { const o = JSON.parse(localStorage.getItem('lodQiblaPos') || 'null'); if (o && isFinite(o.lat) && isFinite(o.lng)) return o; } catch (e) {}
@@ -2047,10 +2097,10 @@ function onOrient(e) {
   // ৩৫৯°→০° পার হওয়ার সময় ডায়াল যেন উল্টো পাক না খায়
   dialRot += ((-h - dialRot) % 360 + 540) % 360 - 180;
   document.getElementById('qiblaDial').style.transform = 'rotate(' + dialRot + 'deg)';
-  document.getElementById('qiblaHeading').textContent = bn(Math.round(h)) + '°';
+  document.getElementById('qiblaHeading').textContent = bn(Math.round(h)) + '°'; updChip();
   const diff = Math.abs(((qiblaBearing - h + 540) % 360) - 180);
   const aligned = diff < 5;
-  document.getElementById('qiblaDial').parentElement.classList.toggle('aligned', aligned);
+  document.getElementById('qiblaDial').closest('.qibla-card').classList.toggle('aligned', aligned);
   if (aligned) { if (qiblaStatusKey !== 'ok') { setQiblaStatus('ok'); if (navigator.vibrate) try { navigator.vibrate(30); } catch (e) {} } }
   else if (qiblaStatusKey !== 'turn') setQiblaStatus('turn');
 }
@@ -3509,7 +3559,7 @@ function resetTasbih() {
 
 // ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
 const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
-const I18N_SKIP='#qibla-view,#live-date,#live-clock,#locName,#noteLoc,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
+const I18N_SKIP='#qibla-view,#live-date,#live-clock,#locName,#noteLoc,#noteMadhab,#madhabRow,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
 function i18nWalk(){
   const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
   while((x=tw.nextNode()))nodes.push(x);
