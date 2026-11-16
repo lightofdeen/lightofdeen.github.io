@@ -814,6 +814,54 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .bk-bt{display:flex;gap:8px;margin-top:10px}
 .bk-bt .lb-btn{flex:1;margin:0;text-align:center;font-size:13.5px;padding:10px 6px}
 .lb-btn.dis{opacity:.55;pointer-events:none}
+
+/* নামাজের সময় কার্ড: প্রিমিয়াম লম্বা-চিকন ঘর ও সোনালি বর্ডার */
+.prayer{border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(224,168,46,.85),color-mix(in srgb,var(--blue) 30%,transparent) 50%,rgba(224,168,46,.6)) border-box;padding:12px 12px 12px}
+.times{gap:7px}
+.t{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:128px;padding:12px 2px 10px;border:1.5px solid transparent;border-radius:18px;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(165deg,rgba(224,168,46,.9),color-mix(in srgb,var(--blue) 28%,transparent) 55%,rgba(224,168,46,.5)) border-box;box-shadow:0 4px 12px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.07)}
+.t .i{font-size:20px;margin-bottom:4px}
+.t b{margin-top:8px}
+.t em{margin-top:6px;line-height:1.35;min-height:0}
+.t.on{background:linear-gradient(165deg,var(--blue),var(--blue-d)) padding-box,linear-gradient(165deg,#f3cf72,rgba(224,168,46,.7)) border-box;box-shadow:0 8px 18px color-mix(in srgb,var(--blue) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.25)}
+
+/* নিষিদ্ধ সময় বিভাগ */
+.forbid{margin:12px 2px 2px;padding:10px 8px 10px;border-radius:18px;border:1.5px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(150deg,rgba(224,168,46,.8),color-mix(in srgb,#e5484d 35%,transparent) 55%,rgba(224,168,46,.5)) border-box}
+.fh{display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:8px}
+.fh .fht{font-size:13.5px;font-weight:700;color:var(--gold,#e0a82e)}
+.fh small{font-size:11px;color:var(--muted)}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.f{position:relative;text-align:center;padding:9px 2px 8px;border-radius:14px;background:color-mix(in srgb,var(--card) 70%,transparent);border:1px solid var(--line);color:var(--muted);font-size:12px}
+.f .i{display:block;margin:0 auto 3px;font-size:18px;color:var(--gold,#e0a82e)}
+.f .fn{display:block;font-size:12.5px;color:var(--text);font-weight:600}
+.f b{display:block;margin-top:4px;font-size:12px;font-weight:600;color:var(--muted);line-height:1.35}
+.f .fon{display:none;font-style:normal;font-size:10px;margin-top:3px;font-weight:700;color:#fff}
+.f.on{background:linear-gradient(165deg,#e5484d,#b4232a);border-color:#f3a3a6;box-shadow:0 6px 14px rgba(229,72,77,.35)}
+.f.on .i,.f.on .fn,.f.on b{color:#fff}
+.f.on .fon{display:block}
+
+/* কমপ্যাক্ট নামাজ কার্ড: সব কিছু অল্প উচ্চতায় */
+.prayer{margin-top:-30px;padding:8px 8px 6px;border-radius:18px}
+.next{padding:0 4px 5px}
+.next small{font-size:10.5px;line-height:1.1}
+.next strong{font-size:16px;line-height:1.15}
+.count{padding:2px 10px;border-radius:10px;font-size:13px;line-height:1.25}
+.count span{font-size:9.5px;line-height:1.2}
+.times{gap:5px}
+.t{min-height:0;padding:6px 1px 5px;border-radius:13px;font-size:11.5px;line-height:1.25}
+.t .i{font-size:15px;margin-bottom:1px}
+.t b{margin-top:2px;font-size:12.5px}
+.t em{margin-top:2px;font-size:9px;line-height:1.25;min-height:0}
+.forbid{margin:6px 0 0;padding:5px 6px 6px;border-radius:14px}
+.fh{margin-bottom:4px;gap:5px}
+.fh .fht{font-size:12px}
+.fh small{font-size:10px}
+.fgrid{gap:5px}
+.f{padding:5px 1px 4px;border-radius:11px;line-height:1.25}
+.f .i{display:inline-block;vertical-align:-2px;margin:0 3px 0 0;font-size:13px}
+.f .fn{display:inline;font-size:11.5px}
+.f b{margin-top:1px;font-size:11.5px}
+.f.on .fon{position:absolute;top:-7px;left:50%;transform:translateX(-50%);margin:0;padding:0 6px;border-radius:8px;background:#fff;color:#b4232a;font-size:9px;line-height:14px;white-space:nowrap}
+.note{margin-top:4px;font-size:10px;line-height:1.3}
 </style>
 </head>
 <body>
@@ -889,9 +937,13 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <div class="t" data-p="maghrib"><svg class="i"><use href="#sunset"/></svg>মাগরিব<b>--</b><em></em></div>
         <div class="t" data-p="isha"><svg class="i"><use href="#moon"/></svg>ইশা<b>--</b><em></em></div>
       </div>
-      <div class="madhab" id="madhabRow" role="group" aria-label="মাজহাব">
-        <button type="button" data-m="hanafi"><span class="mn">হানাফি মাজহাব</span><small class="ma">--</small></button>
-        <button type="button" data-m="shafi"><span class="mn">মালিকি, শাফি'ই, হাম্বলি</span><small class="ma">--</small></button>
+      <div class="forbid" id="forbidRow" role="group" aria-label="নিষিদ্ধ সময়">
+        <div class="fh"><span class="fht">নিষিদ্ধ সময়</span><small>নামাজ পড়া মাকরূহ</small></div>
+        <div class="fgrid">
+          <div class="f" data-f="rise"><svg class="i"><use href="#dawn"/></svg><span class="fn">সূর্যোদয়</span><b>--</b><i class="fon">এখন চলছে</i></div>
+          <div class="f" data-f="noon"><svg class="i"><use href="#sun"/></svg><span class="fn">ঠিক দুপুর</span><b>--</b><i class="fon">এখন চলছে</i></div>
+          <div class="f" data-f="set"><svg class="i"><use href="#sunset"/></svg><span class="fn">সূর্যাস্ত</span><b>--</b><i class="fon">এখন চলছে</i></div>
+        </div>
       </div>
       <p class="note"><span id="noteLoc">ঢাকা</span> · <span id="noteMadhab">হানাফি আসর</span> · ১৮° · সূর্যোদয় <span id="sunriseT">--</span></p>
     </div>
@@ -1604,6 +1656,7 @@ Object.assign(D,{'আসমাউল হুসনা':['Asma ul-Husna','الأس
 Object.assign(D,{'হিজরি ক্যালেন্ডার':['Hijri Calendar','التقويم الهجري'],'আজ':['Today','اليوم'],'এই মাসের গুরুত্বপূর্ণ দিন':['Important days this month','أيام مهمة في هذا الشهر'],'বাংলাদেশে চাঁদ দেখার ওপর ভিত্তি করে তারিখ ১ দিন আগে-পরে হতে পারে।':['Dates may differ by a day depending on moon sighting in Bangladesh.','قد يختلف التاريخ بيوم حسب رؤية الهلال في بنغلاديش.']});
 Object.assign(D,{'দৈনন্দিন আমল':['Daily Amal','الأعمال اليومية'],'রাতের ঘুমানোর আগের আমল':['Deeds before sleeping at night','أعمال قبل النوم'],'আজকের অগ্রগতি':["Today's progress",'تقدم اليوم'],'ফজিলত':['Virtue','الفضل'],'সূরা মূলক পড়ুন':['Read Surah Al-Mulk','اقرأ سورة الملك'],'প্রতিদিন নতুন করে শুরু হয়। আপনার অগ্রগতি শুধু এই ডিভাইসে সংরক্ষিত থাকে।':['Resets every day. Your progress is saved only on this device.','يبدأ من جديد كل يوم. يُحفظ تقدمك على هذا الجهاز فقط.']});
 Object.assign(D,{'তাফসীর':['Tafsir','التفسير'],'তাফসীর:':['Tafsir:','التفسير:'],'তাফসীর নির্বাচন করুন':['Choose a tafsir','اختر التفسير'],'তাফসীর খুঁজুন...':['Search tafsir...','ابحث عن تفسير...'],'যেকোনো আয়াতে ট্যাপ করলে তাফসীর দেখা যাবে':['Tap any verse to read its tafsir','اضغط على أي آية لقراءة تفسيرها'],'আয়াত কপি':['Copy verse','نسخ الآية'],'অর্থ কপি':['Copy meaning','نسخ المعنى'],'দুটোই কপি':['Copy both','نسخ الكل'],'কপি হয়েছে':['Copied','تم النسخ'],'কপি করা যায়নি':['Could not copy','تعذّر النسخ'],'তাফসীর কপি':['Copy tafsir','نسخ التفسير'],'তথ্য':['Info','معلومات'],'আগের আয়াত':['Previous verse','الآية السابقة'],'পরের আয়াত':['Next verse','الآية التالية'],'তাফসীর পরিবর্তন হয়েছে':['Tafsir changed','تم تغيير التفسير'],'কোনো তাফসীর পাওয়া যায়নি।':['No tafsir found.','لم يتم العثور على تفسير.'],'এই তাফসীরে এই আয়াতের ব্যাখ্যা পাওয়া যায়নি। অন্য তাফসীর বেছে নিন।':['No explanation for this verse in this tafsir. Choose another tafsir.','لا يوجد شرح لهذه الآية في هذا التفسير. اختر تفسيرًا آخر.'],'এই তাফসীরে আয়াত':['In this tafsir, the explanation from verse','في هذا التفسير شرح مشترك من الآية'],'থেকে কয়েকটি আয়াতের ব্যাখ্যা একসাথে দেওয়া আছে।':['covers several verses together.','يشمل عدة آيات معًا.'],'সূরা নং':['Surah no.','رقم السورة'],'আরবি নাম':['Arabic name','الاسم العربي'],'অবতীর্ণের স্থান':['Revealed in','مكان النزول'],'আয়াত সংখ্যা':['Number of verses','عدد الآيات'],'বন্ধ করুন':['Close','إغلاق']});
+Object.assign(D,{'নিষিদ্ধ সময়':['Forbidden times','أوقات النهي'],'নামাজ পড়া মাকরূহ':['Prayer is disliked (makruh)','تُكره الصلاة فيها'],'সূর্যোদয়':['Sunrise','الشروق'],'ঠিক দুপুর':['Zenith (noon)','وقت الزوال'],'সূর্যাস্ত':['Sunset','الغروب'],'এখন চলছে':['Now','الآن']});
 Object.assign(D,{'শব্দে শব্দে':['Word by word','كلمة بكلمة'],'সাধারণ':['Normal','عادي'],'আয়াত দেখানোর ধরন':['Verse display mode','طريقة عرض الآية']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
@@ -1701,7 +1754,7 @@ function periodBn(h) { if (LANG !== 'bn') return LANG === 'en' ? (h < 12 ? 'AM' 
 
 // নামাজের সময় গণনা (ঢাকা, হানাফি আসর, ফজর/ইশা ১৮°)
 let MADHAB = 'hanafi';
-try { const mv = localStorage.getItem('lodMadhab'); if (mv === 'hanafi' || mv === 'shafi') MADHAB = mv; } catch (e) {}
+// মাজহাব নির্বাচনের বাটন সরানো হয়েছে; আসর সবসময় হানাফি হিসেবে গণনা হয়
 function calcPrayerTimes(y, m, d, mdh) {
   const asrK = (mdh || MADHAB) === 'hanafi' ? 2 : 1; // হানাফি: ছায়া ২ গুণ; মালিকি/শাফি'ই/হাম্বলি: ১ গুণ
   const r = Math.PI / 180, sin = x => Math.sin(x * r), cos = x => Math.cos(x * r), tan = x => Math.tan(x * r);
@@ -1732,9 +1785,9 @@ function setMadhab(m) {
   tick();
 }
 function updMadhabUI(dn) {
-  const row = document.getElementById('madhabRow'); if (!row) return;
+  const row = document.getElementById('madhabRow');
   const asrOf = m => { const t = calcPrayerTimes(dn.getUTCFullYear(), dn.getUTCMonth(), dn.getUTCDate(), m).asr, pm = hrsToMin(t); return T('আসর') + ' ' + bnTime12(Math.floor(pm / 60), pm % 60); };
-  row.querySelectorAll('button').forEach(b => {
+  (row ? row.querySelectorAll('button') : []).forEach(b => {
     const m = b.dataset.m;
     b.classList.toggle('on', m === MADHAB);
     b.setAttribute('aria-pressed', m === MADHAB ? 'true' : 'false');
@@ -1775,6 +1828,16 @@ function tick() {
   el('cdText').textContent = bn(String(Math.floor(left / 3600)).padStart(2, '0')) + ':' + bn(String(Math.floor(left % 3600 / 60)).padStart(2, '0')) + ':' + bn(String(left % 60).padStart(2, '0'));
   el('cdMin').textContent = T(waiting ? 'শুরু হতে বাকি' : 'শেষ হতে বাকি') + ' · ' + bn(Math.ceil(left / 60)) + ' ' + T('মিনিট');
   try { renderHomeDua(dn); } catch (e) {}
+  // নিষিদ্ধ সময় (সূর্যোদয়ের পর ~১৫ মি., ঠিক দুপুর: যোহরের ~৬ মি. আগ থেকে, সূর্যাস্তের আগের ~২০ মি.)
+  try {
+    const fmM = x => bnTime12(Math.floor(x / 60), x % 60);
+    const FB = { rise: [sunriseMin, sunriseMin + 15], noon: [mins.dhuhr - 6, mins.dhuhr], set: [mins.maghrib - 20, mins.maghrib] };
+    document.querySelectorAll('#forbidRow .f').forEach(box => {
+      const r = FB[box.dataset.f]; if (!r) return;
+      box.querySelector('b').textContent = fmM(r[0]) + ' – ' + fmM(r[1]);
+      box.classList.toggle('on', nowSec >= r[0] * 60 && nowSec < r[1] * 60);
+    });
+  } catch (e) {}
   try { updMadhabUI(dn); } catch (e) {}
 
   document.querySelectorAll('#prayerTimes .t').forEach((box, i) => {
