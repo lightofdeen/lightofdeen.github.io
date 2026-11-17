@@ -1716,6 +1716,7 @@ Object.assign(D,{'শব্দে শব্দে':['Word by word','كلمة ب�
 Object.assign(D,{'দৈনন্দিন কুরআন':['Daily Quran','القرآن اليومي'],'সব আয়াত দেখুন →':['View all verses →','عرض كل الآيات →'],'দৈনন্দিন হাদিস':['Daily Hadith','الحديث اليومي'],'সব হাদিস দেখুন →':['View all hadith →','عرض كل الأحاديث →']});
 Object.assign(D,{'🔊 সবগুলো নাম শুনুন':['🔊 Listen to all 99 names','🔊 استمع إلى الأسماء كلها'],'■ থামান':['■ Stop','■ إيقاف'],'🔊 শুনুন':['🔊 Listen','🔊 استمع'],'আপনার ডিভাইসের আরবি ভয়েস দিয়ে নামগুলো পড়ে শোনানো হয়।':['Names are read aloud using your device\'s Arabic voice.','تُقرأ الأسماء بصوت الجهاز العربي.'],'এই ডিভাইসে আরবি ভয়েস পাওয়া যায়নি। ফোনের Text-to-speech সেটিংসে আরবি ভয়েস যোগ করুন।':['No Arabic voice found on this device. Add an Arabic voice in your Text-to-speech settings.','لم يتم العثور على صوت عربي. أضف صوتًا عربيًا من إعدادات تحويل النص إلى كلام.'],'এই ব্রাউজারে অডিও সমর্থিত নয়।':['Audio is not supported in this browser.','الصوت غير مدعوم في هذا المتصفح.']});
 Object.assign(D,{'🎧 সম্পূর্ণ অডিও (সবগুলো নাম)':['🎧 Full audio (all 99 names)','🎧 الصوت الكامل (كل الأسماء)'],'অডিও ইন্টারনেট থেকে বাজে। নেট না থাকলে ডিভাইসের আরবি ভয়েস ব্যবহার হয়।':['Audio plays from the internet. Without a connection, your device\'s Arabic voice is used.','يُشغَّل الصوت من الإنترنت، وعند عدم الاتصال يُستخدم صوت الجهاز.'],'অডিও লোড হয়নি। ইন্টারনেট সংযোগ চেক করুন।':['Audio failed to load. Check your internet connection.','تعذر تحميل الصوت. تحقق من الاتصال بالإنترنت.']});
+Object.assign(D,{'অডিও লোড হচ্ছে...':['Loading audio...','جارٍ تحميل الصوت...'],'অডিও চালানো যায়নি। ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।':['Could not play audio. Check your connection and try again.','تعذر تشغيل الصوت. تحقق من الاتصال وحاول مرة أخرى.']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -3338,8 +3339,15 @@ function asmaHasVoice(){ try{ const v=speechSynthesis.getVoices(); return v.leng
 // নিজের mp3 থাকলে ASMA_AUDIO.one বদলে দিন, যেমন: i => 'https://your-site/audio/' + (i+1) + '.mp3'
 const ASMA_AUDIO={
   all:'https://archive.org/download/AsmaUlHusna99NamesofALLAH_201808/Asma-ul-Husna-99Nam-Download-From-YTPak.com.mp3',
-  one:(i,text)=>'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q='+encodeURIComponent(text)
+  // একটি উৎস না চললে পরেরটি নিজে থেকে চেষ্টা হয়; যেটা চলে সেটি মনে রাখা হয়
+  srcs:[
+    (i,t)=>'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=ar&q='+encodeURIComponent(t),
+    (i,t)=>'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q='+encodeURIComponent(t),
+    (i,t)=>'https://api.streamelements.com/kappa/v2/speech?voice=Zeina&text='+encodeURIComponent(t)
+  ]
 };
+function asmaNote(t){ const n=document.getElementById('asmaNote'); if(n&&t!=null) n.textContent=t; }
+const ASMA_NOTE_DEF='অডিও ইন্টারনেট থেকে বাজে। নেট না থাকলে ডিভাইসের আরবি ভয়েস ব্যবহার হয়।';
 let _asmaEl=null;
 function asmaDeviceSpeak(text,done){
   if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){ done&&done(); return; }
@@ -3349,21 +3357,38 @@ function asmaDeviceSpeak(text,done){
   speechSynthesis.speak(u);
 }
 function asmaSpeak(text,done,idx){
-  const tok0=ASMA_TTS.tok; let fin=false;
-  const end=()=>{ if(fin)return; fin=true; done&&done(); };
-  let fell=false;
-  const fallback=()=>{ if(fin||fell||tok0!==ASMA_TTS.tok)return; fell=true; asmaDeviceSpeak(text,end); };
+  const tok0=ASMA_TTS.tok; let fin=false, att=0, timer=null;
+  const end=()=>{ if(fin)return; fin=true; clearTimeout(timer); done&&done(); };
   const el=_asmaEl||(_asmaEl=new Audio());
   try{ el.pause(); }catch(e){}
-  el.onended=end; el.onerror=fallback;
-  el.src=ASMA_AUDIO.one(idx,text);
-  const pr=el.play(); if(pr&&pr.catch) pr.catch(fallback);
+  let pref=0; try{ pref=+localStorage.getItem('asma_src')||0; }catch(e){}
+  const n=ASMA_AUDIO.srcs.length, order=[]; for(let k=0;k<n;k++) order.push((pref+k)%n);
+  const live=()=>!fin&&tok0===ASMA_TTS.tok;
+  const tryAt=k=>{
+    if(!live()) return;
+    clearTimeout(timer);
+    if(k>=order.length){ // সব অনলাইন উৎস ব্যর্থ → ডিভাইসের ভয়েস
+      let hasAr=false; try{ hasAr=speechSynthesis.getVoices().some(x=>/^ar/i.test(x.lang)); }catch(e){}
+      if(!hasAr) asmaNote(T('অডিও চালানো যায়নি। ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।'));
+      asmaDeviceSpeak(text,end); return;
+    }
+    const my=++att, src=order[k];
+    asmaNote(T('অডিও লোড হচ্ছে...'));
+    el.onended=()=>{ if(my===att) end(); };
+    el.onplaying=()=>{ if(my!==att) return; clearTimeout(timer); asmaNote(T(ASMA_NOTE_DEF)); try{ localStorage.setItem('asma_src',src); }catch(e){} };
+    el.onerror=()=>{ if(my===att) tryAt(k+1); };
+    timer=setTimeout(()=>{ if(my===att) tryAt(k+1); },5000); // ৫ সেকেন্ডে না বাজলে পরের উৎস
+    el.src=ASMA_AUDIO.srcs[src](idx,text);
+    const pr=el.play(); if(pr&&pr.catch) pr.catch(()=>{});
+  };
+  tryAt(0);
 }
 function asmaPlayFull(){
   asmaStop();
   const el=document.getElementById('asmaFull'); if(!el) return;
   el.style.display='block';
   if(!el.getAttribute('src')) el.src=ASMA_AUDIO.all;
+  if(el.readyState<3) asmaNote(T('অডিও লোড হচ্ছে...'));
   const pr=el.play(); if(pr&&pr.catch) pr.catch(()=>{});
 }
 function asmaMark(i){
@@ -3405,12 +3430,13 @@ function showAsmaList(){
   const box=document.getElementById('asmaBody'); box.innerHTML='';
   const bar=hdEl('div','as-bar');
   const full=hdEl('button','as-all',T('🎧 সম্পূর্ণ অডিও (সবগুলো নাম)')); full.onclick=asmaPlayFull; bar.appendChild(full);
-  const au=document.createElement('audio'); au.id='asmaFull'; au.controls=true; au.preload='none'; au.style.cssText='display:none;width:100%';
+  const au=document.createElement('audio'); au.id='asmaFull'; au.controls=true; au.preload='auto'; au.style.cssText='display:none;width:100%'; au.src=ASMA_AUDIO.all; // আগেভাগে লোড শুরু, যাতে বাটন চাপলে দ্রুত বাজে
+  au.onwaiting=()=>asmaNote(T('অডিও লোড হচ্ছে...')); au.onplaying=()=>asmaNote(T(ASMA_NOTE_DEF));
   au.onplay=()=>{ try{ ASMA_TTS.tok++; ASMA_TTS.run=false; speechSynthesis.cancel(); if(_asmaEl)_asmaEl.pause(); }catch(e){} asmaMark(null); asmaAllBtn(); };
-  au.onerror=()=>{ n.textContent=T('অডিও লোড হয়নি। ইন্টারনেট সংযোগ চেক করুন।'); };
+  au.onerror=()=>asmaNote(T('অডিও লোড হয়নি। ইন্টারনেট সংযোগ চেক করুন।'));
   bar.appendChild(au);
   const all=hdEl('button','as-all',T('🔊 সবগুলো নাম শুনুন')); all.id='asmaAllBtn'; all.onclick=()=>{ try{au.pause();}catch(e){} asmaPlayAll(); }; bar.appendChild(all);
-  const n=hdEl('div','as-note',T('অডিও ইন্টারনেট থেকে বাজে। নেট না থাকলে ডিভাইসের আরবি ভয়েস ব্যবহার হয়।')); bar.appendChild(n);
+  const n=hdEl('div','as-note',T(ASMA_NOTE_DEF)); n.id='asmaNote'; bar.appendChild(n);
   box.appendChild(bar);
   ASMA.forEach((a,i)=>{
     const row=hdEl('button','as-row');
