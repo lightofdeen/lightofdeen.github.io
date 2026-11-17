@@ -681,6 +681,16 @@ button,input,select,textarea{font-family:inherit}
 .as-mid small{display:block;font-size:13px;color:var(--muted);line-height:1.35}
 .as-ar{font-family:'MuhammadiQuranic','Amiri',serif;font-size:26px;line-height:1.5;color:var(--blue);direction:rtl;flex:none}
 .as-chev{color:var(--muted);font-size:22px;flex:none}
+.as-play{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--blue-l);color:var(--blue);font-size:15px;line-height:1;cursor:pointer;border:1px solid var(--line)}
+.as-play:active{background:var(--blue);color:#fff}
+.as-row.playing{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent)}
+.as-row.playing .as-play{background:var(--blue);color:#fff}
+.as-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.as-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;border-radius:16px;border:1.5px solid var(--blue);background:var(--blue-l);color:var(--blue);font-family:inherit;font-size:15.5px;font-weight:600;cursor:pointer}
+.as-all.on{background:var(--blue);color:#fff}
+.as-note{font-size:12.5px;color:var(--muted);text-align:center;line-height:1.5}
+.as-listen{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:10px 20px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.as-listen:active{background:rgba(255,255,255,.32)}
 .as-card{background:linear-gradient(160deg,var(--blue),var(--blue-d));color:#fff;border-radius:24px;padding:22px 18px 16px;text-align:center;box-shadow:var(--shadow)}
 .as-badge{display:inline-grid;place-items:center;min-width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.22);font-weight:600;font-size:16px;padding:0 8px}
 .as-big{font-family:'MuhammadiQuranic','Amiri',serif;font-size:56px;line-height:1.6;direction:rtl;margin-top:6px}
@@ -1704,6 +1714,7 @@ Object.assign(D,{'তাফসীর':['Tafsir','التفسير'],'তাফস�
 Object.assign(D,{'নিষিদ্ধ সময়':['Forbidden times','أوقات النهي'],'নামাজ পড়া মাকরূহ':['Prayer is disliked (makruh)','تُكره الصلاة فيها'],'সূর্যোদয়':['Sunrise','الشروق'],'ঠিক দুপুর':['Zenith (noon)','وقت الزوال'],'সূর্যাস্ত':['Sunset','الغروب'],'এখন চলছে':['Now','الآن']});
 Object.assign(D,{'শব্দে শব্দে':['Word by word','كلمة بكلمة'],'সাধারণ':['Normal','عادي'],'আয়াত দেখানোর ধরন':['Verse display mode','طريقة عرض الآية']});
 Object.assign(D,{'দৈনন্দিন কুরআন':['Daily Quran','القرآن اليومي'],'সব আয়াত দেখুন →':['View all verses →','عرض كل الآيات →'],'দৈনন্দিন হাদিস':['Daily Hadith','الحديث اليومي'],'সব হাদিস দেখুন →':['View all hadith →','عرض كل الأحاديث →']});
+Object.assign(D,{'🔊 সবগুলো নাম শুনুন':['🔊 Listen to all 99 names','🔊 استمع إلى الأسماء كلها'],'■ থামান':['■ Stop','■ إيقاف'],'🔊 শুনুন':['🔊 Listen','🔊 استمع'],'আপনার ডিভাইসের আরবি ভয়েস দিয়ে নামগুলো পড়ে শোনানো হয়।':['Names are read aloud using your device\'s Arabic voice.','تُقرأ الأسماء بصوت الجهاز العربي.'],'এই ডিভাইসে আরবি ভয়েস পাওয়া যায়নি। ফোনের Text-to-speech সেটিংসে আরবি ভয়েস যোগ করুন।':['No Arabic voice found on this device. Add an Arabic voice in your Text-to-speech settings.','لم يتم العثور على صوت عربي. أضف صوتًا عربيًا من إعدادات تحويل النص إلى كلام.'],'এই ব্রাউজারে অডিও সমর্থিত নয়।':['Audio is not supported in this browser.','الصوت غير مدعوم في هذا المتصفح.']});
 const T=s=>{if(LANG==='bn')return s;const v=(D[s]||[])[LANG==='en'?0:1];return v===undefined?s:v;};
 const SURAH_EN=["Al-Fatihah", "Al-Baqarah", "Ali 'Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-'Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "'Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duha", "Ash-Sharh", "At-Tin", "Al-'Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-'Adiyat", "Al-Qari'ah", "At-Takathur", "Al-'Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"], DIST_EN=["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Manikganj", "Munshiganj", "Kishoreganj", "Tangail", "Faridpur", "Gopalganj", "Madaripur", "Rajbari", "Shariatpur", "Chattogram", "Cox's Bazar", "Cumilla", "Brahmanbaria", "Chandpur", "Noakhali", "Feni", "Lakshmipur", "Rangamati", "Khagrachhari", "Bandarban", "Rajshahi", "Bogura", "Joypurhat", "Naogaon", "Natore", "Chapainawabganj", "Pabna", "Sirajganj", "Khulna", "Bagerhat", "Satkhira", "Jashore", "Jhenaidah", "Magura", "Narail", "Kushtia", "Chuadanga", "Meherpur", "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalakathi", "Barguna", "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj", "Rangpur", "Dinajpur", "Gaibandha", "Kurigram", "Lalmonirhat", "Nilphamari", "Panchagarh", "Thakurgaon", "Mymensingh", "Jamalpur", "Netrokona", "Sherpur"], DIV_EN=["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"], DUA_T=[["Before sleeping", "دعاء النوم"], ["Upon waking up", "دعاء الاستيقاظ من النوم"], ["Before eating", "دعاء قبل الطعام"], ["If you forget Bismillah at the start of a meal", "إذا نسي التسمية في أول الطعام"], ["After eating", "دعاء بعد الطعام"], ["For the host (after eating at someone's home)", "دعاء للمضيف"], ["When dressing", "دعاء لبس الثوب"], ["When wearing new clothes", "دعاء لبس الثوب الجديد"], ["Looking in the mirror", "دعاء النظر في المرآة"], ["Entering the toilet", "دعاء دخول الخلاء"], ["Leaving the toilet", "دعاء الخروج من الخلاء"], ["Beginning wudu", "دعاء بداية الوضوء"], ["After wudu", "دعاء بعد الوضوء"], ["After the adhan", "دعاء بعد الأذان"], ["Entering the mosque", "دعاء دخول المسجد"], ["Leaving the mosque", "دعاء الخروج من المسجد"], ["Leaving home", "دعاء الخروج من المنزل"], ["Entering home", "دعاء دخول المنزل"], ["Riding a vehicle", "دعاء الركوب"], ["Morning dua", "دعاء الصباح"], ["Evening dua", "دعاء المساء"], ["When sneezing", "دعاء العطاس"], ["Visiting the sick", "دعاء عيادة المريض"], ["Seeing rain", "دعاء المطر"], ["Controlling anger", "دعاء الغضب"], ["Relief from worry and debt", "دعاء الهم والدين"], ["Sayyidul Istighfar (master of seeking forgiveness)", "سيد الاستغفار"], ["Good in this world and the Hereafter", "دعاء خير الدنيا والآخرة"], ["Relief from distress (dua of Yunus AS)", "دعاء يونس عليه السلام"], ["Forgiveness (dua of Adam and Hawwa AS)", "دعاء آدم وحواء عليهما السلام"], ["Increase in knowledge", "دعاء زيادة العلم"], ["Ease and an open heart (dua of Musa AS)", "دعاء موسى عليه السلام"], ["For parents", "دعاء للوالدين"], ["For spouse and children", "دعاء للأزواج والذرية"], ["Steadfastness in guidance", "دعاء الثبات على الهداية"], ["Steadfastness in faith", "دعاء الثبات على الدين"]], REFS=[["সূরা আ\\u2019রাফ", "Surah Al-A'raf", "سورة الأعراف"], ["সূরা আম্বিয়া", "Surah Al-Anbiya", "سورة الأنبياء"], ["সূরা আলে ইমরান", "Surah Ali 'Imran", "سورة آل عمران"], ["সূরা ত্বাহা", "Surah Ta-Ha", "سورة طه"], ["সূরা ফুরকান", "Surah Al-Furqan", "سورة الفرقان"], ["সূরা বনী ইসরাঈল", "Surah Al-Isra", "سورة الإسراء"], ["সূরা বাকারা", "Surah Al-Baqarah", "سورة البقرة"], ["সূরা যুখরুফ", "Surah Az-Zukhruf", "سورة الزخرف"], ["সহীহ বুখারী", "Sahih al-Bukhari", "صحيح البخاري"], ["সহীহ মুসলিম", "Sahih Muslim", "صحيح مسلم"], ["সুনান আবু দাউদ", "Sunan Abi Dawud", "سنن أبي داود"], ["জামে তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["তিরমিযী", "Jami at-Tirmidhi", "جامع الترمذي"], ["ইবনে মাজাহ", "Ibn Majah", "ابن ماجه"], ["মুসনাদ আহমাদ", "Musnad Ahmad", "مسند أحمد"]], NAMES={"en": {"days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "gm": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "bm": ["Boishakh", "Joishtho", "Asharh", "Shrabon", "Bhadro", "Ashwin", "Kartik", "Agrahayan", "Poush", "Magh", "Falgun", "Choitro"], "hm": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Awwal", "Jumada al-Thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"]}, "ar": {"days": ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"], "gm": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"], "bm": ["بايشاخ", "جيشطو", "آشار", "شرابون", "بهادرو", "آشين", "كارتيك", "أغرهايون", "بوش", "ماغ", "فالغون", "تشيترو"], "hm": ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]}};
 const HBN={1:['Sahih al-Bukhari','صحيح البخاري'],2:['Sahih Muslim','صحيح مسلم'],3:['Sunan at-Tirmidhi','سنن الترمذي'],4:["Sunan an-Nasa'i",'سنن النسائي'],5:['Sunan Abi Dawud','سنن أبي داود'],6:['Sunan Ibn Majah','سنن ابن ماجه'],7:['Muwatta Malik','موطأ الإمام مالك']};
@@ -2104,6 +2115,7 @@ function switchView(viewName) {
   if (viewName === 'audio' && typeof auShow === 'function') auShow();
   if (viewName === 'tafsir') tfvRender();
   if (viewName === 'hadith') showHadithBooks();
+  if (viewName !== 'asma' && typeof asmaStop === 'function') asmaStop();
   if (viewName === 'asma') showAsmaList();
   if (viewName === 'hijri') showHijri(true);
   if (viewName === 'amal') renderAmal();
@@ -3318,10 +3330,57 @@ const ASMA=[
 ["الصَّبُورُ","আস-সাবূর","পরম ধৈর্যশীল","2:153,8:46,103:3",1]
 ];
 let asmaCur=0;
+// ===== আসমাউল হুসনা অডিও (ডিভাইসের আরবি ভয়েস) =====
+const ASMA_TTS={tok:0,run:false};
+function asmaHasVoice(){ try{ const v=speechSynthesis.getVoices(); return v.length===0 ? null : v.some(x=>/^ar/i.test(x.lang)); }catch(e){ return false; } }
+function asmaSpeak(text,done){
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){ alert(T('এই ব্রাউজারে অডিও সমর্থিত নয়।')); done&&done(); return; }
+  const u=new SpeechSynthesisUtterance(text); u.lang='ar-SA'; u.rate=.8;
+  const v=speechSynthesis.getVoices().find(x=>/^ar/i.test(x.lang)); if(v) u.voice=v;
+  u.onend=u.onerror=()=>done&&done();
+  speechSynthesis.speak(u);
+}
+function asmaMark(i){
+  document.querySelectorAll('#asmaBody .as-row.playing').forEach(e=>e.classList.remove('playing'));
+  if(i==null) return;
+  const r=document.querySelectorAll('#asmaBody .as-row')[i];
+  if(r){ r.classList.add('playing'); try{ r.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){} }
+}
+function asmaAllBtn(){
+  const b=document.getElementById('asmaAllBtn'); if(!b) return;
+  b.classList.toggle('on',ASMA_TTS.run); b.textContent=T(ASMA_TTS.run?'■ থামান':'🔊 সবগুলো নাম শুনুন');
+}
+function asmaStop(){
+  ASMA_TTS.tok++; ASMA_TTS.run=false;
+  try{ speechSynthesis.cancel(); }catch(e){}
+  asmaMark(null); asmaAllBtn();
+}
+function asmaPlayOne(i){
+  asmaStop(); const tok=ASMA_TTS.tok; asmaMark(i);
+  asmaSpeak(ASMA[i][0],()=>{ if(tok===ASMA_TTS.tok) asmaMark(null); });
+}
+function asmaPlayAll(){
+  if(ASMA_TTS.run){ asmaStop(); return; }
+  asmaStop(); ASMA_TTS.run=true; asmaAllBtn(); const tok=ASMA_TTS.tok;
+  const step=i=>{
+    if(tok!==ASMA_TTS.tok) return;
+    if(i>=ASMA.length){ asmaStop(); return; }
+    asmaMark(i);
+    asmaSpeak(ASMA[i][0],()=>{ if(tok!==ASMA_TTS.tok) return; setTimeout(()=>step(i+1),600); });
+  };
+  step(0);
+}
+try{ speechSynthesis.getVoices(); }catch(e){}
 function showAsmaList(){
   asmaCur=0;
   document.getElementById('asmaTitle').textContent=T('আল্লাহর ৯৯টি নাম');
+  asmaStop();
   const box=document.getElementById('asmaBody'); box.innerHTML='';
+  const bar=hdEl('div','as-bar');
+  const all=hdEl('button','as-all',T('🔊 সবগুলো নাম শুনুন')); all.id='asmaAllBtn'; all.onclick=asmaPlayAll; bar.appendChild(all);
+  const hv=asmaHasVoice();
+  bar.appendChild(hdEl('div','as-note',T(hv===false?'এই ডিভাইসে আরবি ভয়েস পাওয়া যায়নি। ফোনের Text-to-speech সেটিংসে আরবি ভয়েস যোগ করুন।':'আপনার ডিভাইসের আরবি ভয়েস দিয়ে নামগুলো পড়ে শোনানো হয়।')));
+  box.appendChild(bar);
   ASMA.forEach((a,i)=>{
     const row=hdEl('button','as-row');
     row.appendChild(hdEl('span','no',bn(i+1)));
@@ -3331,6 +3390,9 @@ function showAsmaList(){
     row.appendChild(mid);
     const ar=hdEl('span','as-ar',a[0]); ar.lang='ar';
     row.appendChild(ar);
+    const pl=hdEl('span','as-play','🔊'); pl.setAttribute('role','button'); pl.setAttribute('aria-label',T('🔊 শুনুন'));
+    pl.onclick=e=>{ e.stopPropagation(); asmaPlayOne(i); };
+    row.appendChild(pl);
     row.appendChild(hdEl('span','as-chev','›'));
     row.onclick=()=>openAsma(i+1);
     box.appendChild(row);
@@ -3338,6 +3400,7 @@ function showAsmaList(){
   window.scrollTo(0,0);
 }
 function openAsma(n){
+  asmaStop();
   asmaCur=n;
   const a=ASMA[n-1];
   document.getElementById('asmaTitle').textContent=a[1];
@@ -3347,6 +3410,7 @@ function openAsma(n){
   const ar=hdEl('div','as-big',a[0]); ar.lang='ar'; card.appendChild(ar);
   card.appendChild(hdEl('div','as-tr',a[1]));
   card.appendChild(hdEl('div','as-mn',a[2]));
+  const lb=hdEl('button','as-listen',T('🔊 শুনুন')); lb.onclick=()=>asmaPlayOne(n-1); card.appendChild(lb);
   const nav=hdEl('div','as-nav');
   const prev=hdEl('button','btn','‹ '+(n>1?ASMA[n-2][1]:''));
   const next=hdEl('button','btn',(n<99?ASMA[n][1]:'')+' ›');
