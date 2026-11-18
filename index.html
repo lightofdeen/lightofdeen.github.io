@@ -3214,7 +3214,7 @@ function fetchAyahPair(s,a){
 function openSub(name){
   if(curTopic===2){openHadithSub(name);return;}
   if(curTopic===3){openBioCat(name);return;}
-  if(curTopic===4||curTopic===5){openQasasQ(name);return;}
+  if(curTopic>=4&&curTopic<=9){openQasasQ(name);return;}
   curSub=name;
   document.getElementById('topicTitle').textContent=name;
   const box=document.getElementById('topicBody'); box.innerHTML='';
