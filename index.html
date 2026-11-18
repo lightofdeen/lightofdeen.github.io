@@ -442,6 +442,8 @@ html[dir=rtl] button.rd-back:active svg{transform:scaleX(-1) translateX(-2px)}
 .ar-full .ae{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;margin:0 6px;border:2px solid var(--blue);border-radius:50%;font-size:15px;line-height:1;color:var(--blue);font-family:inherit;vertical-align:middle}
 #rdAyahs.normal .words{display:none}
 #rdAyahs.normal .ar-full{display:block}
+#rdAyahs .ayah.nowords .words{display:none}
+#rdAyahs .ayah.nowords .ar-full{display:block}
 .tf-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow)}
 .tf-chip b{font-weight:600;color:var(--blue);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tf-chip .tf-k{color:var(--muted)}
@@ -1686,6 +1688,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
   <input class="loc-search" id="locSearch" type="search" placeholder="জেলার নাম লিখে খুঁজুন..." autocomplete="off">
   <div class="loc-list" id="locList"></div>
 </div>
+<script src="quran-data.js" defer></script>
 <script>
 let LANG='bn';try{LANG=localStorage.getItem('lang')||'bn'}catch(e){}
 if(!['bn','en','ar'].includes(LANG))LANG='bn';
@@ -2666,6 +2669,18 @@ function openInfo() {
 }
 
 // ---------- সূরা খোলা ----------
+// ---------- অফলাইন কোরআন ডেটা (quran-data.js) ----------
+function qoGet() {
+  const d = window.QURAN_OFFLINE; if (!d) return null;
+  return { ar: d.ar, tr: d[({ bn: 'bn', en: 'en', ar: 'mu' })[LANG] || 'bn'] };
+}
+function qoVerses(n, page) {
+  const QO = qoGet(); if (!QO || !QO.ar[n - 1]) return null;
+  const arr = QO.ar[n - 1], from = (page - 1) * 10, to = Math.min(from + 10, arr.length), verses = [];
+  for (let i = from; i < to; i++) verses.push({ verse_number: i + 1, text_uthmani: arr[i], words: [] });
+  return { verses, pagination: { next_page: to < arr.length ? page + 1 : null } };
+}
+
 async function openSurah(n) {
   const bnName = surahName(n), arName = SURAH_INFO[n].ar, meta = surahMeta(n);
   closeAllSheets();
@@ -2684,14 +2699,25 @@ async function openSurah(n) {
   const st = document.getElementById('rdStatus');
   st.textContent = T('লোড হচ্ছে...');
   const token = rd.token;
-  try {
-    // অনুবাদ + অডিও (পুরো সূরা একবারে)
-    const r = await fetch('https://api.alquran.cloud/v1/surah/' + n + '/editions/' + ({ bn: 'bn.bengali', en: 'en.sahih', ar: 'ar.muyassar' })[LANG] + ',ar.alafasy');
-    const j = await r.json();
-    if (token !== rd.token) return;
-    rd.trans = j.data[0].ayahs.map(a => a.text);
-    rd.audio = j.data[1].ayahs.map(a => a.audio);
-  } catch (e) { /* অনুবাদ ছাড়াও আয়াত দেখানো হবে */ }
+  const QO = qoGet();
+  if (QO) {
+    // অনুবাদ সরাসরি লোকাল ফাইল থেকে (অফলাইনে কাজ করে)
+    rd.trans = QO.tr[n - 1] || [];
+    // অডিও শুধু অনলাইনে — অপেক্ষা না করে ব্যাকগ্রাউন্ডে আনা হয়
+    if (navigator.onLine !== false) {
+      fetch('https://api.alquran.cloud/v1/surah/' + n + '/ar.alafasy').then(r => r.json())
+        .then(j => { if (token === rd.token) rd.audio = j.data.ayahs.map(a => a.audio); }).catch(() => {});
+    }
+  } else {
+    try {
+      // অনুবাদ + অডিও (পুরো সূরা একবারে)
+      const r = await fetch('https://api.alquran.cloud/v1/surah/' + n + '/editions/' + ({ bn: 'bn.bengali', en: 'en.sahih', ar: 'ar.muyassar' })[LANG] + ',ar.alafasy');
+      const j = await r.json();
+      if (token !== rd.token) return;
+      rd.trans = j.data[0].ayahs.map(a => a.text);
+      rd.audio = j.data[1].ayahs.map(a => a.audio);
+    } catch (e) { /* অনুবাদ ছাড়াও আয়াত দেখানো হবে */ }
+  }
   loadMoreAyahs();
 }
 
@@ -2702,11 +2728,19 @@ async function loadMoreAyahs() {
   more.style.display = 'none';
   st.textContent = T('লোড হচ্ছে...');
   try {
-    const url = 'https://api.quran.com/api/v4/verses/by_chapter/' + rd.n +
-      '?language=' + LANG + '&words=true&word_fields=text_uthmani&fields=text_uthmani&per_page=10&page=' + rd.page;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('http ' + r.status);
-    const j = await r.json();
+    let j;
+    try {
+      if (qoGet() && navigator.onLine === false) throw new Error('offline');
+      const url = 'https://api.quran.com/api/v4/verses/by_chapter/' + rd.n +
+        '?language=' + LANG + '&words=true&word_fields=text_uthmani&fields=text_uthmani&per_page=10&page=' + rd.page;
+      const ac = new AbortController(), tm = setTimeout(() => ac.abort(), qoGet() ? 4000 : 30000);
+      const r = await fetch(url, { signal: ac.signal }); clearTimeout(tm);
+      if (!r.ok) throw new Error('http ' + r.status);
+      j = await r.json();
+    } catch (e) {
+      j = qoVerses(rd.n, rd.page);   // অফলাইন: লোকাল ফাইল থেকে আয়াত
+      if (!j) throw e;
+    }
     if (token !== rd.token) return;
     const wrap = document.getElementById('rdAyahs');
     j.verses.forEach(v => wrap.appendChild(buildAyah(v)));
@@ -2735,7 +2769,7 @@ function setRdMode(m) {
 function buildAyah(v) {
   const no = v.verse_number, sNo = rd.n;
   const el = document.createElement('div');
-  el.className = 'ayah'; el.tabIndex = 0; el.setAttribute('role', 'button');
+  el.className = 'ayah' + ((v.words && v.words.length) ? '' : ' nowords'); el.tabIndex = 0; el.setAttribute('role', 'button');
   const arabic = v.text_uthmani || v.words.filter(w => w.char_type_name !== 'end').map(w => w.text_uthmani).join(' ');
   rd.ar[no] = arabic;
   const words = v.words.map(w => {
@@ -3163,6 +3197,8 @@ function parseRefs(str){
   return out;
 }
 function fetchAyahPair(s,a){
+  const QO=qoGet();
+  if(QO&&QO.tr&&QO.ar[s-1]&&QO.ar[s-1][a-1]&&QO.tr[s-1]&&QO.tr[s-1][a-1])return Promise.resolve({ar:QO.ar[s-1][a-1],tr:QO.tr[s-1][a-1]});
   const ed=({bn:'bn.bengali',en:'en.sahih',ar:'ar.muyassar'})[LANG];
   const key=s+':'+a+'|'+ed;
   if(AYAH_CACHE[key])return AYAH_CACHE[key];
