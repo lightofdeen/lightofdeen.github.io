@@ -626,6 +626,18 @@ html[dir=rtl] button.rd-back:active svg{transform:scaleX(-1) translateX(-2px)}
 .loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .loc-item{padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:13.5px;cursor:pointer;text-align:center}
 .loc-item.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.loc-back{display:flex;align-items:center;gap:10px;margin:6px 4px 0}
+.loc-back button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:6px 10px;font-family:inherit;font-size:13px;cursor:pointer}
+.area-row{display:flex;gap:8px;margin:0 0 6px}
+.area-row input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:14.5px;outline:none}
+.area-row input:focus{border-color:var(--blue)}
+.area-row button,.loc-res,.loc-done{font-family:inherit;cursor:pointer}
+.area-row button{padding:0 14px;border-radius:12px;border:0;background:var(--blue);color:#fff;font-size:14px}
+.loc-res{display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:13px;line-height:1.4}
+.loc-res.own{border-style:dashed}
+.loc-hint{font-size:12px;color:var(--muted);margin:2px 4px 8px}
+.loc-done{display:block;width:100%;margin:14px 0 6px;padding:11px;border-radius:14px;border:0;background:var(--blue);color:#fff;font-size:15px}
+
 
 /* language switcher */
 .brand{min-width:0}
@@ -1860,7 +1872,7 @@ function tick() {
   const el = id => document.getElementById(id);
   el('live-date').textContent = NM('days')[dn.getUTCDay()] + ', ' + bn(dn.getUTCDate()) + ' ' + NM('gm')[dn.getUTCMonth()] + ' ' + bn(dn.getUTCFullYear());
   el('live-clock').innerHTML = bnTime12(H, M, true, S) + '<small>' + periodBn(H) + '</small>';
-  el('locName').textContent = dnm(LOC.name); el('noteLoc').textContent = dnm(LOC.name) + (LOC.mode === 'auto' ? ' ' + T('(আপনার অবস্থান)') : '');
+  el('locName').textContent = locShort(); el('noteLoc').textContent = locFull() + (LOC.mode === 'auto' ? ' ' + T('(আপনার অবস্থান)') : '');
   el('bn-date').textContent = banglaDate(dn);
   el('hj-date').textContent = hijriDate(dn);
 
@@ -1922,9 +1934,78 @@ const DISTRICTS = [
  ['রংপুর বিভাগ',[['রংপুর',25.75,89.25],['দিনাজপুর',25.63,88.64],['গাইবান্ধা',25.33,89.54],['কুড়িগ্রাম',25.81,89.65],['লালমনিরহাট',25.99,89.45],['নীলফামারী',25.93,88.86],['পঞ্চগড়',26.34,88.55],['ঠাকুরগাঁও',26.03,88.46]]],
  ['ময়মনসিংহ বিভাগ',[['ময়মনসিংহ',24.75,90.41],['জামালপুর',24.92,89.94],['নেত্রকোণা',24.87,90.73],['শেরপুর',25.02,90.02]]]
 ];
+const UPAZILAS = {
+"ঢাকা": "ঢাকা মহানগর|সাভার|ধামরাই|কেরানীগঞ্জ|নবাবগঞ্জ|দোহার",
+"গাজীপুর": "গাজীপুর সদর|কালিয়াকৈর|কালীগঞ্জ|কাপাসিয়া|শ্রীপুর",
+"নারায়ণগঞ্জ": "নারায়ণগঞ্জ সদর|আড়াইহাজার|বন্দর|রূপগঞ্জ|সোনারগাঁ",
+"নরসিংদী": "নরসিংদী সদর|বেলাব|মনোহরদী|পলাশ|রায়পুরা|শিবপুর",
+"মানিকগঞ্জ": "মানিকগঞ্জ সদর|ঘিওর|দৌলতপুর|শিবালয়|সাটুরিয়া|হরিরামপুর|সিংগাইর",
+"মুন্সিগঞ্জ": "মুন্সিগঞ্জ সদর|গজারিয়া|লৌহজং|শ্রীনগর|সিরাজদিখান|টঙ্গীবাড়ী",
+"কিশোরগঞ্জ": "কিশোরগঞ্জ সদর|অষ্টগ্রাম|বাজিতপুর|ভৈরব|হোসেনপুর|ইটনা|করিমগঞ্জ|কটিয়াদী|কুলিয়ারচর|মিঠামইন|নিকলী|পাকুন্দিয়া|তাড়াইল",
+"টাঙ্গাইল": "টাঙ্গাইল সদর|বাসাইল|ভুঞাপুর|দেলদুয়ার|ঘাটাইল|গোপালপুর|কালিহাতি|মধুপুর|মির্জাপুর|নাগরপুর|সখিপুর|ধনবাড়ী",
+"ফরিদপুর": "ফরিদপুর সদর|আলফাডাঙ্গা|ভাঙ্গা|বোয়ালমারী|চরভদ্রাসন|মধুখালী|নগরকান্দা|সদরপুর|সালথা",
+"গোপালগঞ্জ": "গোপালগঞ্জ সদর|কাশিয়ানী|কোটালীপাড়া|মুকসুদপুর|টুঙ্গিপাড়া",
+"মাদারীপুর": "মাদারীপুর সদর|কালকিনি|রাজৈর|শিবচর|ডাসার",
+"রাজবাড়ী": "রাজবাড়ী সদর|বালিয়াকান্দি|গোয়ালন্দ|পাংশা|কালুখালী",
+"শরীয়তপুর": "শরীয়তপুর সদর|ভেদরগঞ্জ|ডামুড্যা|গোসাইরহাট|নড়িয়া|জাজিরা",
+"চট্টগ্রাম": "চট্টগ্রাম মহানগর|আনোয়ারা|বাঁশখালী|বোয়ালখালী|চন্দনাইশ|ফটিকছড়ি|হাটহাজারী|লোহাগাড়া|মীরসরাই|পটিয়া|রাঙ্গুনিয়া|রাউজান|সন্দ্বীপ|সাতকানিয়া|সীতাকুণ্ড|কর্ণফুলী",
+"কক্সবাজার": "কক্সবাজার সদর|চকরিয়া|কুতুবদিয়া|উখিয়া|মহেশখালী|পেকুয়া|রামু|টেকনাফ|ঈদগাঁও",
+"কুমিল্লা": "কুমিল্লা সদর|কুমিল্লা সদর দক্ষিণ|আদর্শ সদর|বরুড়া|ব্রাহ্মণপাড়া|বুড়িচং|চান্দিনা|চৌদ্দগ্রাম|দাউদকান্দি|দেবিদ্বার|হোমনা|লাকসাম|লালমাই|মনোহরগঞ্জ|মেঘনা|মুরাদনগর|নাঙ্গলকোট|তিতাস",
+"ব্রাহ্মণবাড়িয়া": "ব্রাহ্মণবাড়িয়া সদর|আখাউড়া|আশুগঞ্জ|বাঞ্ছারামপুর|বিজয়নগর|কসবা|নবীনগর|নাসিরনগর|সরাইল",
+"চাঁদপুর": "চাঁদপুর সদর|ফরিদগঞ্জ|হাইমচর|হাজীগঞ্জ|কচুয়া|মতলব উত্তর|মতলব দক্ষিণ|শাহরাস্তি",
+"নোয়াখালী": "নোয়াখালী সদর|বেগমগঞ্জ|চাটখিল|কোম্পানীগঞ্জ|হাতিয়া|কবিরহাট|সেনবাগ|সোনাইমুড়ী|সুবর্ণচর",
+"ফেনী": "ফেনী সদর|ছাগলনাইয়া|দাগনভূঞা|ফুলগাজী|পরশুরাম|সোনাগাজী",
+"লক্ষ্মীপুর": "লক্ষ্মীপুর সদর|কমলনগর|রায়পুর|রামগঞ্জ|রামগতি",
+"রাঙ্গামাটি": "রাঙ্গামাটি সদর|বাঘাইছড়ি|বরকল|কাউখালী|জুরাছড়ি|লংগদু|নানিয়ারচর|রাজস্থলী|বিলাইছড়ি|কাপ্তাই",
+"খাগড়াছড়ি": "খাগড়াছড়ি সদর|দীঘিনালা|লক্ষ্মীছড়ি|মহালছড়ি|মানিকছড়ি|মাটিরাঙ্গা|পানছড়ি|রামগড়|গুইমারা",
+"বান্দরবান": "বান্দরবান সদর|আলীকদম|লামা|নাইক্ষ্যংছড়ি|রোয়াংছড়ি|রুমা|থানচি",
+"রাজশাহী": "রাজশাহী মহানগর|বাগমারা|বাঘা|চারঘাট|দুর্গাপুর|গোদাগাড়ী|মোহনপুর|পবা|পুঠিয়া|তানোর",
+"বগুড়া": "বগুড়া সদর|আদমদিঘী|ধুনট|দুপচাঁচিয়া|গাবতলী|কাহালু|নন্দীগ্রাম|সারিয়াকান্দি|শাজাহানপুর|শেরপুর|শিবগঞ্জ|সোনাতলা",
+"জয়পুরহাট": "জয়পুরহাট সদর|আক্কেলপুর|কালাই|ক্ষেতলাল|পাঁচবিবি",
+"নওগাঁ": "নওগাঁ সদর|আত্রাই|বদলগাছী|ধামইরহাট|মহাদেবপুর|মান্দা|নিয়ামতপুর|পত্নীতলা|পোরশা|রানীনগর|সাপাহার",
+"নাটোর": "নাটোর সদর|বাগাতিপাড়া|বড়াইগ্রাম|গুরুদাসপুর|লালপুর|সিংড়া|নলডাঙ্গা",
+"চাঁপাইনবাবগঞ্জ": "চাঁপাইনবাবগঞ্জ সদর|ভোলাহাট|গোমস্তাপুর|নাচোল|শিবগঞ্জ",
+"পাবনা": "পাবনা সদর|আটঘরিয়া|বেড়া|ভাঙ্গুড়া|চাটমোহর|ফরিদপুর|ঈশ্বরদী|সুজানগর|সাঁথিয়া",
+"সিরাজগঞ্জ": "সিরাজগঞ্জ সদর|বেলকুচি|চৌহালি|কামারখন্দ|কাজীপুর|রায়গঞ্জ|শাহজাদপুর|তাড়াশ|উল্লাপাড়া",
+"খুলনা": "খুলনা মহানগর|বটিয়াঘাটা|দাকোপ|ডুমুরিয়া|দিঘলিয়া|কয়রা|পাইকগাছা|ফুলতলা|রূপসা|তেরখাদা",
+"বাগেরহাট": "বাগেরহাট সদর|চিতলমারী|ফকিরহাট|কচুয়া|মোল্লাহাট|মোংলা|মোড়েলগঞ্জ|রামপাল|শরণখোলা",
+"সাতক্ষীরা": "সাতক্ষীরা সদর|আশাশুনি|দেবহাটা|কালীগঞ্জ|কলারোয়া|শ্যামনগর|তালা",
+"যশোর": "যশোর সদর|অভয়নগর|বাঘারপাড়া|চৌগাছা|ঝিকরগাছা|কেশবপুর|মণিরামপুর|শার্শা",
+"ঝিনাইদহ": "ঝিনাইদহ সদর|কালীগঞ্জ|কোটচাঁদপুর|মহেশপুর|শৈলকুপা|হরিণাকুণ্ডু",
+"মাগুরা": "মাগুরা সদর|মহম্মদপুর|শালিখা|শ্রীপুর",
+"নড়াইল": "নড়াইল সদর|কালিয়া|লোহাগড়া",
+"কুষ্টিয়া": "কুষ্টিয়া সদর|ভেড়ামারা|দৌলতপুর|খোকসা|কুমারখালী|মিরপুর",
+"চুয়াডাঙ্গা": "চুয়াডাঙ্গা সদর|আলমডাঙ্গা|দামুড়হুদা|জীবননগর",
+"মেহেরপুর": "মেহেরপুর সদর|গাংনী|মুজিবনগর",
+"বরিশাল": "বরিশাল সদর|আগৈলঝাড়া|বাবুগঞ্জ|বাকেরগঞ্জ|বানারীপাড়া|গৌরনদী|হিজলা|মুলাদী|মেহেন্দিগঞ্জ|উজিরপুর",
+"ভোলা": "ভোলা সদর|বোরহানউদ্দিন|চরফ্যাশন|দৌলতখান|লালমোহন|মনপুরা|তজুমদ্দিন",
+"পটুয়াখালী": "পটুয়াখালী সদর|বাউফল|দশমিনা|দুমকি|গলাচিপা|কলাপাড়া|মির্জাগঞ্জ|রাঙ্গাবালী",
+"পিরোজপুর": "পিরোজপুর সদর|ভান্ডারিয়া|কাউখালী|মঠবাড়িয়া|নাজিরপুর|নেছারাবাদ|জিয়ানগর",
+"ঝালকাঠি": "ঝালকাঠি সদর|কাঁঠালিয়া|নলছিটি|রাজাপুর",
+"বরগুনা": "বরগুনা সদর|আমতলী|বামনা|বেতাগী|পাথরঘাটা|তালতলী",
+"সিলেট": "সিলেট সদর|বালাগঞ্জ|বিয়ানীবাজার|বিশ্বনাথ|কোম্পানীগঞ্জ|দক্ষিণ সুরমা|ফেঞ্চুগঞ্জ|গোলাপগঞ্জ|গোয়াইনঘাট|জৈন্তাপুর|কানাইঘাট|ওসমানীনগর|জকিগঞ্জ",
+"মৌলভীবাজার": "মৌলভীবাজার সদর|বড়লেখা|জুড়ী|কমলগঞ্জ|কুলাউড়া|রাজনগর|শ্রীমঙ্গল",
+"হবিগঞ্জ": "হবিগঞ্জ সদর|আজমিরীগঞ্জ|বাহুবল|বানিয়াচং|চুনারুঘাট|লাখাই|মাধবপুর|নবীগঞ্জ|শায়েস্তাগঞ্জ",
+"সুনামগঞ্জ": "সুনামগঞ্জ সদর|বিশ্বম্ভরপুর|ছাতক|দক্ষিণ সুনামগঞ্জ|দিরাই|ধর্মপাশা|দোয়ারাবাজার|জগন্নাথপুর|জামালগঞ্জ|শাল্লা|তাহিরপুর|মধ্যনগর",
+"রংপুর": "রংপুর সদর|বদরগঞ্জ|গঙ্গাচড়া|কাউনিয়া|মিঠাপুকুর|পীরগাছা|পীরগঞ্জ|তারাগঞ্জ",
+"দিনাজপুর": "দিনাজপুর সদর|বিরামপুর|বীরগঞ্জ|বিরল|বোচাগঞ্জ|চিরিরবন্দর|ফুলবাড়ী|ঘোড়াঘাট|হাকিমপুর|কাহারোল|খানসামা|নবাবগঞ্জ|পার্বতীপুর",
+"গাইবান্ধা": "গাইবান্ধা সদর|ফুলছড়ি|গোবিন্দগঞ্জ|পলাশবাড়ী|সাদুল্লাপুর|সাঘাটা|সুন্দরগঞ্জ",
+"কুড়িগ্রাম": "কুড়িগ্রাম সদর|ভুরুঙ্গামারী|চিলমারী|ফুলবাড়ী|নাগেশ্বরী|রাজারহাট|রাজিবপুর|রৌমারী|উলিপুর",
+"লালমনিরহাট": "লালমনিরহাট সদর|আদিতমারী|হাতীবান্ধা|কালীগঞ্জ|পাটগ্রাম",
+"নীলফামারী": "নীলফামারী সদর|ডিমলা|ডোমার|জলঢাকা|কিশোরগঞ্জ|সৈয়দপুর",
+"পঞ্চগড়": "পঞ্চগড় সদর|আটোয়ারী|বোদা|দেবীগঞ্জ|তেঁতুলিয়া",
+"ঠাকুরগাঁও": "ঠাকুরগাঁও সদর|বালিয়াডাঙ্গী|হরিপুর|পীরগঞ্জ|রানীশংকৈল",
+"ময়মনসিংহ": "ময়মনসিংহ সদর|ভালুকা|ধোবাউড়া|ফুলবাড়ীয়া|গফরগাঁও|গৌরীপুর|হালুয়াঘাট|ঈশ্বরগঞ্জ|মুক্তাগাছা|নান্দাইল|ফুলপুর|ত্রিশাল|তারাকান্দা",
+"জামালপুর": "জামালপুর সদর|বকশীগঞ্জ|দেওয়ানগঞ্জ|ইসলামপুর|মাদারগঞ্জ|মেলান্দহ|সরিষাবাড়ী",
+"নেত্রকোণা": "নেত্রকোণা সদর|আটপাড়া|বারহাট্টা|দুর্গাপুর|কলমাকান্দা|কেন্দুয়া|খালিয়াজুরী|মদন|মোহনগঞ্জ|পূর্বধলা",
+"শেরপুর": "শেরপুর সদর|ঝিনাইগাতী|নকলা|নালিতাবাড়ী|শ্রীবরদী"
+};
 const $ = id => document.getElementById(id);
 function saveLoc() { try { localStorage.setItem('prayerLoc', JSON.stringify(LOC)); } catch (e) {} }
 function setLoc(l) { LOC = l; saveLoc(); tick(); renderLocList($('locSearch').value); }
+function locShort() { return LOC.area || LOC.upa || dnm(LOC.name); }
+function locFull() { return [LOC.area, LOC.upa, dnm(LOC.name)].filter(Boolean).join(', '); }
+function distObj(n) { let r = null; DISTRICTS.forEach(([, a]) => a.forEach(d => { if (d[0] === n) r = d; })); return r; }
 function nearestDistrict(lat, lng) {
   let best = null, bd = 1e9;
   DISTRICTS.forEach(([, arr]) => arr.forEach(d => {
@@ -1934,25 +2015,78 @@ function nearestDistrict(lat, lng) {
   return best;
 }
 function inBangladesh(lat, lng) { return lat > 20.5 && lat < 26.8 && lng > 88.0 && lng < 92.8; }
+
+// ---- উপজেলা / গ্রাম-এলাকা: OpenStreetMap (Nominatim) দিয়ে স্থানাঙ্ক খোঁজা ----
+let LOCSEL = null; // যে জেলার উপজেলা দেখানো হচ্ছে
+function geoGet(url) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), 9000);
+  return fetch(url, { signal: c.signal, headers: { 'Accept': 'application/json' } }).then(r => r.json()).finally(() => clearTimeout(t));
+}
+function geoSearch(q, d, limit) {
+  const la = d[1], ln = d[2], r = 0.75;
+  return geoGet('https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=bn&countrycodes=bd&bounded=1&limit=' + limit +
+    '&viewbox=' + (ln - r) + ',' + (la + r) + ',' + (ln + r) + ',' + (la - r) + '&q=' + encodeURIComponent(q));
+}
+function upaGeoCache() { try { return JSON.parse(localStorage.getItem('upaGeo') || '{}') || {}; } catch (e) { return {}; } }
+function refineUpazila(dist, upa) {
+  const d = distObj(dist); if (!d || /সদর$|মহানগর$/.test(upa)) return; // সদর/মহানগর = জেলার কেন্দ্র
+  const key = dist + '|' + upa, apply = c => {
+    if (LOC.name === dist && LOC.upa === upa && !LOC.area) { LOC.lat = c[0]; LOC.lng = c[1]; saveLoc(); tick(); }
+  }, cache = upaGeoCache();
+  if (cache[key]) return apply(cache[key]);
+  geoSearch(upa + ', ' + dist + ', বাংলাদেশ', d, 1).then(res => {
+    if (!res || !res[0]) return;
+    const c = [+(+res[0].lat).toFixed(4), +(+res[0].lon).toFixed(4)];
+    const cc = upaGeoCache(); cc[key] = c; try { localStorage.setItem('upaGeo', JSON.stringify(cc)); } catch (e) {}
+    apply(c);
+  }).catch(() => {});
+}
+function esc(x) { return String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function renderLocList(q) {
   q = (q || '').trim();
+  const L = q.toLowerCase();
+  if (LOCSEL) {
+    $('locSearch').placeholder = T('উপজেলার নাম লিখে খুঁজুন...');
+    const ups = (UPAZILAS[LOCSEL] || '').split('|').filter(Boolean).filter(u => !q || u.includes(q));
+    let h = '<div class="loc-back"><button id="locBack">← ' + T('জেলা তালিকা') + '</button><b>' + esc(dnm(LOCSEL)) + '</b></div>' +
+      '<div class="loc-div">' + T('উপজেলা') + '</div><div class="loc-grid">' +
+      ups.map(u => '<button class="loc-item up' + (LOC.name === LOCSEL && LOC.upa === u ? ' on' : '') + '" data-u="' + esc(u) + '">' + esc(u) + '</button>').join('') + '</div>' +
+      (ups.length ? '' : '<p class="loc-hint">' + T('কোনো উপজেলা পাওয়া যায়নি') + '</p>') +
+      '<div class="loc-div">' + T('গ্রাম / এলাকা (ঐচ্ছিক)') + '</div>' +
+      '<div class="area-row"><input id="areaQ" type="search" placeholder="' + T('গ্রাম, ইউনিয়ন বা এলাকার নাম') + '" autocomplete="off" value="' + esc(LOC.name === LOCSEL && LOC.area || '') + '"><button id="areaGo">' + T('খুঁজুন') + '</button></div>' +
+      '<div id="areaRes"></div><p class="loc-hint">' + T('ইন্টারনেট থাকলে নামটি মানচিত্রে খুঁজে সঠিক স্থানাঙ্কে নামাজের সময় হিসাব হবে।') + '</p>' +
+      '<button class="loc-done" id="locDone">' + T('সম্পন্ন') + '</button>';
+    $('locList').innerHTML = h; return;
+  }
+  $('locSearch').placeholder = T('জেলার নাম লিখে খুঁজুন...');
   let html = '';
   DISTRICTS.forEach(([div, arr]) => {
-    const items = arr.filter(d => !q || d[0].includes(q) || dnm(d[0]).toLowerCase().includes(q.toLowerCase()));
+    const items = arr.filter(d => !q || d[0].includes(q) || dnm(d[0]).toLowerCase().includes(L));
     if (!items.length) return;
     html += '<div class="loc-div">' + dvn(div) + '</div><div class="loc-grid">' + items.map(d =>
-      '<button class="loc-item' + (LOC.mode === 'manual' && LOC.name === d[0] ? ' on' : '') + '" data-n="' + d[0] + '" data-la="' + d[1] + '" data-ln="' + d[2] + '">' + dnm(d[0]) + '</button>').join('') + '</div>';
+      '<button class="loc-item' + (LOC.name === d[0] ? ' on' : '') + '" data-n="' + d[0] + '" data-la="' + d[1] + '" data-ln="' + d[2] + '">' + dnm(d[0]) + '</button>').join('') + '</div>';
   });
   $('locList').innerHTML = html || '<p class="gps-msg" style="display:block;text-align:center;padding:18px 0">' + T('কোনো জেলা পাওয়া যায়নি') + '</p>';
 }
 function openSheet() {
-  renderLocList(''); $('locSearch').value = ''; $('gpsMsg').textContent = '';
+  LOCSEL = (LOC.upa || LOC.area) && UPAZILAS[LOC.name] ? LOC.name : null;
+  $('locSearch').value = ''; renderLocList(''); $('gpsMsg').textContent = '';
   $('sheetBg').classList.add('show'); $('locSheet').classList.add('show'); $('locSheet').setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 function closeSheet() {
   $('sheetBg').classList.remove('show'); $('locSheet').classList.remove('show'); $('locSheet').setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+}
+function reverseFill() {
+  if (LOC.mode !== 'auto') return;
+  geoGet('https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&accept-language=bn&lat=' + LOC.lat + '&lon=' + LOC.lng).then(r => {
+    const a = (r && r.address) || {}; if (LOC.mode !== 'auto') return;
+    const clean = x => x ? String(x).replace(/\s*উপজেলা$/, '').replace(/\s*থানা$/, '') : '';
+    LOC.area = a.village || a.suburb || a.neighbourhood || a.hamlet || a.town || a.city_district || '';
+    LOC.upa = clean(a.county || a.municipality || '');
+    saveLoc(); tick();
+  }).catch(() => {});
 }
 function locateMe(silent) {
   const msg = t => { if (!silent) $('gpsMsg').textContent = t; };
@@ -1962,13 +2096,31 @@ function locateMe(silent) {
     btn.disabled = false;
     const lat = pos.coords.latitude, lng = pos.coords.longitude;
     if (!inBangladesh(lat, lng)) return msg(T('আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।'));
-    const n = nearestDistrict(lat, lng);
-    setLoc({ name: n[0], lat: lat, lng: lng, mode: 'auto' });
+    const n = nearestDistrict(lat, lng), keep = LOC.mode === 'auto' && LOC.name === n[0];
+    LOCSEL = null;
+    setLoc({ name: n[0], lat: lat, lng: lng, mode: 'auto', upa: keep ? LOC.upa : '', area: keep ? LOC.area : '' });
+    reverseFill();
     if (!silent) closeSheet();
   }, err => {
     btn.disabled = false;
-    msg(err.code === 1 ? T('লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।') : T('লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।'));
+    msg(err.code === 1 ? T('লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।') : T('লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।'))
   }, { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 });
+}
+function areaSearch() {
+  const v = ($('areaQ').value || '').trim(), box = $('areaRes'), d = distObj(LOCSEL); if (!v || !d) return;
+  box.innerHTML = '<p class="loc-hint">' + T('খোঁজা হচ্ছে...') + '</p>';
+  const ctx = (LOC.name === LOCSEL && LOC.upa ? LOC.upa + ', ' : '') + LOCSEL + ', বাংলাদেশ';
+  geoSearch(v + ', ' + ctx, d, 6).then(res => {
+    if (!res || !res.length) return geoSearch(v + ', ' + LOCSEL, d, 6);
+    return res;
+  }).then(res => {
+    let h = (res || []).map(r => '<button class="loc-res" data-n="' + esc(r.name || String(r.display_name).split(',')[0]) + '" data-la="' + r.lat + '" data-ln="' + r.lon + '">' +
+      esc(String(r.display_name).replace(/, বাংলাদেশ$/, '')) + '</button>').join('');
+    h += '<button class="loc-res own" data-own="1" data-n="' + esc(v) + '">“' + esc(v) + '” ' + T('নামে সংরক্ষণ করুন (উপজেলার কেন্দ্র ধরে)') + '</button>';
+    box.innerHTML = h;
+  }).catch(() => {
+    box.innerHTML = '<p class="loc-hint">' + T('ইন্টারনেট সমস্যা — মানচিত্রে খোঁজা যায়নি।') + '</p><button class="loc-res own" data-own="1" data-n="' + esc(v) + '">“' + esc(v) + '” ' + T('নামে সংরক্ষণ করুন (উপজেলার কেন্দ্র ধরে)') + '</button>';
+  });
 }
 $('locBtn').addEventListener('click', openSheet);
 $('sheetBg').addEventListener('click', closeSheet);
@@ -1976,10 +2128,31 @@ $('sheetX').addEventListener('click', closeSheet);
 $('gpsBtn').addEventListener('click', () => locateMe(false));
 $('locSearch').addEventListener('input', e => renderLocList(e.target.value));
 $('locList').addEventListener('click', e => {
-  const b = e.target.closest('.loc-item'); if (!b) return;
-  setLoc({ name: b.dataset.n, lat: +b.dataset.la, lng: +b.dataset.ln, mode: 'manual' });
-  closeSheet();
+  const t = e.target;
+  if (t.closest('#locBack')) { LOCSEL = null; $('locSearch').value = ''; return renderLocList(''); }
+  if (t.closest('#locDone')) return closeSheet();
+  if (t.closest('#areaGo')) return areaSearch();
+  const r = t.closest('.loc-res');
+  if (r) {
+    const d = distObj(LOCSEL); if (!d) return;
+    if (r.dataset.own) {
+      const base = LOC.name === LOCSEL ? LOC : { lat: d[1], lng: d[2], upa: '' };
+      setLoc({ name: LOCSEL, upa: base.upa || '', area: r.dataset.n, lat: base.lat, lng: base.lng, mode: 'manual' });
+    } else setLoc({ name: LOCSEL, upa: LOC.name === LOCSEL ? (LOC.upa || '') : '', area: r.dataset.n, lat: +r.dataset.la, lng: +r.dataset.ln, mode: 'manual' });
+    return closeSheet();
+  }
+  const u = t.closest('.loc-item.up');
+  if (u) {
+    const d = distObj(LOCSEL); if (!d) return;
+    setLoc({ name: LOCSEL, upa: u.dataset.u, area: '', lat: d[1], lng: d[2], mode: 'manual' });
+    refineUpazila(LOCSEL, u.dataset.u); return;
+  }
+  const b = t.closest('.loc-item'); if (!b) return;
+  setLoc({ name: b.dataset.n, lat: +b.dataset.la, lng: +b.dataset.ln, mode: 'manual', upa: '', area: '' });
+  LOCSEL = UPAZILAS[b.dataset.n] ? b.dataset.n : null; $('locSearch').value = ''; renderLocList('');
+  if (!LOCSEL) closeSheet();
 });
+$('locList').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'areaQ') { e.preventDefault(); areaSearch(); } });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 if (LOC.mode === 'auto') locateMe(true); // আগে GPS বেছে থাকলে নীরবে অবস্থান হালনাগাদ
 
