@@ -912,6 +912,83 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .f b{margin-top:1px;font-size:11.5px}
 .f.on .fon{position:absolute;top:-7px;left:50%;transform:translateX(-50%);margin:0;padding:0 6px;border-radius:8px;background:#fff;color:#b4232a;font-size:9px;line-height:14px;white-space:nowrap}
 .note{margin-top:4px;font-size:10px;line-height:1.3}
+
+/* ===== হাদিস কুইজ ===== */
+#quiz-view{--qz-ok:#1f9d6b;--qz-bad:#e5484d}
+.qz-wrap{padding:14px 16px 90px;max-width:640px;margin:0 auto}
+.qz-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.qz-hero{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.qz-hero .qz-ico{width:64px;height:64px;border-radius:18px;background:var(--blue-l);color:var(--blue);display:grid;place-items:center;font-size:34px;flex:none}
+.qz-hero h2{font-size:22px;color:var(--blue);margin:0 0 2px}
+.qz-hero p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.qz-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.qz-stat{background:var(--blue-l);border-radius:14px;padding:10px 4px;text-align:center;font-size:11.5px;color:var(--muted)}
+.qz-stat b{display:block;font-size:20px;color:var(--text);margin-bottom:2px}
+.qz-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:14px;padding:14px;background:var(--blue);color:var(--on-blue);font:600 16px/1.3 inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.qz-btn:active{transform:scale(.99)}
+.qz-btn.ghost{background:var(--blue-l);color:var(--blue)}
+.qz-btn[disabled]{opacity:.45;pointer-events:none}
+.qz-sec{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 10px;font-size:14px;font-weight:600;color:var(--muted)}
+.qz-row{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:10px;cursor:pointer;color:var(--text);-webkit-tap-highlight-color:transparent}
+.qz-row:active{background:var(--blue-l)}
+.qz-row .tx{flex:1;min-width:0}
+.qz-row .tx b{display:block;font-size:16px;line-height:1.35}
+.qz-row .tx small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.qz-hex{width:46px;height:50px;flex:none;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;background:var(--hx,var(--blue));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.qz-ring{--p:0;width:54px;height:54px;flex:none;border-radius:50%;background:conic-gradient(var(--blue) calc(var(--p)*1%),var(--blue-l) 0);display:grid;place-items:center}
+.qz-ring b{width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:12px;color:var(--blue)}
+.qz-icobtn{width:44px;height:44px;border-radius:50%;border:0;flex:none;display:grid;place-items:center;cursor:pointer;font-size:18px}
+.qz-icobtn.play{background:var(--blue);color:var(--on-blue)}
+.qz-icobtn.del{background:none;color:var(--muted);font-size:20px}
+.qz-lvl{display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);margin-bottom:10px;cursor:pointer;color:var(--text)}
+.qz-lvl.sel{border-color:var(--blue);background:var(--blue-l)}
+.qz-lvl.off{opacity:.45;pointer-events:none}
+.qz-lvl .bars{width:44px;height:44px;border-radius:12px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:10px 0;flex:none}
+.qz-lvl .bars i{width:6px;border-radius:3px;background:currentColor;opacity:.28}
+.qz-lvl .bars i:nth-child(1){height:9px}.qz-lvl .bars i:nth-child(2){height:16px}.qz-lvl .bars i:nth-child(3){height:24px}
+.qz-lvl .bars i.on{opacity:1}
+.qz-lvl .tx{flex:1}.qz-lvl .tx b{display:block;font-size:17px}.qz-lvl .tx small{color:var(--muted);font-size:12.5px}
+.qz-lvl .rd{width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center;color:#fff;font-size:14px}
+.qz-lvl.sel .rd{background:var(--blue);border-color:var(--blue)}
+.qz-timer{font-size:13px;font-weight:600;background:var(--blue-l);color:var(--blue);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.qz-prog{display:flex;gap:6px;margin:4px 0 18px}
+.qz-prog i{flex:1;height:7px;border-radius:4px;background:var(--blue-l)}
+.qz-prog i.done{background:var(--blue)}
+.qz-prog i.bad{background:var(--qz-bad)}
+.qz-prog i.good{background:var(--qz-ok)}
+.qz-cnt{font-size:13px;color:var(--muted);margin:2px 2px 8px}
+.qz-q{font-size:19px;line-height:1.6;font-weight:600;color:var(--text);margin:0 0 16px}
+.qz-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);font:inherit;font-size:16px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.qz-opt .k{width:36px;height:36px;border-radius:10px;background:var(--blue-l);color:var(--muted);display:grid;place-items:center;font-weight:600;flex:none}
+.qz-opt.ok{border-color:var(--qz-ok);background:color-mix(in srgb,var(--qz-ok) 14%,var(--card))}
+.qz-opt.ok .k{background:var(--qz-ok);color:#fff}
+.qz-opt.bad{border-color:var(--qz-bad);background:color-mix(in srgb,var(--qz-bad) 14%,var(--card))}
+.qz-opt.bad .k{background:var(--qz-bad);color:#fff}
+.qz-opt.dim{opacity:.7;pointer-events:none}
+.qz-fb{border:1.5px solid var(--qz-bad);background:color-mix(in srgb,var(--qz-bad) 10%,var(--card));border-radius:18px;padding:14px;margin-top:6px}
+.qz-fb.ok{border-color:var(--qz-ok);background:color-mix(in srgb,var(--qz-ok) 10%,var(--card))}
+.qz-fb .h{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--qz-bad);margin-bottom:8px}
+.qz-fb.ok .h{color:var(--qz-ok)}
+.qz-fb .h span{width:30px;height:30px;border-radius:50%;background:var(--qz-bad);color:#fff;display:grid;place-items:center;font-size:16px}
+.qz-fb.ok .h span{background:var(--qz-ok)}
+.qz-fb p{margin:0 0 12px;line-height:1.65;font-size:15px;color:var(--text)}
+.qz-ref{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13.5px;color:var(--blue);font-weight:600;margin-bottom:12px}
+.qz-fb .qz-btn{background:var(--qz-bad)}
+.qz-fb.ok .qz-btn{background:var(--qz-ok)}
+.qz-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999}
+.qz-modal[hidden]{display:none}
+.qz-dlg{background:var(--card);color:var(--text);border-radius:22px;padding:24px 20px 14px;width:100%;max-width:360px;text-align:center}
+.qz-dlg .qz-ring{width:96px;height:96px;margin:0 auto 12px}
+.qz-dlg .qz-ring b{width:76px;height:76px;font-size:22px}
+.qz-dlg h4{font-size:20px;margin:0 0 8px}
+.qz-dlg p{font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 6px}
+.qz-dlg .acts{display:flex;justify-content:space-between;margin-top:14px}
+.qz-dlg .acts button{background:none;border:0;font:600 15px inherit;font-family:inherit;padding:10px 12px;cursor:pointer;color:var(--text)}
+.qz-dlg .acts button.pri{color:var(--blue)}
+.qz-res{text-align:center;padding:24px 16px}
+.qz-res .big{font-size:48px;font-weight:700;color:var(--blue);margin:8px 0 2px}
+.qz-res p{color:var(--muted);margin:0 0 16px;line-height:1.6}
+.qz-res .qz-btn{margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -948,6 +1025,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 <symbol id="scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
 <symbol id="qa" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 9h6M9 12h4"/></symbol>
 <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.500"/><path d="M5 20c0-3.900 3.100-6.500 7-6.500s7 2.600 7 6.500"/></symbol>
+<symbol id="quiz" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M10 8.800c0-1.200 1-2 2-2s2 .8 2 1.800c0 1.500-2 1.600-2 3M12 13.600v.1"/></symbol>
 </defs>
 </svg>
 
@@ -1012,6 +1090,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
         <button class="m" onclick="switchView('asma')"><div class="ic" style="font-family:'MuhammadiQuranic','Amiri',serif;font-size:27px;line-height:1"><span lang="ar">الله</span></div>আসমাউল হুসনা<small>Asmaul Husna</small></button>
         <button class="m" onclick="switchView('zakat')"><div class="ic"><svg class="i"><use href="#zakat"/></svg></div>যাকাত ক্যালকুলেটর<small>Zakat</small></button>
+        <button class="m" onclick="switchView('quiz')"><div class="ic"><svg class="i"><use href="#quiz"/></svg></div>কুইজ<small>Quiz</small></button>
       </nav>
     </section>
 
@@ -1510,6 +1589,18 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
   </div>
 
   <!-- আসমাউল হুসনা ভিউ -->
+
+  <!-- হাদিস কুইজ ভিউ -->
+  <div id="quiz-view" class="view-section">
+    <div class="rd-bar">
+      <button class="rd-back" onclick="quizBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
+      <h3 id="qzTitle">কুইজ</h3>
+      <span class="qz-timer" id="qzTimer" hidden>০০:০০</span>
+    </div>
+    <div class="qz-wrap" id="qzBody"></div>
+    <div class="qz-modal" id="qzModal" hidden></div>
+  </div>
+
   <div id="asma-view" class="view-section">
     <div class="rd-bar">
       <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
@@ -2290,6 +2381,7 @@ function switchView(viewName) {
   if (viewName === 'tafsir') tfvRender();
   if (viewName === 'hadith') showHadithBooks();
   if (viewName === 'asma') showAsmaList();
+  if (viewName === 'quiz' && typeof quizShow === 'function') quizShow();
   if (viewName === 'hijri') showHijri(true);
   if (viewName === 'amal') renderAmal();
   if (viewName === 'dua') { document.getElementById('duaSearch').value=''; renderDuas(''); }
@@ -13890,6 +13982,282 @@ if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
     navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW failed',e);});
   });
 }
+</script>
+
+<script>
+/* ===== হাদিস কুইজ ===== */
+(function(){
+'use strict';
+/* শিরোনাম (ক্যাটাগরি): নতুন শিরোনাম যোগ করতে এখানে একটি লাইন লিখুন, তারপর BOOKS-এ cat:'আইডি' দিয়ে বিষয় যোগ করুন */
+var CATS=[
+ {id:'quran',name:'কুরআন',icon:'📖',color:'#2e8b57',sub:'কুরআন পরিচিতি ও সূরা'},
+ {id:'hadith',name:'হাদিস',icon:'📜',color:'#c0872b',sub:'বুখারী, মুসলিম, শামায়েল'},
+ {id:'history',name:'ইতিহাস',icon:'🏛',color:'#8e5ab5',sub:'সীরাত ও খুলাফায়ে রাশেদীন'}
+];
+var BOOKS=[
+ {id:'bukhari',cat:'hadith',name:'সহীহ বুখারী',by:'ইমাম বুখারি',letter:'B',color:'#6aa84f',chapters:[
+   {id:'wahy',name:'ওহীর সূচনা'},{id:'iman',name:'ঈমান'}]},
+ {id:'muslim',cat:'hadith',name:'সহীহ মুসলিম',by:'ইমাম মুসলিম',letter:'M',color:'#2e8bc0',chapters:[
+   {id:'nasiha',name:'নসীহত, পবিত্রতা ও ইলম'}]},
+ {id:'shamail',cat:'hadith',name:'শামায়েলে তিরমিযি',by:'ইমাম তিরমিযি',letter:'S',color:'#8e5ab5',chapters:[
+   {id:'porichoy',name:'পরিচিতি ও দৈহিক গঠন'},{id:'dan',name:'মোহরে নবুওয়াত ও ডান দিকের আদব'}]},
+ {id:'quranintro',cat:'quran',name:'কুরআন পরিচিতি',by:'কুরআন',letter:'ক',color:'#2e8b57',chapters:[
+   {id:'porichoy',name:'কুরআনের সাধারণ পরিচিতি'},{id:'surah',name:'সূরা পরিচিতি'}]},
+ {id:'seerah',cat:'history',name:'সীরাত',by:'নবী (ﷺ)-এর জীবন',letter:'স',color:'#c0592f',chapters:[
+   {id:'jonmo',name:'জন্ম ও নবুওয়াত'},{id:'hijrat',name:'হিজরত ও গুরুত্বপূর্ণ ঘটনা'}]},
+ {id:'khulafa',cat:'history',name:'খুলাফায়ে রাশেদীন',by:'চার খলিফা',letter:'খ',color:'#1d5fa6',chapters:[
+   {id:'khulafa1',name:'চার খলিফার পরিচয়'}]}
+];
+/* প্রশ্ন: [বই, অধ্যায়, লেভেল(e/m/h), প্রশ্ন, সঠিক উত্তর, [ভুল উত্তর...], ব্যাখ্যা]
+   ➜ নতুন প্রশ্ন যোগ করতে শুধু এই তালিকায় নতুন লাইন লিখুন */
+var Q=[
+ ['bukhari','wahy','e','সহীহ বুখারীর প্রথম হাদিসে বলা হয়েছে—সকল আমলের ফলাফল নির্ভর করে কীসের উপর?','নিয়তের উপর',['আমলের পরিমাণের উপর','আমলের সময়ের উপর','আমলের স্থানের উপর'],'হাদিসে বলা হয়েছে, “নিশ্চয়ই সকল আমল নিয়তের উপর নির্ভরশীল।”'],
+ ['bukhari','wahy','e','নবী (ﷺ)-এর প্রতি প্রথম ওহী নাযিল হয় কোন গুহায়?','হেরা গুহায়',['সাওর গুহায়','উহুদ পাহাড়ের গুহায়','তূর পাহাড়ের গুহায়'],'নবুওয়াতের শুরুতে তিনি মক্কার হেরা গুহায় ইবাদতে মগ্ন থাকতেন; সেখানেই প্রথম ওহী আসে।'],
+ ['bukhari','wahy','m','প্রথম ওহী নিয়ে নবী (ﷺ)-এর কাছে কে এসেছিলেন?','জিবরীল (আ.)',['মীকাঈল (আ.)','ইসরাফীল (আ.)','আযরাঈল (আ.)'],'ফেরেশতা জিবরীল (আ.) এসে বলেছিলেন, “ইকরা” (পড়ুন)।'],
+ ['bukhari','wahy','m','প্রথম ওহীর পর নবী (ﷺ) ভীত অবস্থায় প্রথমে কার কাছে গিয়েছিলেন?','খাদিজা (রা.)',['আবু বকর (রা.)','আলী (রা.)','আবু তালিব'],'তিনি খাদিজা (রা.)-এর কাছে গিয়ে বলেছিলেন, “আমাকে চাদর জড়িয়ে দাও।”'],
+ ['bukhari','wahy','h','নিয়তের হাদিসটি কোন সাহাবী থেকে বর্ণিত?','উমর ইবনুল খাত্তাব (রা.)',['আবু হুরায়রা (রা.)','আনাস ইবনে মালিক (রা.)','আব্দুল্লাহ ইবনে আব্বাস (রা.)'],'এই বিখ্যাত হাদিসটি উমর ইবনুল খাত্তাব (রা.) মিম্বরে দাঁড়িয়ে বর্ণনা করেছিলেন।'],
+ ['bukhari','wahy','h','খাদিজা (রা.) নবী (ﷺ)-কে নিয়ে ওহী সম্পর্কে জানতে কার কাছে গিয়েছিলেন?','ওরাকা ইবনে নাওফাল',['আবু সুফিয়ান','উমাইয়া ইবনে আবি সালত','যায়েদ ইবনে আমর'],'ওরাকা ইবনে নাওফাল ছিলেন খাদিজা (রা.)-এর চাচাতো ভাই; তিনি আগের আসমানী কিতাব সম্পর্কে জানতেন।'],
+
+ ['bukhari','iman','e','নবী (ﷺ) বলেছেন, লজ্জা ঈমানের কী?','একটি শাখা',['একটি স্তম্ভ','একটি শর্ত','একটি ফল'],'হাদিসে বলা হয়েছে, ঈমানের ষাটেরও অধিক শাখা আছে এবং লজ্জা ঈমানের একটি শাখা।'],
+ ['bukhari','iman','e','হাদিস অনুযায়ী প্রকৃত মুসলিম সে-ই, যার ... থেকে অন্য মুসলিমরা নিরাপদ থাকে।','জিহ্বা ও হাত',['চোখ ও কান','পা ও পেট','অন্তর ও মন'],'প্রকৃত মুসলিম সে, যার মুখ ও হাত থেকে অন্য মুসলিমরা নিরাপদ।'],
+ ['bukhari','iman','m','ইসলাম কয়টি মূল ভিত্তির উপর প্রতিষ্ঠিত?','পাঁচটি',['তিনটি','সাতটি','দশটি'],'কালিমার সাক্ষ্য, নামায, যাকাত, হজ্জ ও রমযানের রোযা—এই পাঁচটির উপর ইসলাম প্রতিষ্ঠিত।'],
+ ['bukhari','iman','m','“তোমাদের কেউ প্রকৃত মুমিন হবে না, যতক্ষণ না...”—হাদিসের বাকি অংশ কোনটি?','নিজের জন্য যা পছন্দ করে ভাইয়ের জন্যও তা পছন্দ করে',['সারা রাত নফল ইবাদত করে','সব সম্পদ দান করে দেয়','সবার চেয়ে বেশি ইলম অর্জন করে'],'নিজের জন্য যা ভালোবাসো, অন্যের জন্যও তাই ভালোবাসা ঈমানের পূর্ণতার অংশ।'],
+ ['bukhari','iman','h','“ইসলামের পাঁচ ভিত্তি”র হাদিসটি কোন সাহাবী বর্ণনা করেছেন?','আব্দুল্লাহ ইবনে উমর (রা.)',['আয়েশা (রা.)','আবু মূসা আশআরী (রা.)','জাবির ইবনে আব্দুল্লাহ (রা.)'],'বুখারীতে এই হাদিসটি আব্দুল্লাহ ইবনে উমর (রা.) থেকে বর্ণিত।'],
+ ['bukhari','iman','h','জিবরীল (আ.)-এর প্রশ্নের জবাবে নবী (ﷺ) “ইহসান”-এর ব্যাখ্যা কীভাবে দিয়েছেন?','এমনভাবে ইবাদত করা যেন তুমি আল্লাহকে দেখছ; না দেখলেও তিনি তোমাকে দেখছেন',['বেশি বেশি সম্পদ দান করা','সব সময় রোযা রাখা','প্রতি বছর হজ্জ করা'],'ইহসান হলো আল্লাহকে দেখছ—এমন অনুভূতি নিয়ে ইবাদত করা; তা না পারলেও মনে রাখা যে তিনি দেখছেন।'],
+
+ ['muslim','nasiha','e','হাদিস অনুযায়ী পবিত্রতা ঈমানের কতটুকু?','অর্ধেক',['এক-চতুর্থাংশ','এক-তৃতীয়াংশ','পূর্ণ'],'সহীহ মুসলিমে এসেছে, “পবিত্রতা ঈমানের অর্ধেক।”'],
+ ['muslim','nasiha','e','নবী (ﷺ) বলেছেন, “দ্বীন হলো ...”','কল্যাণ কামনা (নসীহত)',['কেবল নামায','কেবল রোযা','কেবল দান'],'হাদিসে আছে, “আদ-দ্বীনুন নাসীহাহ”—দ্বীন হলো আন্তরিক কল্যাণ কামনা।'],
+ ['muslim','nasiha','m','যে ব্যক্তি কোনো ভালো কাজের পথ দেখায়, সে কী পাবে?','কাজটি সম্পাদনকারীর সমান সওয়াব',['কোনো সওয়াব পাবে না','অর্ধেক সওয়াব পাবে','শুধু দুনিয়ার প্রতিদান পাবে'],'নবী (ﷺ) বলেছেন, যে ভালো কাজের পথ দেখায়, সে ওই কাজ সম্পাদনকারীর মতো প্রতিদান পায়।'],
+ ['muslim','nasiha','m','যে ব্যক্তি ইলম অন্বেষণের পথে চলে, আল্লাহ তার জন্য কী সহজ করে দেন?','জান্নাতের পথ',['দুনিয়ার সম্পদ','দীর্ঘ জীবন','রাজত্ব'],'হাদিসে এসেছে, ইলম অন্বেষণকারীর জন্য আল্লাহ জান্নাতের পথ সহজ করে দেন।'],
+ ['muslim','nasiha','h','নবী (ﷺ)-এর সংজ্ঞা অনুযায়ী “অহংকার” কী?','সত্য প্রত্যাখ্যান করা এবং মানুষকে তুচ্ছ মনে করা',['সুন্দর পোশাক পরা','ভালো জুতা পরা','নিজের সম্পদ নিয়ে কথা বলা'],'সুন্দর পোশাক-জুতা পছন্দ করা অহংকার নয়; অহংকার হলো সত্য প্রত্যাখ্যান ও মানুষকে হেয় করা।'],
+ ['muslim','nasiha','h','মৃত্যুর পরও যে আমলের সওয়াব চলতে থাকে—হাদিসে বর্ণিত এমন সন্তান-সংক্রান্ত আমল কোনটি?','তার জন্য দোয়াকারী নেক সন্তান',['তার নামে সম্পদের হিসাব','তার জন্য বড় ভোজের আয়োজন','তার সন্তানের উচ্চ পদ'],'সদকায়ে জারিয়া, উপকারী ইলম ও নেক সন্তানের দোয়া—এই তিনটি আমল মৃত্যুর পরও চলতে থাকে।'],
+
+ ['shamail','porichoy','e','“শামায়েলে তিরমিযি” গ্রন্থের সংকলক কে?','ইমাম তিরমিযি',['ইমাম বুখারি','ইমাম মুসলিম','ইমাম আবু দাউদ'],'ইমাম মুহাম্মাদ ইবনে ঈসা আত-তিরমিযি (রহ.) এই গ্রন্থটি সংকলন করেন।'],
+ ['shamail','porichoy','e','নবী (ﷺ)-এর দৈহিক উচ্চতা কেমন ছিল?','মধ্যম আকৃতির',['অতিশয় লম্বা','অতিশয় খাটো','খুব রোগা-পাতলা'],'সাহাবীদের বর্ণনায় তিনি অতি লম্বাও নন, অতি খাটোও নন—মধ্যম আকৃতির ছিলেন।'],
+ ['shamail','porichoy','m','“শামায়েল” শব্দের অর্থ কী?','চরিত্র, স্বভাব ও গুণাবলি',['যুদ্ধের কৌশল','ব্যবসার নিয়ম','ইবাদতের সময়সূচি'],'শামায়েল বলতে নবী (ﷺ)-এর দৈহিক গঠন, স্বভাব ও চারিত্রিক গুণাবলিকে বোঝায়।'],
+ ['shamail','porichoy','m','নবী (ﷺ)-এর চুল সম্পর্কে সহীহ বর্ণনায় কী বলা হয়েছে?','না একেবারে কোঁকড়ানো, না একেবারে সোজা',['খুব কোঁকড়ানো','একেবারে সোজা ও খাড়া','সম্পূর্ণ ছোট করে ছাঁটা'],'আনাস (রা.) বলেন, তাঁর চুল না ছিল একেবারে কোঁকড়ানো, না একেবারে সোজা।'],
+ ['shamail','porichoy','h','ইমাম তিরমিযি (রহ.) কোন হিজরি শতকের মুহাদ্দিস ছিলেন?','তৃতীয় হিজরি শতক',['প্রথম হিজরি শতক','পঞ্চম হিজরি শতক','সপ্তম হিজরি শতক'],'তিনি আনুমানিক ২০৯ থেকে ২৭৯ হিজরির মধ্যে জীবিত ছিলেন।'],
+ ['shamail','porichoy','h','ইমাম তিরমিযি (রহ.)-এর পূর্ণ নাম কোনটি?','মুহাম্মাদ ইবনে ঈসা ইবনে সাওরা',['মুহাম্মাদ ইবনে ইসমাঈল','মুসলিম ইবনুল হাজ্জাজ','আহমাদ ইবনে শুআইব'],'তাঁর নাম মুহাম্মাদ ইবনে ঈসা ইবনে সাওরা আত-তিরমিযি।'],
+
+ ['shamail','dan','e','নবী (ﷺ) জুতা পরার সময় কোন পা আগে দিতেন?','ডান পা',['বাম পা','দুই পা একসাথে','কোনো নিয়ম ছিল না'],'জুতা পরার সময় ডান দিক থেকে শুরু করা সুন্নত।'],
+ ['shamail','dan','e','নবী (ﷺ) ওযু করার সময় কোন দিক থেকে শুরু করতেন?','ডান দিক থেকে',['বাম দিক থেকে','মাথা থেকে','পা থেকে'],'ওযুর সময় অঙ্গ ধোয়ায় ডান দিক থেকে শুরু করা সুন্নত।'],
+ ['shamail','dan','m','মোহরে নবুওয়াত নবী (ﷺ)-এর শরীরের কোথায় ছিল?','দুই কাঁধের মাঝখানে',['কপালে','বাম হাতে','বুকের মাঝখানে'],'সাহাবীদের বর্ণনায় মোহরে নবুওয়াত ছিল পিঠে দুই কাঁধের মাঝখানে।'],
+ ['shamail','dan','m','মোহরে নবুওয়াত দেখতে কেমন ছিল বলে বর্ণিত হয়েছে?','কবুতরের ডিমের মতো',['চাঁদের মতো গোল ও বড়','লম্বা দাগের মতো','তারার মতো ঝলমলে'],'বর্ণনায় আছে, এটি ছিল কবুতরের ডিমের মতো একটি চিহ্ন।'],
+ ['shamail','dan','h','আয়েশা (রা.)-এর বর্ণনা অনুযায়ী নবী (ﷺ) ডান দিক পছন্দ করতেন—','জুতা পরা, চিরুনি করা ও পবিত্রতা অর্জনসহ সব কাজে',['শুধু খাবার খাওয়ার সময়','শুধু নামাযে দাঁড়ানোর সময়','শুধু ঘুমানোর সময়'],'আয়েশা (রা.) বলেন, নবী (ﷺ) জুতা পরা, চিরুনি করা ও পবিত্রতা অর্জনসহ সব কাজে ডান দিক পছন্দ করতেন।'],
+ ['shamail','dan','h','টয়লেটে প্রবেশের সময় কোন পা আগে দেওয়া সুন্নত?','বাম পা',['ডান পা','দুই পা একসাথে','যেকোনো পা'],'ডান দিক সম্মানের কাজে; টয়লেটে ঢোকার সময় বাম পা আগে দেওয়া এবং বের হওয়ার সময় ডান পা আগে দেওয়া সুন্নত।'],
+
+ ['quranintro','porichoy','e','কুরআনে মোট কতটি সূরা আছে?','১১৪টি',['১০০টি','১২০টি','৩০টি'],'কুরআনে মোট ১১৪টি সূরা রয়েছে।'],
+ ['quranintro','porichoy','e','কুরআনের প্রথম সূরা কোনটি?','সূরা আল-ফাতিহা',['সূরা আল-বাকারা','সূরা আল-ইখলাস','সূরা আন-নাস'],'কুরআনের সূচনা হয়েছে সূরা আল-ফাতিহা দিয়ে।'],
+ ['quranintro','porichoy','m','কুরআন নাযিল শুরু হয়েছে কোন মাসে?','রমযান মাসে',['মুহাররম মাসে','রজব মাসে','শাবান মাসে'],'আল্লাহ বলেন, “রমযান মাস, যে মাসে কুরআন নাযিল করা হয়েছে।” (সূরা বাকারা ২:১৮৫)'],
+ ['quranintro','porichoy','m','কুরআনে মোট কতটি পারা (জুয) আছে?','৩০টি',['২০টি','৪০টি','৬০টি'],'কুরআন পাঠের সুবিধার জন্য ৩০টি পারায় ভাগ করা হয়েছে।'],
+ ['quranintro','porichoy','h','কুরআনের দীর্ঘতম সূরা কোনটি?','সূরা আল-বাকারা',['সূরা আলে ইমরান','সূরা আন-নিসা','সূরা আল-মায়িদা'],'সূরা আল-বাকারায় ২৮৬টি আয়াত আছে; এটিই কুরআনের দীর্ঘতম সূরা।'],
+ ['quranintro','porichoy','h','কুরআনের সবচেয়ে ছোট সূরা কোনটি?','সূরা আল-কাউসার',['সূরা আল-ইখলাস','সূরা আল-আসর','সূরা আন-নাস'],'সূরা আল-কাউসারের আয়াত সংখ্যা মাত্র ৩টি, যা কুরআনের সবচেয়ে ছোট সূরা।'],
+
+ ['quranintro','surah','e','সূরা আল-ফাতিহার আয়াত সংখ্যা কত?','৭টি',['৫টি','৬টি','১০টি'],'সূরা আল-ফাতিহায় ৭টি আয়াত আছে।'],
+ ['quranintro','surah','e','সূরা আল-ইখলাসের আয়াত সংখ্যা কত?','৪টি',['৩টি','৫টি','৬টি'],'সূরা আল-ইখলাসে ৪টি আয়াত আছে।'],
+ ['quranintro','surah','m','কুরআনের কোন সূরার শুরুতে “বিসমিল্লাহ” নেই?','সূরা আত-তাওবা',['সূরা আল-ফাতিহা','সূরা আল-ইখলাস','সূরা ইউসুফ'],'সূরা তাওবা ছাড়া কুরআনের সব সূরার শুরুতে বিসমিল্লাহ আছে।'],
+ ['quranintro','surah','m','আয়াতুল কুরসী কোন সূরায় আছে?','সূরা আল-বাকারা',['সূরা আলে ইমরান','সূরা ইয়াসীন','সূরা আল-মুলক'],'আয়াতুল কুরসী সূরা আল-বাকারার ২৫৫ নম্বর আয়াত।'],
+ ['quranintro','surah','h','সূরা আল-ফাতিহার আরেক নাম কী?','উম্মুল কিতাব',['উম্মুল কুরা','আস-সাবাব','আল-ফুরকান'],'সূরা ফাতিহাকে “উম্মুল কিতাব” (কিতাবের মূল) নামেও ডাকা হয়।'],
+ ['quranintro','surah','h','কোন সূরার মাঝখানেও “বিসমিল্লাহির রাহমানির রাহীম” আয়াতের অংশ হিসেবে এসেছে?','সূরা আন-নামল',['সূরা আল-কাহফ','সূরা আর-রহমান','সূরা ইউনুস'],'সূরা নামলে সুলাইমান (আ.)-এর চিঠির বর্ণনায় বিসমিল্লাহ আয়াতের অংশ হিসেবে এসেছে।'],
+
+ ['seerah','jonmo','e','নবী (ﷺ) কোন শহরে জন্মগ্রহণ করেন?','মক্কা',['মদীনা','তায়েফ','জেরুজালেম'],'নবী (ﷺ) মক্কা নগরীতে জন্মগ্রহণ করেন।'],
+ ['seerah','jonmo','e','নবী (ﷺ)-এর পিতার নাম কী?','আব্দুল্লাহ',['আবু তালিব','আব্দুল মুত্তালিব','আবু লাহাব'],'তাঁর পিতা ছিলেন আব্দুল্লাহ ইবনে আব্দুল মুত্তালিব।'],
+ ['seerah','jonmo','m','নবী (ﷺ)-এর মাতার নাম কী?','আমিনা বিনতে ওয়াহাব',['খাদিজা বিনতে খুওয়াইলিদ','হালিমা সা’দিয়া','ফাতিমা বিনতে আসাদ'],'তাঁর মাতা ছিলেন আমিনা বিনতে ওয়াহাব।'],
+ ['seerah','jonmo','m','কত বছর বয়সে নবী (ﷺ) নবুওয়াত লাভ করেন?','৪০ বছর',['৩০ বছর','৩৫ বছর','৪৫ বছর'],'চল্লিশ বছর বয়সে হেরা গুহায় তাঁর প্রতি প্রথম ওহী নাযিল হয়।'],
+ ['seerah','jonmo','h','নবী (ﷺ)-এর জন্ম কোন ঘটনার বছরে বলে প্রসিদ্ধ?','হাতির বাহিনীর আক্রমণের বছর',['হিজরতের বছর','হুদাইবিয়ার বছর','বদর যুদ্ধের বছর'],'আবরাহার হাতির বাহিনী কাবা আক্রমণ করতে এলে আল্লাহ তাদের ধ্বংস করেন; ওই বছরকেই “আমুল ফীল” বলা হয়।'],
+ ['seerah','jonmo','h','খাদিজা (রা.)-এর সাথে বিয়ের সময় নবী (ﷺ)-এর বয়স আনুমানিক কত ছিল?','২৫ বছর',['১৫ বছর','৩৫ বছর','৪০ বছর'],'প্রসিদ্ধ মত অনুযায়ী তখন তাঁর বয়স ছিল প্রায় ২৫ বছর।'],
+
+ ['seerah','hijrat','e','নবী (ﷺ) মক্কা থেকে কোন শহরে হিজরত করেন?','মদীনা',['তায়েফ','হাবশা','দামেস্ক'],'নবী (ﷺ) মক্কা থেকে মদীনায় হিজরত করেন।'],
+ ['seerah','hijrat','e','হিজরতের সময় নবী (ﷺ)-এর সফরসঙ্গী কে ছিলেন?','আবু বকর (রা.)',['উমর (রা.)','উসমান (রা.)','আলী (রা.)'],'আবু বকর (রা.) হিজরতের সফরে নবী (ﷺ)-এর সঙ্গী ছিলেন।'],
+ ['seerah','hijrat','m','হিজরতের পথে নবী (ﷺ) ও আবু বকর (রা.) কোন গুহায় আশ্রয় নিয়েছিলেন?','সাওর গুহায়',['হেরা গুহায়','তূর গুহায়','উহুদের গুহায়'],'তাঁরা তিন দিন মক্কার কাছে সাওর গুহায় অবস্থান করেন।'],
+ ['seerah','hijrat','m','বদরের যুদ্ধ কত হিজরি সনে সংঘটিত হয়?','২য় হিজরি',['১ম হিজরি','৪র্থ হিজরি','৮ম হিজরি'],'বদরের যুদ্ধ ২য় হিজরির রমযান মাসে হয়েছিল।'],
+ ['seerah','hijrat','h','মক্কা বিজয় কত হিজরি সনে হয়?','৮ম হিজরি',['৬ষ্ঠ হিজরি','৭ম হিজরি','১০ম হিজরি'],'মক্কা বিজয় ৮ম হিজরির রমযান মাসে সংঘটিত হয়।'],
+ ['seerah','hijrat','h','কুরাইশদের সাথে নবী (ﷺ)-এর দশ বছরের যুদ্ধবিরতির চুক্তিটি কী নামে পরিচিত?','হুদাইবিয়ার সন্ধি',['আকাবার বাইআত','মদীনার সনদ','হিলফুল ফুযূল'],'৬ষ্ঠ হিজরিতে হুদাইবিয়ায় এই সন্ধি হয়।'],
+
+ ['khulafa','khulafa1','e','ইসলামের প্রথম খলিফা কে ছিলেন?','আবু বকর (রা.)',['উমর (রা.)','উসমান (রা.)','আলী (রা.)'],'নবী (ﷺ)-এর ওফাতের পর আবু বকর সিদ্দীক (রা.) প্রথম খলিফা হন।'],
+ ['khulafa','khulafa1','e','খুলাফায়ে রাশেদীন কয়জন?','চারজন',['তিনজন','পাঁচজন','ছয়জন'],'আবু বকর, উমর, উসমান ও আলী (রা.)—এই চারজন।'],
+ ['khulafa','khulafa1','m','ইসলামের দ্বিতীয় খলিফা কে?','উমর ইবনুল খাত্তাব (রা.)',['আবু বকর (রা.)','উসমান (রা.)','আলী (রা.)'],'আবু বকর (রা.)-এর পর উমর (রা.) খলিফা হন।'],
+ ['khulafa','khulafa1','m','কোন খলিফা “যুন-নূরাইন” (দুই নূরের অধিকারী) উপাধিতে পরিচিত?','উসমান ইবনে আফফান (রা.)',['আবু বকর (রা.)','উমর (রা.)','আলী (রা.)'],'নবী (ﷺ)-এর দুই কন্যাকে একে একে বিয়ে করার কারণে তাঁকে এই উপাধি দেওয়া হয়।'],
+ ['khulafa','khulafa1','h','কুরআনকে প্রথম গ্রন্থাকারে একত্র করার উদ্যোগ কোন খলিফার সময়ে নেওয়া হয়?','আবু বকর (রা.)',['উমর (রা.)','উসমান (রা.)','আলী (রা.)'],'ইয়ামামার যুদ্ধের পর উমর (রা.)-এর পরামর্শে আবু বকর (রা.) যায়েদ ইবনে সাবিত (রা.)-কে দিয়ে কুরআন একত্র করান।'],
+ ['khulafa','khulafa1','h','কোন খলিফার সময়ে বায়তুল মুকাদ্দাস (জেরুজালেম) মুসলিমদের অধীনে আসে?','উমর (রা.)',['আবু বকর (রা.)','উসমান (রা.)','আলী (রা.)'],'উমর (রা.)-এর খিলাফতকালে শান্তিচুক্তির মাধ্যমে বায়তুল মুকাদ্দাস মুসলিমদের অধীনে আসে।']
+];
+
+var KEY='lodQuizV1', LV={e:'সহজ',m:'মাঝারি',h:'কঠিন'}, LCOL={e:'#2fa36b',m:'#f0932b',h:'#e5484d'}, LET=['ক','খ','গ','ঘ'], PER=10;
+var $=function(id){return document.getElementById(id)};
+function bn(n){return String(n).replace(/\d/g,function(d){return '০১২৩৪৫৬৭৮৯'[d]})}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function book(id){for(var i=0;i<BOOKS.length;i++)if(BOOKS[i].id===id)return BOOKS[i]}
+function chap(b,id){var bk=book(b);if(!bk)return null;for(var i=0;i<bk.chapters.length;i++)if(bk.chapters[i].id===id)return bk.chapters[i]}
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.active)return s}catch(e){}return {active:[],done:0,ans:0,ok:0,best:0}}
+var S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function cat(id){for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i]}
+function inScope(q,bk){if(bk==='all')return true;if(bk.indexOf('cat:')===0)return book(q[0]).cat===bk.slice(4);return q[0]===bk}
+function pool(bk,ch,lv){var r=[];for(var i=0;i<Q.length;i++){var q=Q[i];if(inScope(q,bk)&&(!ch||q[1]===ch)&&(!lv||q[2]===lv))r.push(i)}return r}
+function ago(t){var m=Math.floor((Date.now()-t)/60000);if(m<1)return 'এইমাত্র';if(m<60)return bn(m)+' মিনিট আগে';var h=Math.floor(m/60);if(h<24)return bn(h)+' ঘণ্টা আগে';return bn(Math.floor(h/24))+' দিন আগে'}
+function clock(s){var m=Math.floor(s/60),x=s%60;return bn((m<10?'0':'')+m)+':'+bn((x<10?'0':'')+x)}
+function headName(bk){if(bk==='all')return 'সব শিরোনাম';if(bk.indexOf('cat:')===0)return cat(bk.slice(4)).name;return book(bk).name}
+function scopeName(ses){var t=headName(ses.book);if(ses.ch){var c=chap(ses.book,ses.ch);if(c)t=c.name}return t}
+
+var UI={screen:'hub',book:null,ch:null,lvl:'e',ses:null,fb:false};
+var BACK='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+var PLAYSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+var HEXQ='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.500v9L12 21l-8-4.500v-9z"/><path d="M9.800 9.800c0-1.300 1-2 2.200-2s2.200.8 2.200 1.900c0 1.600-2.200 1.700-2.200 3.300M12 16.300v.1"/></svg>';
+
+function setHead(t,timer){$('qzTitle').textContent=t;$('qzTimer').hidden=!timer;if(timer)$('qzTimer').textContent='⏱ '+clock(UI.ses.secs)}
+function body(h){$('qzBody').innerHTML=h;window.scrollTo(0,0)}
+
+/* ---------- হাব ---------- */
+function hub(){
+  UI.screen='hub';UI.ses=null;UI.fb=false;
+  setHead('কুইজ',false);
+  var pct=S.ans?Math.round(S.ok*100/S.ans):0;
+  var h='<div class="qz-card"><div class="qz-hero"><div class="qz-ico">'+HEXQ+'</div><div><h2>কুইজ</h2><p>কুইজ খেলুন, জ্ঞান বাড়ান, আমল আরও মজবুত করুন</p></div></div>'+
+   '<div class="qz-stats"><div class="qz-stat"><b>'+bn(S.done)+'</b>সম্পন্ন কুইজ</div><div class="qz-stat"><b>'+bn(pct)+'%</b>সঠিক উত্তর</div><div class="qz-stat"><b>'+bn(S.best)+'%</b>সেরা স্কোর</div></div>'+
+   '<button class="qz-btn" onclick="quizPick(\'all\')">সব শিরোনাম থেকে কুইজ খেলুন →</button></div>';
+  if(S.active.length){
+    h+='<div class="qz-sec"><span>চলমান কুইজ</span><span>'+bn(S.active.length)+'</span></div>';
+    S.active.slice().sort(function(a,b){return b.ts-a.ts}).forEach(function(s){
+      var p=Math.round(s.ans.length*100/s.ids.length);
+      h+='<div class="qz-row" onclick="quizResume('+s.id+')"><div class="qz-ring" style="--p:'+p+'"><b>'+bn(p)+'%</b></div><div class="tx"><b>'+esc(scopeName(s))+'</b><small>'+LV[s.lvl]+' · '+bn(s.ans.length)+'/'+bn(s.ids.length)+' · '+ago(s.ts)+'</small></div>'+
+        '<button class="qz-icobtn play" aria-label="চালিয়ে যান">'+PLAYSVG+'</button><button class="qz-icobtn del" aria-label="মুছুন" onclick="event.stopPropagation();quizDel('+s.id+')">🗑</button></div>';
+    });
+  }
+  h+='<div class="qz-sec"><span>শিরোনাম বেছে নিন</span></div>';
+  CATS.forEach(function(c){
+    h+='<div class="qz-row" onclick="quizCat(\''+c.id+'\')"><div class="qz-hex" style="--hx:'+c.color+'">'+c.icon+'</div><div class="tx"><b>'+c.name+'</b><small>'+c.sub+' · '+bn(pool('cat:'+c.id).length)+'টি প্রশ্ন</small></div></div>';
+  });
+  body(h);
+}
+
+/* ---------- শিরোনামের ভেতরের বিষয়/বই ---------- */
+function catScreen(id){
+  UI.screen='cat';UI.cat=id;var c=cat(id);setHead(c.name,false);
+  var h='<div class="qz-row" onclick="quizLevel(\'cat:'+id+'\',\'\')"><div class="qz-hex" style="--hx:'+c.color+'">★</div><div class="tx"><b>সব '+c.name+' প্রশ্ন থেকে কুইজ</b><small>'+bn(pool('cat:'+id).length)+'টি প্রশ্ন</small></div></div>';
+  BOOKS.filter(function(b){return b.cat===id}).forEach(function(b){
+    h+='<div class="qz-row" onclick="quizPick(\''+b.id+'\',true)"><div class="qz-hex" style="--hx:'+b.color+'">'+b.letter+'</div><div class="tx"><b>'+b.name+'</b><small>'+b.by+' · '+bn(pool(b.id).length)+'টি প্রশ্ন</small></div></div>';
+  });
+  body(h);
+}
+
+/* ---------- অধ্যায় ---------- */
+function bookScreen(id){
+  UI.screen='book';UI.book=id;var b=book(id);setHead(b.name,false);
+  var h='<div class="qz-row" onclick="quizLevel(\''+id+'\',\'\')"><div class="qz-hex" style="--hx:'+b.color+'">★</div><div class="tx"><b>সকল অধ্যায় থেকে কুইজ</b><small>'+bn(pool(id).length)+'টি প্রশ্ন</small></div></div>';
+  b.chapters.forEach(function(c,i){
+    h+='<div class="qz-row" onclick="quizLevel(\''+id+'\',\''+c.id+'\')"><div class="qz-hex" style="--hx:'+b.color+'">'+bn(i+1)+'</div><div class="tx"><b>'+c.name+'</b><small>'+bn(pool(id,c.id).length)+'টি প্রশ্ন</small></div></div>';
+  });
+  body(h);
+}
+
+/* ---------- লেভেল ---------- */
+function levelScreen(bk,ch){
+  UI.screen='level';UI.book=bk;UI.ch=ch||'';
+  setHead(headName(bk),false);
+  var first=null,h='<div class="qz-card"><div style="font-size:17px;font-weight:600;margin-bottom:12px">লেভেল বেছে নিন</div>';
+  ['e','m','h'].forEach(function(l){
+    var n=Math.min(PER,pool(bk,UI.ch,l).length);
+    if(n&&!first)first=l;
+    var on=l==='e'?1:l==='m'?2:3,bars='';
+    for(var i=1;i<=3;i++)bars+='<i'+(i<=on?' class="on"':'')+'></i>';
+    h+='<div class="qz-lvl'+(n?'':' off')+'" data-l="'+l+'" onclick="quizSel(\''+l+'\')"><div class="bars" style="color:'+LCOL[l]+';background:'+LCOL[l]+'1f">'+bars+'</div><div class="tx"><b>'+LV[l]+'</b><small>মোট '+bn(n)+'টি প্রশ্ন</small></div><div class="rd">✓</div></div>';
+  });
+  h+='<button class="qz-btn" id="qzGo" onclick="quizGo()">▶ কুইজ শুরু করুন</button></div>';
+  UI.lvl=first||'e';body(h);quizSel(UI.lvl);
+  if(!first)$('qzGo').disabled=true;
+}
+window.quizSel=function(l){UI.lvl=l;var els=document.querySelectorAll('#qzBody .qz-lvl');for(var i=0;i<els.length;i++)els[i].classList.toggle('sel',els[i].getAttribute('data-l')===l)};
+
+/* ---------- খেলা ---------- */
+function startSession(bk,ch,lv){
+  var ids=shuffle(pool(bk,ch,lv)).slice(0,PER);
+  if(!ids.length)return;
+  var ses={id:Date.now(),book:bk,ch:ch||'',lvl:lv,ids:ids,orders:ids.map(function(i){return shuffle(Q[i][5].map(function(_,k){return k+1}).concat([0]))}),ans:[],secs:0,ts:Date.now()};
+  S.active.push(ses);save();play(ses);
+}
+function play(ses){
+  UI.screen='play';UI.ses=ses;
+  var n=ses.ans.length,cur=UI.fb?n-1:n;
+  if(cur>=ses.ids.length){return finish(ses)}
+  var q=Q[ses.ids[cur]],order=ses.orders[cur],opts=order.map(function(k){return k===0?q[4]:q[5][k-1]}),right=order.indexOf(0);
+  setHead(book(q[0]).name,true);
+  var bars='';for(var i=0;i<ses.ids.length;i++){var c='';if(i<(UI.fb?n:n)){var qi=ses.ids[i];c=ses.ans[i]===ses.orders[i].indexOf(0)?'good':'bad'}else if(i===cur)c='done';bars+='<i class="'+c+'"></i>'}
+  var h='<div class="qz-cnt">প্রশ্ন '+bn(cur+1)+' / '+bn(ses.ids.length)+'</div><div class="qz-prog">'+bars+'</div><div class="qz-card"><p class="qz-q">'+esc(q[3])+'</p>';
+  opts.forEach(function(t,j){
+    var cls='qz-opt',mark=LET[j];
+    if(UI.fb){cls+=' dim';if(j===right){cls+=' ok';mark='✓'}else if(j===ses.ans[cur]){cls+=' bad';mark='✕'}}
+    h+='<button class="'+cls+'" '+(UI.fb?'':'onclick="quizAns('+j+')"')+'><span class="k">'+mark+'</span><span>'+esc(t)+'</span></button>';
+  });
+  h+='</div>';
+  if(UI.fb){
+    var good=ses.ans[cur]===right,c=chap(q[0],q[1]);
+    h+='<div class="qz-fb'+(good?' ok':'')+'"><div class="h"><span>'+(good?'✓':'✕')+'</span>'+(good?'সঠিক উত্তর':'ভুল উত্তর')+'</div><p>'+esc(q[6])+'</p><div class="qz-ref">📖 হাদিসের সূত্র: '+esc(book(q[0]).name)+(c?' · '+esc(c.name):'')+'</div>'+
+      '<button class="qz-btn" onclick="quizNext()">'+(n>=ses.ids.length?'ফলাফল দেখুন':'পরবর্তী')+'</button></div>';
+  }
+  body(h);
+  if(UI.fb)window.scrollTo(0,document.body.scrollHeight);
+}
+window.quizAns=function(j){
+  var ses=UI.ses;if(!ses||UI.fb)return;
+  var cur=ses.ans.length,right=ses.orders[cur].indexOf(0);
+  ses.ans.push(j);ses.ts=Date.now();S.ans++;if(j===right)S.ok++;save();
+  UI.fb=true;play(ses);
+};
+window.quizNext=function(){var ses=UI.ses;UI.fb=false;if(ses.ans.length>=ses.ids.length)finish(ses);else play(ses)};
+
+/* ---------- ফলাফল ---------- */
+function finish(ses){
+  UI.screen='result';UI.fb=false;
+  var ok=0;ses.ans.forEach(function(a,i){if(a===ses.orders[i].indexOf(0))ok++});
+  var p=Math.round(ok*100/ses.ids.length);
+  S.done++;if(p>S.best)S.best=p;
+  S.active=S.active.filter(function(s){return s.id!==ses.id});save();
+  setHead('ফলাফল',false);
+  var msg=p>=80?'মাশাআল্লাহ! চমৎকার ফলাফল।':p>=50?'ভালো করেছেন, আরেকটু অনুশীলন করলে আরও ভালো হবে।':'আবার চেষ্টা করুন, ইনশাআল্লাহ ভালো হবে।';
+  body('<div class="qz-card qz-res"><div class="qz-ring" style="--p:'+p+';width:120px;height:120px;margin:0 auto"><b style="width:96px;height:96px;font-size:26px">'+bn(p)+'%</b></div><div class="big">'+bn(ok)+' / '+bn(ses.ids.length)+'</div><p>'+msg+'<br>'+esc(scopeName(ses))+' · '+LV[ses.lvl]+' · সময়: '+clock(ses.secs)+'</p>'+
+   '<button class="qz-btn" onclick="quizAgain(\''+ses.book+'\',\''+ses.ch+'\',\''+ses.lvl+'\')">আবার খেলুন</button><button class="qz-btn ghost" onclick="quizHome()">কুইজ হোমে ফিরুন</button></div>');
+}
+
+/* ---------- বিরতির ডায়ালগ ---------- */
+function pauseDlg(){
+  var ses=UI.ses,p=Math.round(ses.ans.length*100/ses.ids.length);
+  $('qzModal').innerHTML='<div class="qz-dlg" role="dialog" aria-modal="true"><div class="qz-ring" style="--p:'+p+'"><b>'+bn(p)+'%</b></div><h4>কুইজে বিরতি নেবেন?</h4><p>যেখানে থেমেছেন, পরে সেখান থেকেই চালিয়ে যেতে পারবেন।</p><p>'+bn(ses.ans.length)+'/'+bn(ses.ids.length)+'টি প্রশ্নের উত্তর দিয়েছেন</p><div class="acts"><button onclick="quizKeep()">খেলতে থাকুন</button><button class="pri" onclick="quizPause()">বিরতি নিন</button></div></div>';
+  $('qzModal').hidden=false;
+}
+window.quizKeep=function(){$('qzModal').hidden=true};
+window.quizPause=function(){$('qzModal').hidden=true;if(UI.ses){UI.ses.ts=Date.now();save()}hub()};
+
+/* ---------- নেভিগেশন ---------- */
+window.quizShow=function(){$('qzModal').hidden=true;hub()};
+window.quizHome=hub;
+window.quizPick=function(id,chapters){if(chapters)bookScreen(id);else levelScreen(id,'')};
+window.quizLevel=function(bk,ch){levelScreen(bk,ch)};
+window.quizCat=function(id){catScreen(id)};
+window.quizGo=function(){startSession(UI.book,UI.ch,UI.lvl)};
+window.quizAgain=function(bk,ch,lv){startSession(bk,ch,lv)};
+window.quizResume=function(id){for(var i=0;i<S.active.length;i++)if(S.active[i].id===id){UI.fb=false;play(S.active[i]);return}};
+window.quizDel=function(id){if(!confirm('এই চলমান কুইজটি মুছে ফেলবেন?'))return;S.active=S.active.filter(function(s){return s.id!==id});save();hub()};
+window.quizBack=function(){
+  if(!$('qzModal').hidden){$('qzModal').hidden=true;return}
+  switch(UI.screen){
+    case 'play':pauseDlg();break;
+    case 'level':if(UI.book==='all')hub();else if(UI.book.indexOf('cat:')===0)catScreen(UI.book.slice(4));else if(UI.ch)bookScreen(UI.book);else bookScreen(UI.book);break;
+    case 'book':catScreen(book(UI.book).cat);break;
+    case 'cat':case 'result':hub();break;
+    default:if(typeof navBack==='function')navBack();else switchView('home');
+  }
+};
+
+/* টাইমার: শুধু কুইজ চলাকালীন ও বিরতি-ডায়ালগ বন্ধ থাকলে */
+var tick=0;
+setInterval(function(){
+  var v=$('quiz-view');
+  if(!v||!v.classList.contains('active')||UI.screen!=='play'||!UI.ses||UI.fb||!$('qzModal').hidden)return;
+  UI.ses.secs++;$('qzTimer').textContent='⏱ '+clock(UI.ses.secs);
+  if(++tick%5===0)save();
+},1000);
+})();
 </script>
 </body>
   </html>
