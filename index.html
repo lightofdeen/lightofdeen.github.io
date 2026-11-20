@@ -14084,6 +14084,7 @@ var Q=[
 
 var KEY='lodQuizV1', LV={e:'সহজ',m:'মাঝারি',h:'কঠিন'}, LCOL={e:'#2fa36b',m:'#f0932b',h:'#e5484d'}, LET=['ক','খ','গ','ঘ'], PER=10;
 var $=function(id){return document.getElementById(id)};
+function lvTxt(l){return LV[l]?LV[l]+' · ':''}
 function bn(n){return String(n).replace(/\d/g,function(d){return '০১২৩৪৫৬৭৮৯'[d]})}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
@@ -14120,7 +14121,7 @@ function hub(){
     h+='<div class="qz-sec"><span>চলমান কুইজ</span><span>'+bn(S.active.length)+'</span></div>';
     S.active.slice().sort(function(a,b){return b.ts-a.ts}).forEach(function(s){
       var p=Math.round(s.ans.length*100/s.ids.length);
-      h+='<div class="qz-row" onclick="quizResume('+s.id+')"><div class="qz-ring" style="--p:'+p+'"><b>'+bn(p)+'%</b></div><div class="tx"><b>'+esc(scopeName(s))+'</b><small>'+LV[s.lvl]+' · '+bn(s.ans.length)+'/'+bn(s.ids.length)+' · '+ago(s.ts)+'</small></div>'+
+      h+='<div class="qz-row" onclick="quizResume('+s.id+')"><div class="qz-ring" style="--p:'+p+'"><b>'+bn(p)+'%</b></div><div class="tx"><b>'+esc(scopeName(s))+'</b><small>'+lvTxt(s.lvl)+bn(s.ans.length)+'/'+bn(s.ids.length)+' · '+ago(s.ts)+'</small></div>'+
         '<button class="qz-icobtn play" aria-label="চালিয়ে যান">'+PLAYSVG+'</button><button class="qz-icobtn del" aria-label="মুছুন" onclick="event.stopPropagation();quizDel('+s.id+')">🗑</button></div>';
     });
   }
@@ -14215,7 +14216,7 @@ function finish(ses){
   S.active=S.active.filter(function(s){return s.id!==ses.id});save();
   setHead('ফলাফল',false);
   var msg=p>=80?'মাশাআল্লাহ! চমৎকার ফলাফল।':p>=50?'ভালো করেছেন, আরেকটু অনুশীলন করলে আরও ভালো হবে।':'আবার চেষ্টা করুন, ইনশাআল্লাহ ভালো হবে।';
-  body('<div class="qz-card qz-res"><div class="qz-ring" style="--p:'+p+';width:120px;height:120px;margin:0 auto"><b style="width:96px;height:96px;font-size:26px">'+bn(p)+'%</b></div><div class="big">'+bn(ok)+' / '+bn(ses.ids.length)+'</div><p>'+msg+'<br>'+esc(scopeName(ses))+' · '+LV[ses.lvl]+' · সময়: '+clock(ses.secs)+'</p>'+
+  body('<div class="qz-card qz-res"><div class="qz-ring" style="--p:'+p+';width:120px;height:120px;margin:0 auto"><b style="width:96px;height:96px;font-size:26px">'+bn(p)+'%</b></div><div class="big">'+bn(ok)+' / '+bn(ses.ids.length)+'</div><p>'+msg+'<br>'+esc(scopeName(ses))+' · সময়: '+clock(ses.secs)+'</p>'+
    '<button class="qz-btn" onclick="quizAgain(\''+ses.book+'\',\''+ses.ch+'\',\''+ses.lvl+'\')">আবার খেলুন</button><button class="qz-btn ghost" onclick="quizHome()">কুইজ হোমে ফিরুন</button></div>');
 }
 
@@ -14231,8 +14232,8 @@ window.quizPause=function(){$('qzModal').hidden=true;if(UI.ses){UI.ses.ts=Date.n
 /* ---------- নেভিগেশন ---------- */
 window.quizShow=function(){$('qzModal').hidden=true;hub()};
 window.quizHome=hub;
-window.quizPick=function(id,chapters){if(chapters)bookScreen(id);else levelScreen(id,'')};
-window.quizLevel=function(bk,ch){levelScreen(bk,ch)};
+window.quizPick=function(id,chapters){if(chapters)bookScreen(id);else startSession(id,'','')};
+window.quizLevel=function(bk,ch){startSession(bk,ch,'')};
 window.quizCat=function(id){catScreen(id)};
 window.quizGo=function(){startSession(UI.book,UI.ch,UI.lvl)};
 window.quizAgain=function(bk,ch,lv){startSession(bk,ch,lv)};
