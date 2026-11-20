@@ -12563,6 +12563,7 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
       else if (v === 'asma') { d.a = asmaCur; }
       else if (v === 'audio') { var ar_ = window.auDesc ? window.auDesc() : ''; if (ar_) d.r = ar_; }
       else if (v === 'tafsir') { d.m = tfvMode; }
+      else if (v === 'quiz') { var qz = window.quizDesc && window.quizDesc(); if (qz) d.z = qz; }
       else if (v === 'library') { var lx = window.libDesc && window.libDesc(); if (lx) for (var lk in lx) d[lk] = lx[lk]; }
     } catch (e) {}
     return d;
@@ -12660,6 +12661,7 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
         case 'asma': O.switchView('asma'); if (d.a) O.openAsma(d.a); break;
         case 'audio': O.switchView('audio'); if (d.r && window.auGo) window.auGo(d.r); break;
         case 'tafsir': tfvMode = d.m || 'editions'; O.switchView('tafsir'); break;
+        case 'quiz': O.switchView('quiz'); if (window.quizRestore) window.quizRestore(d.z); break;
         case 'library': O.switchView('library'); if (window.libRestore) window.libRestore(d); break;
         default: O.switchView(d.v || 'home');
       }
@@ -14107,7 +14109,13 @@ var PLAYSVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
 var HEXQ='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.500v9L12 21l-8-4.500v-9z"/><path d="M9.800 9.800c0-1.300 1-2 2.200-2s2.200.8 2.200 1.900c0 1.600-2.200 1.700-2.200 3.300M12 16.300v.1"/></svg>';
 
 function setHead(t,timer){$('qzTitle').textContent=t;$('qzTimer').hidden=!timer;if(timer)$('qzTimer').textContent='⏱ '+clock(UI.ses.secs)}
-function body(h){$('qzBody').innerHTML=h;window.scrollTo(0,0)}
+function body(h){$('qzModal').hidden=true;$('qzBody').innerHTML=h;window.scrollTo(0,0)}
+/* ফোনের ব্যাক/ব্রাউজার history-র সাথে ধাপে ধাপে ফেরা */
+function nc(){try{if(window.NAV&&NAV.commit)NAV.commit()}catch(e){}}
+function goBack(){if(window.NAV&&NAV.commit&&typeof navBack==='function')navBack();else hub()}
+window.quizDesc=function(){switch(UI.screen){case 'cat':return {s:'cat',id:UI.cat};case 'book':return {s:'book',id:UI.book};case 'play':case 'result':return {s:'play'};default:return {s:'hub'}}};
+window.quizRestore=function(z){z=z||{};if(z.s==='cat'&&cat(z.id))catScreen(z.id);else if(z.s==='book'&&book(z.id))bookScreen(z.id);else hub()};
+window.quizGoBack=goBack;
 
 /* ---------- হাব ---------- */
 function hub(){
@@ -14129,7 +14137,7 @@ function hub(){
   CATS.forEach(function(c){
     h+='<div class="qz-row" onclick="quizCat(\''+c.id+'\')"><div class="qz-hex" style="--hx:'+c.color+'">'+c.icon+'</div><div class="tx"><b>'+c.name+'</b><small>'+c.sub+' · '+bn(pool('cat:'+c.id).length)+'টি প্রশ্ন</small></div></div>';
   });
-  body(h);
+  body(h);nc();
 }
 
 /* ---------- শিরোনামের ভেতরের বিষয়/বই ---------- */
@@ -14139,7 +14147,7 @@ function catScreen(id){
   BOOKS.filter(function(b){return b.cat===id}).forEach(function(b){
     h+='<div class="qz-row" onclick="quizPick(\''+b.id+'\',true)"><div class="qz-hex" style="--hx:'+b.color+'">'+b.letter+'</div><div class="tx"><b>'+b.name+'</b><small>'+b.by+' · '+bn(pool(b.id).length)+'টি প্রশ্ন</small></div></div>';
   });
-  body(h);
+  UI.fb=false;body(h);nc();
 }
 
 /* ---------- অধ্যায় ---------- */
@@ -14149,7 +14157,7 @@ function bookScreen(id){
   b.chapters.forEach(function(c,i){
     h+='<div class="qz-row" onclick="quizLevel(\''+id+'\',\''+c.id+'\')"><div class="qz-hex" style="--hx:'+b.color+'">'+bn(i+1)+'</div><div class="tx"><b>'+c.name+'</b><small>'+bn(pool(id,c.id).length)+'টি প্রশ্ন</small></div></div>';
   });
-  body(h);
+  UI.fb=false;body(h);nc();
 }
 
 /* ---------- লেভেল ---------- */
@@ -14196,7 +14204,7 @@ function play(ses){
     h+='<div class="qz-fb'+(good?' ok':'')+'"><div class="h"><span>'+(good?'✓':'✕')+'</span>'+(good?'সঠিক উত্তর':'ভুল উত্তর')+'</div><p>'+esc(q[6])+'</p><div class="qz-ref">📖 হাদিসের সূত্র: '+esc(book(q[0]).name)+(c?' · '+esc(c.name):'')+'</div>'+
       '<button class="qz-btn" onclick="quizNext()">'+(n>=ses.ids.length?'ফলাফল দেখুন':'পরবর্তী')+'</button></div>';
   }
-  body(h);
+  body(h);nc();
   if(UI.fb)window.scrollTo(0,document.body.scrollHeight);
 }
 window.quizAns=function(j){
@@ -14217,7 +14225,7 @@ function finish(ses){
   setHead('ফলাফল',false);
   var msg=p>=80?'মাশাআল্লাহ! চমৎকার ফলাফল।':p>=50?'ভালো করেছেন, আরেকটু অনুশীলন করলে আরও ভালো হবে।':'আবার চেষ্টা করুন, ইনশাআল্লাহ ভালো হবে।';
   body('<div class="qz-card qz-res"><div class="qz-ring" style="--p:'+p+';width:120px;height:120px;margin:0 auto"><b style="width:96px;height:96px;font-size:26px">'+bn(p)+'%</b></div><div class="big">'+bn(ok)+' / '+bn(ses.ids.length)+'</div><p>'+msg+'<br>'+esc(scopeName(ses))+' · সময়: '+clock(ses.secs)+'</p>'+
-   '<button class="qz-btn" onclick="quizAgain(\''+ses.book+'\',\''+ses.ch+'\',\''+ses.lvl+'\')">আবার খেলুন</button><button class="qz-btn ghost" onclick="quizHome()">কুইজ হোমে ফিরুন</button></div>');
+   '<button class="qz-btn" onclick="quizAgain(\''+ses.book+'\',\''+ses.ch+'\',\''+ses.lvl+'\')">আবার খেলুন</button><button class="qz-btn ghost" onclick="quizGoBack()">ফিরে যান</button></div>');nc();
 }
 
 /* ---------- বিরতির ডায়ালগ ---------- */
@@ -14227,7 +14235,7 @@ function pauseDlg(){
   $('qzModal').hidden=false;
 }
 window.quizKeep=function(){$('qzModal').hidden=true};
-window.quizPause=function(){$('qzModal').hidden=true;if(UI.ses){UI.ses.ts=Date.now();save()}hub()};
+window.quizPause=function(){$('qzModal').hidden=true;if(UI.ses){UI.ses.ts=Date.now();save()}goBack()};
 
 /* ---------- নেভিগেশন ---------- */
 window.quizShow=function(){$('qzModal').hidden=true;hub()};
@@ -14241,13 +14249,11 @@ window.quizResume=function(id){for(var i=0;i<S.active.length;i++)if(S.active[i].
 window.quizDel=function(id){if(!confirm('এই চলমান কুইজটি মুছে ফেলবেন?'))return;S.active=S.active.filter(function(s){return s.id!==id});save();hub()};
 window.quizBack=function(){
   if(!$('qzModal').hidden){$('qzModal').hidden=true;return}
-  switch(UI.screen){
-    case 'play':pauseDlg();break;
-    case 'level':if(UI.book==='all')hub();else if(UI.book.indexOf('cat:')===0)catScreen(UI.book.slice(4));else if(UI.ch)bookScreen(UI.book);else bookScreen(UI.book);break;
-    case 'book':catScreen(book(UI.book).cat);break;
-    case 'cat':case 'result':hub();break;
-    default:if(typeof navBack==='function')navBack();else switchView('home');
-  }
+  if(UI.screen==='play'){pauseDlg();return}
+  if(window.NAV&&NAV.commit&&typeof navBack==='function'){navBack();return}
+  if(UI.screen==='book')catScreen(book(UI.book).cat);
+  else if(UI.screen==='cat'||UI.screen==='result')hub();
+  else switchView('home');
 };
 
 /* টাইমার: শুধু কুইজ চলাকালীন ও বিরতি-ডায়ালগ বন্ধ থাকলে */
