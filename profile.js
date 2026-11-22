@@ -225,10 +225,10 @@
   }
 
   function computeStats() {
-    var s = stats(), secs = 0, active = [];
+    var s = stats(), secs = 0, active = [], lastDay = '';
     Object.keys(s.days).forEach(function (k) {
       var v = +s.days[k] || 0; secs += v;
-      if (v >= 10) active.push(dnum(k));
+      if (v >= 10) { active.push(dnum(k)); if (k > lastDay) lastDay = k; }
     });
     active.sort(function (a, b) { return a - b; });
     var best = 0, run = 0, prev = null;
@@ -239,7 +239,7 @@
     var td = dkey(), tb = 0;
     Object.keys(s.tbd).forEach(function (k) { tb += (+s.tbd[k] || 0); });
     return { secs: secs, activeDays: active.length, streak: cur, best: best, read: Object.keys(s.read).length,
-             ay: setCount(s.ay), hd: setCount(s.hd), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {} };
+             ay: setCount(s.ay), hd: setCount(s.hd), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {}, lastDay: lastDay };
   }
 
   function fmtTime(secs) {
@@ -470,7 +470,24 @@
     '.pf-lt span{display:block;color:var(--muted);font-size:12.5px}' +
     '.pf-lt b{display:block;font-size:16px;line-height:1.4;margin-top:1px;overflow-wrap:anywhere}' +
     '.pf-lt small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}' +
-    '.pf-last>svg{flex:none;width:18px;height:18px;color:var(--muted)}';
+    '.pf-last>svg{flex:none;width:18px;height:18px;color:var(--muted)}' +
+    '.lb-tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}' +
+    '.lb-tabs::-webkit-scrollbar{display:none}' +
+    '.lb-tab{flex:none;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
+    '.lb-tab.on{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}' +
+    '.lb-me{display:flex;align-items:center;gap:10px;background:var(--blue-l);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:12px;font-size:14px;line-height:1.5}' +
+    '.lb-me b{color:var(--blue);font-size:20px}' +
+    '.lb-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 12px;margin-bottom:8px}' +
+    '.lb-row.me{border-color:var(--blue);background:var(--blue-l)}' +
+    '.lb-rk{flex:none;width:34px;text-align:center;font-weight:700;font-size:15px;color:var(--muted)}' +
+    '.lb-rk.m{font-size:22px}' +
+    '.lb-av{flex:none;width:44px;height:44px;border-radius:50%;background:var(--blue-l);color:var(--blue);display:grid;place-items:center;overflow:hidden;font-weight:700}' +
+    '.lb-av img{width:100%;height:100%;object-fit:cover;display:block}' +
+    '.lb-nm{flex:1;min-width:0}' +
+    '.lb-nm b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+    '.lb-nm small{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+    '.lb-v{flex:none;font-weight:700;font-size:16px;color:var(--blue);text-align:end}' +
+    '.lb-note{color:var(--muted);font-size:12.5px;line-height:1.7;margin:14px 4px}';
 
   function injectUI() {
     if (document.getElementById('profile-view')) return;
@@ -492,6 +509,7 @@
       else if (a === 'sync') syncNow(true);
       else if (a === 'list') openList(b.getAttribute('data-k'));
       else if (a === 'last') openLast(b.getAttribute('data-k'));
+      else if (a === 'lb') { if (typeof switchView === 'function') switchView('leaderboard'); }
     });
 
     new MutationObserver(function () { if (v.classList.contains('active')) { render(); preload(); } })
@@ -546,6 +564,7 @@
              : '<button class="pf-act" data-a="login">' + IC.login + '<span>লগইন</span></button>') +
         '</div>' +
       '</div>' +
+      '<div class="pf-card" style="padding-top:4px;padding-bottom:4px"><button class="pf-last" data-a="lb"><div class="pf-ic">' + IC.cup + '</div><div class="pf-lt"><span>সবার মধ্যে আপনার অবস্থান</span><b>লিডারবোর্ড দেখুন</b></div>' + IC.chev + '</button></div>' +
       '<div class="pf-h">সর্বমোট কার্যক্রম</div>' +
       '<div class="pf-card"><div class="pf-grid3">' +
         stat('ay', IC.book, cs.ay, 'আয়াত পড়া') +
@@ -613,6 +632,170 @@
   /* =====================================================================
      ৫) এক্সপোর্ট / ইম্পোর্ট
      ===================================================================== */
+  /* =====================================================================
+     লিডারবোর্ড — সবার নাম ও (থাকলে) ছবিসহ। Firestore: leaderboard/{uid}
+     স্কোর = আয়াত + হাদিস + (তাসবিহ ÷ ৩৩) + (সময় ÷ ১০ মিনিট) + (সেরা স্ট্রিক × ৫)
+     ===================================================================== */
+  var LB = { tab: 'score', cache: {}, busy: false, err: '' };
+  var LB_TABS = [['score', 'সার্বিক'], ['streak', 'স্ট্রিক'], ['ay', 'আয়াত'], ['hd', 'হাদিস'], ['tb', 'তাসবিহ'], ['secs', 'সময়']];
+  var thumbC = { src: '', v: '' }, lbTimer = null;
+
+  function lbScore(cs) { return cs.ay + cs.hd + Math.floor(cs.tb / 33) + Math.floor(cs.secs / 600) + cs.best * 5; }
+  function effStreak(x) {
+    var y = dkey(new Date(Date.now() - 86400000));
+    return (x && x.last && x.last >= y) ? (+x.streak || 0) : 0;
+  }
+
+  // লিডারবোর্ডের জন্য ছোট (৭২px) ছবি
+  function lbThumb(photo, cb) {
+    if (!photo) { cb(''); return; }
+    if (photo.indexOf('data:') !== 0) { cb(photo.length <= 600 ? photo : ''); return; }
+    if (thumbC.src === photo) { cb(thumbC.v); return; }
+    var im = new Image();
+    im.onerror = function () { cb(''); };
+    im.onload = function () {
+      try {
+        var S = 72, c = document.createElement('canvas'); c.width = c.height = S;
+        var m = Math.min(im.width, im.height);
+        c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S);
+        var v = c.toDataURL('image/jpeg', 0.72); thumbC = { src: photo, v: v }; cb(v);
+      } catch (e) { cb(''); }
+    };
+    im.src = photo;
+  }
+
+  // সিঙ্কের পর নিজের সারাংশ leaderboard-এ পাঠানো (কমপক্ষে ৯০ সেকেন্ড পরপর)
+  function publishLb(f, uid, op, u) {
+    try {
+      var cs = computeStats(), p = op || profFor(uid) || {};
+      var name = String(p.name || u.displayName || p.username || '').trim().slice(0, 60) || 'ব্যবহারকারী';
+      lbThumb(p.photo || u.photoURL || '', function (th) {
+        var d = { name: name, un: String(p.username || '').slice(0, 21), photo: th, ay: cs.ay, hd: cs.hd, tb: cs.tb, secs: cs.secs,
+                  streak: cs.streak, best: cs.best, days: cs.activeDays, score: lbScore(cs), last: cs.lastDay || '' };
+        var sig = uid + '|' + JSON.stringify(d), now = Date.now();
+        var lastT = +sget('lodLbT') || 0, lastS = sget('lodLbSig') || '';
+        if (sig === lastS && now - lastT < 6 * 3600000) return;
+        if (sig !== lastS && now - lastT < 90000) {
+          clearTimeout(lbTimer);
+          lbTimer = setTimeout(function () { if (user && !syncing) syncNow(false); }, 90000 - (now - lastT) + 500);
+          return;
+        }
+        d.t = f.F.serverTimestamp();
+        f.F.setDoc(f.F.doc(f.db, 'leaderboard', uid), d).then(function () {
+          sset('lodLbT', String(Date.now())); sset('lodLbSig', sig); LB.cache = {};
+        }).catch(function () {});
+      });
+    } catch (e) {}
+  }
+
+  function lbVal(tab, x) {
+    if (tab === 'streak') return num(effStreak(x)) + ' দিন';
+    if (tab === 'secs') return fmtTime(+x.secs || 0);
+    return num(+x[tab] || 0);
+  }
+  function lbPhoto(s) { return (typeof s === 'string' && /^(data:image\/|https:\/\/)/.test(s)) ? s : ''; }
+
+  function lbRender() {
+    var tabs = document.getElementById('lbTabs'), body = document.getElementById('lbBody'); if (!tabs || !body) return;
+    tabs.innerHTML = LB_TABS.map(function (t) {
+      return '<button class="lb-tab' + (t[0] === LB.tab ? ' on' : '') + '" data-lb="tab" data-k="' + t[0] + '">' + t[1] + '</button>';
+    }).join('');
+    if (!hasConfig()) { body.innerHTML = '<p class="pf-empty">Firebase কনফিগ বসানো হয়নি</p>'; return; }
+    var c = LB.cache[LB.tab];
+    if (!c) { body.innerHTML = '<p class="pf-empty">' + (LB.err ? esc(LB.err) : 'লোড হচ্ছে…') + '</p>'; return; }
+    var h = '', tab = LB.tab;
+    if (!user) {
+      h += '<div class="lb-me"><span style="flex:1">লগইন করলে আপনিও এই তালিকায় আসবেন</span><button class="pf-btn" data-lb="login" style="padding:8px 16px">লগইন</button></div>';
+    } else if (c.mine) {
+      h += '<div class="lb-me"><span style="flex:1">আপনার অবস্থান</span>' + (c.rank ? '<b>#' + num(c.rank) + '</b>' : '<b>—</b>') +
+           '<span>' + esc(lbVal(tab, c.mine)) + '</span></div>';
+    } else {
+      h += '<div class="lb-me"><span>সিঙ্ক হলে আপনার নাম তালিকায় আসবে (কিছুক্ষণ লাগতে পারে)</span></div>';
+    }
+    if (!c.rows.length) h += '<p class="pf-empty">এখনো কেউ নেই।</p>';
+    c.rows.forEach(function (x, i) {
+      var me = user && x.uid === user.uid, nm = String(x.name || 'ব্যবহারকারী'), ph = lbPhoto(x.photo);
+      var rk = i < 3 ? '<div class="lb-rk m">' + ['🥇', '🥈', '🥉'][i] + '</div>' : '<div class="lb-rk">' + num(i + 1) + '</div>';
+      var av = ph ? '<img alt="" referrerpolicy="no-referrer" src="' + esc(ph) + '">' : esc(nm.charAt(0).toUpperCase());
+      var sub = 'আয়াত ' + num(+x.ay || 0) + ' · হাদিস ' + num(+x.hd || 0) + ' · স্ট্রিক ' + num(effStreak(x)) + ' দিন';
+      h += '<div class="lb-row' + (me ? ' me' : '') + '">' + rk + '<div class="lb-av">' + av + '</div>' +
+           '<div class="lb-nm"><b>' + esc(nm) + '</b><small>' + esc(sub) + '</small></div><div class="lb-v">' + esc(lbVal(tab, x)) + '</div></div>';
+    });
+    h += '<p class="lb-note">এখানে আপনার নাম ও প্রোফাইল ছবি (থাকলে) সবাই দেখতে পাবে। ' +
+         'স্কোর = আয়াত + হাদিস + (তাসবিহ ÷ ৩৩) + (সময় ÷ ১০ মিনিট) + (সেরা স্ট্রিক × ৫)। স্ট্রিক মানে টানা প্রতিদিন অ্যাপে আসা।</p>';
+    body.innerHTML = h;
+  }
+
+  function lbLoad(force) {
+    if (!hasConfig()) { lbRender(); return; }
+    var tab = LB.tab, c = LB.cache[tab];
+    if (!force && c && Date.now() - c.t < 60000) { lbRender(); return; }
+    if (LB.busy) return;
+    LB.busy = true; LB.err = ''; lbRender();
+    fbLoad().then(function (f) {
+      var col = f.F.collection(f.db, 'leaderboard');
+      return f.F.getDocs(f.F.query(col, f.F.orderBy(tab, 'desc'), f.F.limit(tab === 'streak' ? 60 : 50))).then(function (sn) {
+        var rows = []; sn.forEach(function (d) { var x = d.data(); x.uid = d.id; rows.push(x); });
+        if (tab === 'streak') {
+          rows = rows.filter(function (x) { return effStreak(x) > 0; })
+            .sort(function (a, b) { return (effStreak(b) - effStreak(a)) || ((+b.best || 0) - (+a.best || 0)); }).slice(0, 50);
+        }
+        var res = { t: Date.now(), rows: rows, rank: 0, mine: null };
+        var uid = user && user.uid; if (!uid) return res;
+        var idx = -1; rows.forEach(function (x, i) { if (x.uid === uid) idx = i; });
+        return f.F.getDoc(f.F.doc(f.db, 'leaderboard', uid)).then(function (ms) {
+          if (!ms.exists()) return res;
+          res.mine = ms.data(); res.mine.uid = uid;
+          if (idx > -1) { res.rank = idx + 1; return res; }
+          var val = tab === 'streak' ? effStreak(res.mine) : (+res.mine[tab] || 0);
+          if (tab === 'streak' && !val) return res;
+          return f.F.getCountFromServer(f.F.query(col, f.F.where(tab, '>', val)))
+            .then(function (cn) { res.rank = cn.data().count + 1; return res; }).catch(function () { return res; });
+        }).catch(function () { return res; });
+      });
+    }).then(function (res) { LB.cache[tab] = res; })
+      .catch(function (e) {
+        LB.err = (e && e.code === 'permission-denied') ? 'অনুমতি নেই — Firestore Rules-এ leaderboard যোগ করুন' : 'লোড হয়নি — ইন্টারনেট দেখে আবার চেষ্টা করুন';
+      })
+      .then(function () {
+        LB.busy = false;
+        if (!LB.cache[LB.tab] && !LB.err) lbLoad(false); else lbRender();
+      });
+  }
+
+  function injectLB() {
+    if (document.getElementById('leaderboard-view')) return;
+    var host = document.querySelector('main.app') || document.body;
+    var v = document.createElement('div');
+    v.id = 'leaderboard-view'; v.className = 'view-section';
+    v.innerHTML = '<div class="rd-bar"><button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button><h3>লিডারবোর্ড</h3>' +
+      '<button class="pf-btn ghost" data-lb="refresh" style="padding:7px 14px;font-size:13px">রিফ্রেশ</button></div>' +
+      '<div class="pf-wrap"><div class="lb-tabs" id="lbTabs"></div><div id="lbBody"></div></div>';
+    host.appendChild(v);
+    v.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-lb]'); if (!b) return;
+      var a = b.getAttribute('data-lb');
+      if (a === 'tab') { LB.tab = b.getAttribute('data-k'); LB.err = ''; lbLoad(false); }
+      else if (a === 'refresh') { LB.cache = {}; lbLoad(true); }
+      else if (a === 'login') login();
+    });
+    new MutationObserver(function () { if (v.classList.contains('active')) { lbLoad(false); preload(); } })
+      .observe(v, { attributes: true, attributeFilter: ['class'] });
+
+    // মেনুতে "লিডারবোর্ড" আইটেম (প্রোফাইলের ঠিক নিচে)
+    var po = document.getElementById('profileOpen');
+    if (po && po.parentNode && !document.getElementById('lbOpen')) {
+      var mb = po.cloneNode(true); mb.id = 'lbOpen';
+      var sp = mb.querySelector('span'); if (sp) sp.textContent = 'লিডারবোর্ড';
+      var ic = mb.querySelector('svg'); if (ic) ic.outerHTML = IC.cup.replace('<svg ', '<svg class="i" ');
+      mb.addEventListener('click', function () {
+        var x = document.getElementById('drawerX'); if (x) x.click();
+        if (typeof switchView === 'function') switchView('leaderboard');
+      });
+      po.parentNode.insertBefore(mb, po.nextSibling);
+    }
+  }
+
   function snapshot() { return { bm: arr(K.bm), pins: pins(), notes: notes(), stats: stats() }; }
 
   function mergeInto(base, inc) {
@@ -1036,7 +1219,7 @@
           stats: out.stats, profT: opT || 0,
           prof: op ? { name: op.name || '', bio: op.bio || '', gender: op.gender || '', photo: op.photo || '', username: op.username || '' } : null,
           updatedAt: f.F.serverTimestamp()
-        });
+        }).then(function () { publishLb(f, uid, op, u); });
       });
     }).catch(function (e) {
       var c = e && e.code;
@@ -1068,6 +1251,7 @@
 
   function init() {
     injectUI();
+    injectLB();
     setupTracking();
     // আগে লগইন করা থাকলে বা রিডাইরেক্ট থেকে ফিরলে সেশন ফেরত আনি
     if (hasConfig() && (sget(K.on) === '1' || sget(K.pend))) {
