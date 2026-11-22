@@ -1299,6 +1299,7 @@
 
   function rcApply(c) {
     c = c || {}; rcStyle();
+    nfSet(c.notices);
     // ১) ফিচার অন/অফ
     rcOff = {};
     var ft = c.features || {};
@@ -1347,11 +1348,111 @@
     }
   }
 
-  function loadRC() {
+  /* ---------- নোটিফিকেশন বেল (হোম হেডারে) — অ্যাডমিন যা পাঠায় config/app.notices থেকে আসে ---------- */
+  var NF = { list: [], btn: null, badge: null, sheet: null, bg: null };
+  var NF_SEEN = 'lodNfSeen';
+
+  function nfStyle() {
+    if (document.getElementById('nf-style')) return;
+    var st = document.createElement('style'); st.id = 'nf-style';
+    st.textContent =
+      '#nfBtn{position:relative}' +
+      '#nfBtn .nf-bd{position:absolute;top:-5px;inset-inline-end:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#e5484d;color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;box-sizing:border-box;display:none;border:2px solid rgba(0,0,0,.25)}' +
+      '.nf-bg{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}' +
+      '.nf-bg.show{opacity:1;pointer-events:auto}' +
+      '.nf-sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:720px;z-index:9001;display:flex;flex-direction:column;max-height:80vh;max-height:80dvh;background:var(--bg,#111);color:var(--text,#fff);border-radius:22px 22px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.35);transform:translateY(105%);visibility:hidden;transition:transform .25s,visibility .25s}' +
+      '.nf-sheet.show{transform:none;visibility:visible}' +
+      '.nf-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}' +
+      '.nf-h b{font-size:17px}' +
+      '.nf-x{width:34px;height:34px;border-radius:50%;border:0;background:var(--card,#222);color:inherit;font-size:18px;cursor:pointer}' +
+      '.nf-list{overflow:auto;padding:4px 14px 22px}' +
+      '.nf-it{background:var(--card,#1c1c1c);border:1px solid var(--line,rgba(128,128,128,.25));border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.65;font-size:14.5px;position:relative}' +
+      '.nf-it.new{border-color:var(--blue,#d4a72c)}' +
+      '.nf-it.new:after{content:"";position:absolute;top:12px;inset-inline-end:12px;width:9px;height:9px;border-radius:50%;background:#e5484d}' +
+      '.nf-it .ty{display:inline-block;font-size:11.5px;padding:1px 9px;border-radius:999px;margin-bottom:5px;background:rgba(80,140,255,.18);color:#6ea0ff}' +
+      '.nf-it .ty.warn{background:rgba(240,169,59,.2);color:#f0a93b}.nf-it .ty.success{background:rgba(62,207,123,.18);color:#3ecf7b}' +
+      '.nf-it .tm{display:block;margin-top:6px;font-size:12px;opacity:.65}' +
+      '.nf-it a{color:var(--blue,#d4a72c);font-weight:700}' +
+      '.nf-empty{text-align:center;opacity:.65;padding:36px 10px}';
+    document.head.appendChild(st);
+  }
+
+  function nfSeen() { return +sget(NF_SEEN) || 0; }
+  function nfUnread() { var s = nfSeen(); return NF.list.filter(function (n) { return n.t > s; }).length; }
+  function nfBadge() {
+    if (!NF.badge) return;
+    var n = nfUnread();
+    NF.badge.textContent = n > 9 ? num(9) + '+' : num(n);
+    NF.badge.style.display = n ? 'block' : 'none';
+  }
+  function nfAgo(t) {
+    var m = Math.floor((Date.now() - t) / 60000);
+    if (m < 1) return 'এইমাত্র';
+    if (m < 60) return num(m) + ' মিনিট আগে';
+    var h = Math.floor(m / 60); if (h < 24) return num(h) + ' ঘণ্টা আগে';
+    var d = Math.floor(h / 24); if (d < 30) return num(d) + ' দিন আগে';
+    try { return new Date(t).toLocaleDateString('bn-BD'); } catch (e) { return ''; }
+  }
+
+  function nfSet(list) {
+    NF.list = (Array.isArray(list) ? list : []).filter(function (n) { return n && n.text && +n.t; })
+      .map(function (n) { return { id: String(n.id || n.t), text: String(n.text), type: n.type, link: n.link, t: +n.t }; })
+      .sort(function (a, b) { return b.t - a.t; });
+    nfBadge();
+    if (NF.sheet && NF.sheet.classList.contains('show')) nfRender(0);
+  }
+
+  function nfRender(seen) {
+    var box = NF.sheet.querySelector('.nf-list'); box.textContent = '';
+    if (!NF.list.length) { var e = document.createElement('div'); e.className = 'nf-empty'; e.textContent = 'কোনো নোটিফিকেশন নেই'; box.appendChild(e); return; }
+    var TY = { info: 'তথ্য', warn: 'সতর্কতা', success: 'সুখবর' };
+    NF.list.forEach(function (n) {
+      var d = document.createElement('div'); d.className = 'nf-it' + (n.t > seen ? ' new' : '');
+      var ty = document.createElement('span'); var k = TY[n.type] ? n.type : 'info'; ty.className = 'ty ' + k; ty.textContent = TY[k];
+      var tx = document.createElement('div'); tx.textContent = n.text;
+      if (n.link && /^https?:\/\//i.test(n.link)) {
+        var a = document.createElement('a'); a.href = n.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = ' বিস্তারিত →'; tx.appendChild(a);
+      }
+      var tm = document.createElement('span'); tm.className = 'tm'; tm.textContent = nfAgo(n.t);
+      d.appendChild(ty); d.appendChild(tx); d.appendChild(tm); box.appendChild(d);
+    });
+  }
+
+  function nfOpen() {
+    var seen = nfSeen();
+    nfRender(seen);
+    NF.bg.classList.add('show'); NF.sheet.classList.add('show');
+    if (NF.list.length) sset(NF_SEEN, String(NF.list[0].t));
+    nfBadge();
+    loadRC(true); // খুললে নতুন কিছু এলো কিনা দেখে নেওয়া
+  }
+  function nfClose() { NF.bg.classList.remove('show'); NF.sheet.classList.remove('show'); }
+
+  function injectBell() {
+    if (document.getElementById('nfBtn')) return;
+    var acts = document.querySelector('#home-view .top-actions'); if (!acts) return;
+    nfStyle();
+    var b = document.createElement('button');
+    b.className = 'iconbtn'; b.id = 'nfBtn'; b.setAttribute('aria-label', 'নোটিফিকেশন');
+    b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span class="nf-bd"></span>';
+    acts.insertBefore(b, acts.firstChild);
+    var bg = document.createElement('div'); bg.className = 'nf-bg';
+    var sh = document.createElement('div'); sh.className = 'nf-sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-label', 'নোটিফিকেশন');
+    sh.innerHTML = '<div class="nf-h"><b>🔔 নোটিফিকেশন</b><button class="nf-x" aria-label="বন্ধ করুন">✕</button></div><div class="nf-list"></div>';
+    document.body.appendChild(bg); document.body.appendChild(sh);
+    NF.btn = b; NF.badge = b.querySelector('.nf-bd'); NF.sheet = sh; NF.bg = bg;
+    b.addEventListener('click', nfOpen);
+    bg.addEventListener('click', nfClose);
+    sh.querySelector('.nf-x').addEventListener('click', nfClose);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') nfClose(); });
+    nfBadge();
+  }
+
+  function loadRC(soft) {
     var cached = jget(RC_KEY, null);
-    if (cached && cached.c) rcApply(cached.c);
+    if (!soft && cached && cached.c) rcApply(cached.c);
     if (!hasConfig()) return;
-    if (cached && Date.now() - (cached.t || 0) < RC_TTL) return;
+    if (cached && Date.now() - (cached.t || 0) < (soft ? 120000 : RC_TTL)) return;
     var c0 = cfg();
     var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(c0.projectId) + '/databases/(default)/documents/config/app?key=' + encodeURIComponent(c0.apiKey);
     fetch(url).then(function (r) {
@@ -1368,6 +1469,7 @@
 
   function init() {
     injectUI();
+    injectBell();
     loadRC();
     updateNavAv();
     injectLB();

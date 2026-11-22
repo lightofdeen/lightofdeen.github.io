@@ -100,7 +100,7 @@ pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius
     <button data-t="dash" class="on">ড্যাশবোর্ড</button>
     <button data-t="users">ইউজার</button>
     <button data-t="blocked">ব্লক তালিকা</button>
-    <button data-t="notice">ঘোষণা</button>
+    <button data-t="notice">নোটিফিকেশন</button>
     <button data-t="feat">ফিচার</button>
     <button data-t="maint">রক্ষণাবেক্ষণ</button>
     <button data-t="admins">অ্যাডমিন</button>
@@ -133,6 +133,15 @@ pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius
   </section>
 
   <section id="t-notice" class="hide">
+    <div class="card"><h2>🔔 নতুন নোটিফিকেশন পাঠান</h2>
+      <p class="muted">পাঠালে অ্যাপের হোম পেজের বেল আইকনে সবার কাছে জমা হবে। (কয়েক মিনিটের মধ্যে পৌঁছায়)</p>
+      <label class="f">বার্তা</label><textarea id="nfText" placeholder="যেমন: রমজানের সময়সূচি যুক্ত হয়েছে। আপডেট করে নিন।"></textarea>
+      <div class="row"><div class="grow"><label class="f">ধরন</label><select id="nfType"><option value="info">তথ্য</option><option value="warn">সতর্কতা</option><option value="success">সুখবর</option></select></div>
+      <div class="grow"><label class="f">লিঙ্ক (ঐচ্ছিক)</label><input type="text" id="nfLink" placeholder="https://..."></div></div>
+      <label class="f"><input type="checkbox" id="nfBan"> হোম পেজে ব্যানারও দেখাও</label>
+      <div class="row" style="margin-top:10px"><button class="btn pri" id="nfSend">পাঠান</button></div>
+      <h2 style="margin-top:18px">পাঠানো নোটিফিকেশন</h2><div id="nfList"></div>
+    </div>
     <div class="card"><h2>সবার জন্য ঘোষণা ব্যানার</h2>
       <label class="f"><input type="checkbox" id="anOn"> ব্যানার চালু</label>
       <label class="f">বার্তা</label><textarea id="anText" placeholder="যেমন: নতুন আপডেট এসেছে! রমজানের সময়সূচি যুক্ত হয়েছে।"></textarea>
@@ -389,6 +398,7 @@ async function loadCfg(){
   try{const s=await F.getDoc(F.doc(db,'config','app'));CFG=s.exists()?s.data():{}}catch(e){CFG={};toast(errMsg(e))}
   const an=CFG.announce||{},mt=CFG.maintenance||{},ft=CFG.features||{};
   $('anOn').checked=!!an.on;$('anText').value=an.text||'';$('anType').value=an.type||'info';$('anLink').value=an.link||'';prevNotice();
+  renderNf();
   $('mtOn').checked=!!mt.on;$('mtText').value=mt.text||'';
   $('featList').innerHTML=FEATURES.map(f=>'<label class="sw"><span>'+f[1]+'</span><input type="checkbox" data-f="'+f[0]+'" '+(ft[f[0]]===false?'':'checked')+'></label>').join('');
 }
@@ -396,8 +406,8 @@ function prevNotice(){const p=$('anPrev');p.className='banner-prev '+$('anType')
 ['anText','anType'].forEach(i=>$(i).addEventListener('input',prevNotice));
 async function saveCfg(part,btn){
   btn.disabled=true;
-  try{await F.setDoc(F.doc(db,'config','app'),{...part,updatedAt:F.serverTimestamp(),updatedBy:me.uid},{merge:true});toast('সংরক্ষণ হয়েছে ✓')}
-  catch(e){toast(errMsg(e))}btn.disabled=false;
+  let ok=false;try{await F.setDoc(F.doc(db,'config','app'),{...part,updatedAt:F.serverTimestamp(),updatedBy:me.uid},{merge:true});toast('সংরক্ষণ হয়েছে ✓');ok=true}
+  catch(e){toast(errMsg(e))}btn.disabled=false;return ok;
 }
 $('anSave').onclick=e=>{const link=$('anLink').value.trim();
   if(link&&!/^https?:\/\//i.test(link)){toast('লিঙ্ক http:// বা https:// দিয়ে শুরু হতে হবে');return}
@@ -407,6 +417,19 @@ $('featSave').onclick=e=>{const ft={};document.querySelectorAll('#featList input
 $('mtSave').onclick=e=>{if($('mtOn').checked&&!confirm('রক্ষণাবেক্ষণ মোড চালু করলে সবার অ্যাপ বন্ধ হয়ে যাবে। নিশ্চিত?'))return;
   saveCfg({maintenance:{on:$('mtOn').checked,text:$('mtText').value.trim()}},e.target)};
 
+
+function renderNf(){const l=CFG.notices||[];
+  $('nfList').innerHTML=l.length?l.slice().sort((a,b)=>b.t-a.t).map(n=>'<div class="sw"><span style="flex:1;min-width:0"><span class="tag">'+esc({info:'তথ্য',warn:'সতর্কতা',success:'সুখবর'}[n.type]||'তথ্য')+'</span> '+esc(n.text)+'<br><small class="muted">'+new Date(n.t).toLocaleString('bn-BD')+'</small></span><button class="btn bad" data-nfdel="'+esc(n.id)+'">মুছুন</button></div>').join(''):'<p class="muted">এখনো কিছু পাঠানো হয়নি</p>'}
+$('nfSend').onclick=async e=>{const text=$('nfText').value.trim(),link=$('nfLink').value.trim(),type=$('nfType').value;
+  if(!text){toast('বার্তা লিখুন');return}
+  if(link&&!/^https?:\/\//i.test(link)){toast('লিঙ্ক http:// বা https:// দিয়ে শুরু হতে হবে');return}
+  const now=Date.now(),list=[{id:String(now),text,type,link,t:now},...(CFG.notices||[])].slice(0,20);
+  const part={notices:list};if($('nfBan').checked)part.announce={on:true,text,type,link,id:String(now)};
+  if(await saveCfg(part,e.target)){CFG.notices=list;if(part.announce)CFG.announce=part.announce;$('nfText').value='';$('nfLink').value='';$('nfBan').checked=false;renderNf();
+    if(part.announce){$('anOn').checked=true;$('anText').value=text;$('anType').value=type;$('anLink').value=link;prevNotice()}}};
+$('nfList').onclick=async e=>{const b=e.target.closest('[data-nfdel]');if(!b||!confirm('এই নোটিফিকেশন মুছবেন?'))return;
+  const list=(CFG.notices||[]).filter(n=>String(n.id)!==b.dataset.nfdel);
+  if(await saveCfg({notices:list},b)){CFG.notices=list;renderNf()}};
 /* ---------- অ্যাডমিন ---------- */
 async function loadAdmins(){
   try{const sn=await F.getDocs(F.collection(db,'admins'));
