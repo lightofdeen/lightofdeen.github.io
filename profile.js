@@ -1267,8 +1267,108 @@
      ===================================================================== */
   window.LODP = { btns: btns, bind: bind, onRead: onRead, touch: touch, open: function () { if (typeof switchView === 'function') switchView('profile'); } };
 
+  /* =====================================================================
+     অ্যাডমিন প্যানেলের কনফিগ (Firestore: config/app) — ঘোষণা ব্যানার, ফিচার অন/অফ, রক্ষণাবেক্ষণ মোড
+     SDK ছাড়া হালকা REST কল; ১০ মিনিট ক্যাশ; নেটওয়ার্ক না থাকলে আগের ক্যাশ বা কিছুই না
+     ===================================================================== */
+  var RC_KEY = 'lodRC', RC_TTL = 600000, rcOff = {}, rcWrapped = false;
+
+  function fsVal(v) {
+    if (!v) return null;
+    if ('stringValue' in v) return v.stringValue;
+    if ('booleanValue' in v) return v.booleanValue;
+    if ('integerValue' in v) return +v.integerValue;
+    if ('doubleValue' in v) return v.doubleValue;
+    if ('mapValue' in v) { var o = {}, f = v.mapValue.fields || {}; for (var k in f) o[k] = fsVal(f[k]); return o; }
+    if ('arrayValue' in v) return (v.arrayValue.values || []).map(fsVal);
+    return null;
+  }
+
+  function rcStyle() {
+    if (document.getElementById('rc-style')) return;
+    var st = document.createElement('style'); st.id = 'rc-style';
+    st.textContent =
+      '.rc-ban{display:flex;align-items:flex-start;gap:10px;margin:10px 14px;padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.55;border:1px solid rgba(128,128,128,.3);background:#e8f1ff;color:#17407a}' +
+      '.rc-ban.warn{background:#fff3d6;color:#7a4b00}.rc-ban.success{background:#e1f6ea;color:#14633a}' +
+      '.rc-ban a{color:inherit;font-weight:700;text-decoration:underline}' +
+      '.rc-ban .t{flex:1}.rc-ban button{flex:none;background:none;border:0;color:inherit;font-size:18px;line-height:1;cursor:pointer;padding:0 2px}' +
+      '.rc-mt{position:fixed;inset:0;z-index:99999;background:var(--bg,#0b0b0b);color:var(--ink,#fff);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center;font-size:17px;line-height:1.7}' +
+      '.rc-mt b{font-size:44px}';
+    document.head.appendChild(st);
+  }
+
+  function rcApply(c) {
+    c = c || {}; rcStyle();
+    // ১) ফিচার অন/অফ
+    rcOff = {};
+    var ft = c.features || {};
+    for (var k in ft) if (ft[k] === false && k !== 'home') rcOff[k] = true;
+    var all = document.querySelectorAll('[onclick*="switchView("]');
+    for (var i = 0; i < all.length; i++) {
+      var m = /switchView\('([a-z-]+)'\)/.exec(all[i].getAttribute('onclick') || '');
+      if (m && /^(button|a|div|li)$/i.test(all[i].tagName) && !all[i].closest('.nav') && !all[i].closest('.rd-bar')) {
+        all[i].style.display = rcOff[m[1]] ? 'none' : '';
+      }
+    }
+    var navP = document.getElementById('navProfile'); if (navP) navP.style.display = rcOff.profile ? 'none' : '';
+    if (!rcWrapped && typeof window.switchView === 'function') {
+      rcWrapped = true;
+      var orig = window.switchView;
+      window.switchView = function (v) {
+        if (rcOff[v]) { toast('এই ফিচারটি সাময়িকভাবে বন্ধ আছে'); return; }
+        return orig.apply(this, arguments);
+      };
+    }
+    // ২) ঘোষণা ব্যানার
+    var old = document.getElementById('rcBan'); if (old) old.remove();
+    var an = c.announce;
+    if (an && an.on && an.text && sget('lodAnnX') !== String(an.id)) {
+      var home = document.getElementById('home-view');
+      if (home) {
+        var d = document.createElement('div'); d.id = 'rcBan';
+        d.className = 'rc-ban ' + (an.type === 'warn' ? 'warn' : an.type === 'success' ? 'success' : '');
+        var t = document.createElement('div'); t.className = 't'; t.textContent = an.text;
+        if (an.link && /^https?:\/\//i.test(an.link)) {
+          var a = document.createElement('a'); a.href = an.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = ' বিস্তারিত →'; t.appendChild(a);
+        }
+        var x = document.createElement('button'); x.setAttribute('aria-label', 'বন্ধ করুন'); x.textContent = '✕';
+        x.onclick = function () { sset('lodAnnX', String(an.id)); d.remove(); };
+        d.appendChild(t); d.appendChild(x); home.insertBefore(d, home.firstChild);
+      }
+    }
+    // ৩) রক্ষণাবেক্ষণ মোড
+    var mo = document.getElementById('rcMt'); if (mo) mo.remove();
+    var mt = c.maintenance;
+    if (mt && mt.on) {
+      var o = document.createElement('div'); o.id = 'rcMt'; o.className = 'rc-mt';
+      var ic = document.createElement('b'); ic.textContent = '🛠';
+      var tx = document.createElement('div'); tx.textContent = mt.text || 'অ্যাপটি কিছুক্ষণের জন্য রক্ষণাবেক্ষণে আছে। একটু পরে আবার চেষ্টা করুন।';
+      o.appendChild(ic); o.appendChild(tx); document.body.appendChild(o);
+    }
+  }
+
+  function loadRC() {
+    var cached = jget(RC_KEY, null);
+    if (cached && cached.c) rcApply(cached.c);
+    if (!hasConfig()) return;
+    if (cached && Date.now() - (cached.t || 0) < RC_TTL) return;
+    var c0 = cfg();
+    var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(c0.projectId) + '/databases/(default)/documents/config/app?key=' + encodeURIComponent(c0.apiKey);
+    fetch(url).then(function (r) {
+      if (r.status === 404) return { fields: {} };
+      if (!r.ok) throw new Error('rc');
+      return r.json();
+    }).then(function (j) {
+      var o = {}, f = (j && j.fields) || {};
+      for (var k in f) o[k] = fsVal(f[k]);
+      jset(RC_KEY, { t: Date.now(), c: o });
+      rcApply(o);
+    }).catch(function () {});
+  }
+
   function init() {
     injectUI();
+    loadRC();
     updateNavAv();
     injectLB();
     setupTracking();

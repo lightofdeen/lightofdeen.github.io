@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Light of Deen — অ্যাডমিন প্যানেল</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#16202e;--muted:#6b7686;--line:#dfe4ec;--pri:#b8860b;--pri-l:#fbf3dc;--ok:#1b8a4b;--bad:#c63a3a;--warn:#c27a00}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1116;--card:#171b22;--ink:#e8ecf2;--muted:#8d97a6;--line:#2a313c;--pri:#e0b04a;--pri-l:#2a2412;--ok:#3ecf7b;--bad:#ff6b6b;--warn:#f0a93b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,"Noto Sans Bengali","Hind Siliguri",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+header.top h1{font-size:19px;margin:0;flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 10px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:999px;cursor:pointer}
+.tabs button.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:10px;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.btn.bad{color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+input[type=text],input[type=email],input[type=password],input[type=search],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+textarea{min-height:90px;resize:vertical}
+label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>.grow{flex:1;min-width:160px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.st{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.st b{display:block;font-size:24px;color:var(--pri)}
+.st span{font-size:13px;color:var(--muted)}
+.list .it{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.list .it:last-child{border-bottom:0}
+.av{flex:none;width:40px;height:40px;border-radius:50%;background:var(--pri-l);color:var(--pri);display:grid;place-items:center;font-weight:700;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.it .nm{flex:1;min-width:0}
+.it .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.it .nm small{color:var(--muted)}
+.tag{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--pri-l);color:var(--pri)}
+.tag.bad{background:rgba(198,58,58,.14);color:var(--bad)}
+.muted{color:var(--muted);font-size:13px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.sw:last-child{border-bottom:0}
+.sw input{width:20px;height:20px;accent-color:var(--pri)}
+.banner-prev{border-radius:12px;padding:12px 14px;margin-top:10px;border:1px solid var(--line)}
+.banner-prev.info{background:#e8f1ff;color:#17407a}.banner-prev.warn{background:#fff3d6;color:#7a4b00}.banner-prev.success{background:#e1f6ea;color:#14633a}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:18px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:14px;margin:10px 0}
+.kv span:nth-child(odd){color:var(--muted)}
+.kv span{word-break:break-all}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:10px;z-index:99;display:none;max-width:90vw}
+.center{max-width:420px;margin:8vh auto}
+pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius:10px;overflow:auto;font-size:13px;user-select:all}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- লগইন -->
+<div id="vLogin" class="center hide">
+  <div class="card">
+    <h2>অ্যাডমিন লগইন</h2>
+    <p class="muted">শুধু অনুমোদিত অ্যাডমিনরা ঢুকতে পারবে।</p>
+    <label class="f">ইমেইল</label><input type="email" id="lgEmail" autocomplete="username">
+    <label class="f">পাসওয়ার্ড</label><input type="password" id="lgPass" autocomplete="current-password">
+    <div class="row" style="margin-top:14px">
+      <button class="btn pri grow" id="lgBtn">লগইন</button>
+      <button class="btn grow" id="lgGoogle">Google দিয়ে লগইন</button>
+    </div>
+    <p id="lgMsg" class="muted" style="color:var(--bad)"></p>
+  </div>
+</div>
+
+<!-- অনুমতি নেই -->
+<div id="vDenied" class="center hide">
+  <div class="card">
+    <h2>আপনি অ্যাডমিন নন</h2>
+    <p class="muted">নিজেকে প্রথম অ্যাডমিন করতে Firebase Console → Firestore Database → <b>admins</b> নামে collection খুলুন, Document ID হিসেবে নিচের UID বসান, এবং একটা ফিল্ড দিন <code>role</code> = <code>owner</code>। তারপর পেজ রিলোড করুন।</p>
+    <pre id="dnUid"></pre>
+    <button class="btn" id="dnOut">লগআউট</button>
+  </div>
+</div>
+
+<!-- মূল প্যানেল -->
+<div id="vApp" class="hide">
+  <header class="top">
+    <h1>🕌 Light of Deen — অ্যাডমিন</h1>
+    <span class="muted" id="meMail"></span>
+    <button class="btn" id="outBtn">লগআউট</button>
+  </header>
+  <div class="tabs" id="tabs">
+    <button data-t="dash" class="on">ড্যাশবোর্ড</button>
+    <button data-t="users">ইউজার</button>
+    <button data-t="blocked">ব্লক তালিকা</button>
+    <button data-t="notice">ঘোষণা</button>
+    <button data-t="feat">ফিচার</button>
+    <button data-t="maint">রক্ষণাবেক্ষণ</button>
+    <button data-t="admins">অ্যাডমিন</button>
+  </div>
+
+  <section id="t-dash">
+    <div class="card"><h2>সারাংশ</h2><div class="stats" id="dashStats"><span class="muted">লোড হচ্ছে…</span></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="dashRef">রিফ্রেশ</button></div></div>
+    <div class="card"><h2>শীর্ষ ১০ ইউজার (স্কোর অনুযায়ী)</h2><div class="list" id="dashTop"></div></div>
+  </section>
+
+  <section id="t-users" class="hide">
+    <div class="card">
+      <div class="row">
+        <input type="search" id="uQ" class="grow" placeholder="নাম / ইউজারনেম / ইমেইল / UID দিয়ে খুঁজুন">
+        <button class="btn pri" id="uSearch">খুঁজুন</button>
+      </div>
+      <p class="muted">নাম দিয়ে খুঁজলে নিচের লোড করা তালিকায় ফিল্টার হয়। পুরো ইমেইল (a@b.com), সঠিক ইউজারনেম বা UID দিলে সরাসরি ডাটাবেস থেকে আনে।</p>
+    </div>
+    <div class="card"><div class="list" id="uList"></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="uMore">আরও লোড করুন</button><span class="muted" id="uInfo"></span></div></div>
+  </section>
+
+  <section id="t-blocked" class="hide">
+    <div class="card"><h2>ব্লক করা ইউজার</h2>
+      <p class="muted">ব্লক করা ইউজার আর সিঙ্ক করতে বা লিডারবোর্ডে নাম দিতে পারবে না (অ্যাপে ঢুকতে ও পড়তে পারবে)।</p>
+      <div class="list" id="bList"></div></div>
+  </section>
+
+  <section id="t-notice" class="hide">
+    <div class="card"><h2>সবার জন্য ঘোষণা ব্যানার</h2>
+      <label class="f"><input type="checkbox" id="anOn"> ব্যানার চালু</label>
+      <label class="f">বার্তা</label><textarea id="anText" placeholder="যেমন: নতুন আপডেট এসেছে! রমজানের সময়সূচি যুক্ত হয়েছে।"></textarea>
+      <div class="row"><div class="grow"><label class="f">ধরন</label><select id="anType"><option value="info">তথ্য (নীল)</option><option value="warn">সতর্কতা (হলুদ)</option><option value="success">সুখবর (সবুজ)</option></select></div>
+      <div class="grow"><label class="f">লিঙ্ক (ঐচ্ছিক)</label><input type="text" id="anLink" placeholder="https://..."></div></div>
+      <div class="banner-prev info" id="anPrev"></div>
+      <div class="row" style="margin-top:12px"><button class="btn pri" id="anSave">সংরক্ষণ করুন</button><span class="muted">প্রতিবার সংরক্ষণ করলে যারা আগে বন্ধ করেছিল তাদের কাছেও আবার দেখাবে।</span></div>
+    </div>
+  </section>
+
+  <section id="t-feat" class="hide">
+    <div class="card"><h2>ফিচার চালু / বন্ধ</h2>
+      <p class="muted">বন্ধ করলে হোমের আইকন লুকিয়ে যাবে এবং ওই পেজে ঢোকা যাবে না। কনফিগ ক্যাশের কারণে ইউজারের কাছে পৌঁছাতে সর্বোচ্চ ১০ মিনিট লাগতে পারে।</p>
+      <div id="featList"></div>
+      <div class="row" style="margin-top:12px"><button class="btn pri" id="featSave">সংরক্ষণ করুন</button></div></div>
+  </section>
+
+  <section id="t-maint" class="hide">
+    <div class="card"><h2>রক্ষণাবেক্ষণ মোড</h2>
+      <p class="muted">চালু করলে সবার স্ক্রিনে বার্তা দেখাবে এবং অ্যাপ ব্যবহার করা যাবে না। জরুরি অবস্থায় ব্যবহার করুন।</p>
+      <label class="f"><input type="checkbox" id="mtOn"> রক্ষণাবেক্ষণ মোড চালু</label>
+      <label class="f">বার্তা</label><textarea id="mtText" placeholder="অ্যাপটি কিছুক্ষণের জন্য রক্ষণাবেক্ষণে আছে। একটু পরে আবার চেষ্টা করুন।"></textarea>
+      <div class="row" style="margin-top:12px"><button class="btn pri" id="mtSave">সংরক্ষণ করুন</button></div></div>
+  </section>
+
+  <section id="t-admins" class="hide">
+    <div class="card"><h2>অ্যাডমিন তালিকা</h2><div class="list" id="adList"></div>
+      <label class="f">নতুন অ্যাডমিন যোগ (UID)</label>
+      <div class="row"><input type="text" id="adUid" class="grow" placeholder="ইউজারের UID"><button class="btn pri" id="adAdd">যোগ করুন</button></div>
+      <p class="muted">ইউজারের UID ইউজার ট্যাবে তার নামে চাপ দিলে পাবেন।</p></div>
+  </section>
+</div>
+</div>
+
+<div class="modal-bg" id="modal"><div class="modal" id="modalBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+const VER='10.14.1', base='https://www.gstatic.com/firebasejs/'+VER+'/';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cfg=window.LOD_FIREBASE||{};
+const FEATURES=[['quran','আল-কুরআন'],['audio','অডিও কোরআন'],['tafsir','তাফসীর'],['hadith','হাদিস'],['dua','দোয়া'],['amal','দৈনন্দিন আমল'],['qibla','ক্বিবলা'],['tasbih','তাসবিহ'],['hijri','হিজরি ক্যালেন্ডার'],['asma','আসমাউল হুসনা'],['zakat','যাকাত ক্যালকুলেটর'],['quiz','কুইজ'],['leaderboard','লিডারবোর্ড'],['profile','প্রোফাইল']];
+let A,F,auth,db,me=null,CFG={};
+
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',3200)}
+function show(id){['vLogin','vDenied','vApp'].forEach(x=>$(x).classList.toggle('hide',x!==id))}
+function errMsg(e){const c=e&&e.code||'';
+  if(c==='permission-denied')return 'অনুমতি নেই — Firestore Rules ঠিক আছে কি দেখুন';
+  if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found'))return 'ইমেইল বা পাসওয়ার্ড ভুল';
+  if(c.includes('popup-closed'))return 'লগইন বাতিল হয়েছে';
+  return (e&&e.message)||'ত্রুটি হয়েছে'}
+
+async function boot(){
+  if(!(cfg.apiKey&&cfg.projectId&&cfg.appId)){document.body.innerHTML='<div class="wrap"><div class="card">firebase-config.js পাওয়া যায়নি বা ফাঁকা। এই ফাইলটি index.html-এর পাশে রাখুন।</div></div>';return}
+  const m=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+  const app=m[0].initializeApp(cfg);A=m[1];F=m[2];auth=A.getAuth(app);db=F.getFirestore(app);
+  A.onAuthStateChanged(auth,onAuth);
+}
+
+async function onAuth(u){
+  if(!u){me=null;show('vLogin');return}
+  try{
+    const s=await F.getDoc(F.doc(db,'admins',u.uid));
+    if(!s.exists()){$('dnUid').textContent=u.uid;show('vDenied');return}
+    me={uid:u.uid,email:u.email||u.displayName||u.uid};
+    $('meMail').textContent=me.email;show('vApp');
+    await loadCfg();loadDash();
+  }catch(e){$('dnUid').textContent=u.uid;show('vDenied');toast(errMsg(e))}
+}
+
+/* ---------- লগইন ---------- */
+$('lgBtn').onclick=async()=>{$('lgMsg').textContent='';
+  try{await A.signInWithEmailAndPassword(auth,$('lgEmail').value.trim(),$('lgPass').value)}catch(e){$('lgMsg').textContent=errMsg(e)}};
+$('lgGoogle').onclick=async()=>{$('lgMsg').textContent='';
+  try{await A.signInWithPopup(auth,new A.GoogleAuthProvider())}catch(e){$('lgMsg').textContent=errMsg(e)}};
+$('lgPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('lgBtn').click()});
+$('outBtn').onclick=$('dnOut').onclick=()=>A.signOut(auth);
+
+/* ---------- ট্যাব ---------- */
+const loaded={};
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=b.dataset.t;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.wrap section').forEach(s=>s.classList.toggle('hide',s.id!=='t-'+t));
+  if(t==='users'&&!loaded.users){loaded.users=1;loadUsers(true)}
+  if(t==='blocked')loadBlocked();
+  if(t==='admins')loadAdmins();
+  if(t==='dash')loadDash();
+};
+
+/* ---------- ড্যাশবোর্ড ---------- */
+const dkey=d=>d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+function avatar(photo,name){const ch=Array.from(String(name||'?'))[0]||'?';
+  return '<div class="av">'+(/^(data:image\/|https:\/\/)/.test(photo||'')?'<img src="'+esc(photo)+'" alt="">':esc(ch.toUpperCase()))+'</div>'}
+function userRow(id,d,extra){return '<div class="it" data-uid="'+esc(id)+'">'+avatar(d.photo,d.name)+
+  '<div class="nm"><b>'+esc(d.name||'নামহীন')+(d.un?' <small>@'+esc(d.un)+'</small>':'')+'</b><small>স্কোর '+(d.score||0)+' · স্ট্রিক '+(d.streak||0)+' · শেষ '+esc(d.last||'—')+'</small></div>'+(extra||'')+'</div>'}
+
+async function loadDash(){
+  const box=$('dashStats');box.innerHTML='<span class="muted">লোড হচ্ছে…</span>';
+  try{
+    const col=F.collection(db,'leaderboard'), now=new Date(), w=new Date(now.getTime()-6*86400000);
+    const cnt=q=>F.getCountFromServer(q).then(s=>s.data().count);
+    const [users,lb,blk,today,week]=await Promise.all([
+      cnt(F.collection(db,'users')),cnt(col),cnt(F.collection(db,'blocked')),
+      cnt(F.query(col,F.where('last','==',dkey(now)))),cnt(F.query(col,F.where('last','>=',dkey(w))))]);
+    const st=[['সিঙ্ক করা ইউজার',users],['লিডারবোর্ডে',lb],['আজ সক্রিয়',today],['গত ৭ দিনে সক্রিয়',week],['ব্লক করা',blk]];
+    box.innerHTML=st.map(x=>'<div class="st"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join('');
+    const top=await F.getDocs(F.query(col,F.orderBy('score','desc'),F.limit(10)));
+    $('dashTop').innerHTML=top.docs.map(d=>userRow(d.id,d.data())).join('')||'<p class="muted">কেউ নেই</p>';
+  }catch(e){box.innerHTML='<span class="muted">'+esc(errMsg(e))+'</span>'}
+}
+$('dashRef').onclick=loadDash;
+
+/* ---------- ইউজার ---------- */
+let uLast=null,uRows=[];
+async function loadUsers(reset){
+  if(reset){uLast=null;uRows=[]}
+  const parts=[F.collection(db,'leaderboard'),F.orderBy('score','desc')];if(uLast)parts.push(F.startAfter(uLast));parts.push(F.limit(50));
+  try{const sn=await F.getDocs(F.query(...parts));
+    sn.docs.forEach(d=>uRows.push({id:d.id,d:d.data()}));uLast=sn.docs[sn.docs.length-1]||uLast;
+    $('uMore').classList.toggle('hide',sn.docs.length<50);renderUsers(uRows)}catch(e){toast(errMsg(e))}
+}
+function renderUsers(rows){$('uList').innerHTML=rows.map(r=>userRow(r.id,r.d)).join('')||'<p class="muted">কোনো ইউজার নেই</p>';$('uInfo').textContent=rows.length+' জন দেখানো হচ্ছে'}
+$('uMore').onclick=()=>loadUsers(false);
+$('uSearch').onclick=async()=>{
+  const q=$('uQ').value.trim();if(!q){renderUsers(uRows);return}
+  const lc=q.toLowerCase();let found=[];
+  try{
+    if(q.includes('@')){const sn=await F.getDocs(F.query(F.collection(db,'users'),F.where('email','==',q),F.limit(5)));
+      for(const d of sn.docs){const l=await F.getDoc(F.doc(db,'leaderboard',d.id));const u=d.data();found.push({id:d.id,d:l.exists()?l.data():{name:u.name,photo:u.photo}})}}
+    else{
+      found=uRows.filter(r=>[r.d.name,r.d.un,r.id].some(v=>String(v||'').toLowerCase().includes(lc)));
+      if(!found.length){let uid=null;const un=await F.getDoc(F.doc(db,'usernames',lc));if(un.exists())uid=un.data().uid;else if(/^[A-Za-z0-9]{20,}$/.test(q))uid=q;
+        if(uid){const l=await F.getDoc(F.doc(db,'leaderboard',uid));if(l.exists())found.push({id:uid,d:l.data()});else{const u=await F.getDoc(F.doc(db,'users',uid));if(u.exists())found.push({id:uid,d:{name:u.data().name,photo:u.data().photo}})}}}
+    }
+  }catch(e){toast(errMsg(e))}
+  renderUsers(found);if(!found.length)toast('পাওয়া যায়নি');
+};
+$('uQ').addEventListener('keydown',e=>{if(e.key==='Enter')$('uSearch').click()});
+document.addEventListener('click',e=>{const it=e.target.closest('.it[data-uid]');if(it)openUser(it.dataset.uid)});
+
+/* ---------- ইউজারের বিস্তারিত ---------- */
+function closeModal(){$('modal').classList.remove('show')}
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+async function openUser(uid){
+  $('modalBody').innerHTML='<p class="muted">লোড হচ্ছে…</p>';$('modal').classList.add('show');
+  try{
+    const [us,ls,bs]=await Promise.all([F.getDoc(F.doc(db,'users',uid)),F.getDoc(F.doc(db,'leaderboard',uid)),F.getDoc(F.doc(db,'blocked',uid))]);
+    const u=us.exists()?us.data():{}, l=ls.exists()?ls.data():{}, p=u.prof||{}, name=p.name||l.name||u.name||'নামহীন', blocked=bs.exists();
+    const days=u.stats&&u.stats.days?Object.keys(u.stats.days).length:0;
+    const upd=u.updatedAt&&u.updatedAt.toDate?u.updatedAt.toDate().toLocaleString('bn-BD'):'—';
+    $('modalBody').innerHTML='<div class="row">'+avatar(p.photo||l.photo||u.photo,name)+'<div class="grow"><b>'+esc(name)+'</b> '+(blocked?'<span class="tag bad">ব্লক করা</span>':'')+'<br><span class="muted">'+esc(u.email||'ইমেইল নেই')+'</span></div></div>'+
+    '<div class="kv"><span>UID</span><span>'+esc(uid)+'</span><span>ইউজারনেম</span><span>'+esc(p.username||l.un||'—')+'</span><span>পরিচয়</span><span>'+esc(p.bio||'—')+'</span>'+
+    '<span>বুকমার্ক</span><span>'+((u.bm||[]).length)+'</span><span>পিন / নোট</span><span>'+((u.pins||[]).length)+' / '+((u.notes||[]).length)+'</span>'+
+    '<span>সক্রিয় দিন</span><span>'+days+'</span><span>স্কোর / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+
+    '<div class="row" style="margin-top:14px">'+
+    (blocked?'<button class="btn" data-a="unblock">আনব্লক</button>':'<button class="btn bad" data-a="block">ব্লক করুন</button>')+
+    '<button class="btn" data-a="lbdel">লিডারবোর্ড থেকে সরান</button>'+
+    '<button class="btn bad" data-a="wipe">সব ডেটা মুছুন</button>'+
+    '<button class="btn" data-a="close">বন্ধ</button></div>'+
+    '<p class="muted">"সব ডেটা মুছুন" ইউজারের Firestore ডেটা, লিডারবোর্ড এন্ট্রি ও ইউজারনেম মুছবে। লগইন অ্যাকাউন্ট (Authentication) মুছতে Firebase Console → Authentication-এ যান।</p>';
+    $('modalBody').onclick=async ev=>{const b=ev.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
+      try{
+        if(a==='close')return closeModal();
+        if(a==='block'){const r=prompt('ব্লকের কারণ (ঐচ্ছিক):','');if(r===null)return;
+          await F.setDoc(F.doc(db,'blocked',uid),{t:F.serverTimestamp(),name,reason:r,by:me.uid});toast('ব্লক করা হয়েছে')}
+        if(a==='unblock'){await F.deleteDoc(F.doc(db,'blocked',uid));toast('আনব্লক হয়েছে')}
+        if(a==='lbdel'){if(!confirm('লিডারবোর্ড থেকে সরাবেন?'))return;await F.deleteDoc(F.doc(db,'leaderboard',uid));toast('সরানো হয়েছে')}
+        if(a==='wipe'){if(!confirm(name+' এর সব ডেটা চিরতরে মুছবেন?'))return;
+          const un=p.username||l.un;
+          await F.deleteDoc(F.doc(db,'leaderboard',uid));
+          if(un){const s=await F.getDoc(F.doc(db,'usernames',un));if(s.exists()&&s.data().uid===uid)await F.deleteDoc(F.doc(db,'usernames',un))}
+          await F.deleteDoc(F.doc(db,'users',uid));toast('মুছে ফেলা হয়েছে')}
+        closeModal();loaded.users=0;loadDash();
+        if(!$('t-users').classList.contains('hide')){loaded.users=1;loadUsers(true)}
+        if(!$('t-blocked').classList.contains('hide'))loadBlocked();
+      }catch(e){toast(errMsg(e))}};
+  }catch(e){$('modalBody').innerHTML='<p>'+esc(errMsg(e))+'</p><button class="btn" onclick="document.getElementById(\'modal\').classList.remove(\'show\')">বন্ধ</button>'}
+}
+
+/* ---------- ব্লক তালিকা ---------- */
+async function loadBlocked(){
+  try{const sn=await F.getDocs(F.query(F.collection(db,'blocked'),F.limit(200)));
+    $('bList').innerHTML=sn.docs.map(d=>{const x=d.data();return '<div class="it" data-uid="'+esc(d.id)+'">'+avatar('',x.name)+'<div class="nm"><b>'+esc(x.name||d.id)+'</b><small>'+esc(x.reason||'কারণ নেই')+'</small></div><span class="tag bad">ব্লক</span></div>'}).join('')||'<p class="muted">কেউ ব্লক নেই</p>'}
+  catch(e){toast(errMsg(e))}
+}
+
+/* ---------- কনফিগ (config/app) ---------- */
+async function loadCfg(){
+  try{const s=await F.getDoc(F.doc(db,'config','app'));CFG=s.exists()?s.data():{}}catch(e){CFG={};toast(errMsg(e))}
+  const an=CFG.announce||{},mt=CFG.maintenance||{},ft=CFG.features||{};
+  $('anOn').checked=!!an.on;$('anText').value=an.text||'';$('anType').value=an.type||'info';$('anLink').value=an.link||'';prevNotice();
+  $('mtOn').checked=!!mt.on;$('mtText').value=mt.text||'';
+  $('featList').innerHTML=FEATURES.map(f=>'<label class="sw"><span>'+f[1]+'</span><input type="checkbox" data-f="'+f[0]+'" '+(ft[f[0]]===false?'':'checked')+'></label>').join('');
+}
+function prevNotice(){const p=$('anPrev');p.className='banner-prev '+$('anType').value;p.textContent=$('anText').value||'ব্যানারের প্রিভিউ এখানে দেখাবে';}
+['anText','anType'].forEach(i=>$(i).addEventListener('input',prevNotice));
+async function saveCfg(part,btn){
+  btn.disabled=true;
+  try{await F.setDoc(F.doc(db,'config','app'),{...part,updatedAt:F.serverTimestamp(),updatedBy:me.uid},{merge:true});toast('সংরক্ষণ হয়েছে ✓')}
+  catch(e){toast(errMsg(e))}btn.disabled=false;
+}
+$('anSave').onclick=e=>{const link=$('anLink').value.trim();
+  if(link&&!/^https?:\/\//i.test(link)){toast('লিঙ্ক http:// বা https:// দিয়ে শুরু হতে হবে');return}
+  saveCfg({announce:{on:$('anOn').checked,text:$('anText').value.trim(),type:$('anType').value,link,id:String(Date.now())}},e.target)};
+$('featSave').onclick=e=>{const ft={};document.querySelectorAll('#featList input').forEach(i=>ft[i.dataset.f]=i.checked);
+  if(ft.quran===false&&!confirm('কুরআন বন্ধ করলে অ্যাপের মূল অংশ বন্ধ হবে। নিশ্চিত?'))return;saveCfg({features:ft},e.target)};
+$('mtSave').onclick=e=>{if($('mtOn').checked&&!confirm('রক্ষণাবেক্ষণ মোড চালু করলে সবার অ্যাপ বন্ধ হয়ে যাবে। নিশ্চিত?'))return;
+  saveCfg({maintenance:{on:$('mtOn').checked,text:$('mtText').value.trim()}},e.target)};
+
+/* ---------- অ্যাডমিন ---------- */
+async function loadAdmins(){
+  try{const sn=await F.getDocs(F.collection(db,'admins'));
+    $('adList').innerHTML=sn.docs.map(d=>'<div class="sw"><span style="word-break:break-all">'+esc(d.id)+(d.id===me.uid?' <span class="tag">আপনি</span>':'')+' <small class="muted">'+esc(d.data().role||'admin')+'</small></span>'+(d.id===me.uid?'':'<button class="btn bad" data-del="'+esc(d.id)+'">সরান</button>')+'</div>').join('')}
+  catch(e){toast(errMsg(e))}
+}
+$('adList').onclick=async e=>{const b=e.target.closest('[data-del]');if(!b||!confirm('এই অ্যাডমিন সরাবেন?'))return;
+  try{await F.deleteDoc(F.doc(db,'admins',b.dataset.del));loadAdmins()}catch(x){toast(errMsg(x))}};
+$('adAdd').onclick=async()=>{const id=$('adUid').value.trim();if(!/^[A-Za-z0-9]{20,40}$/.test(id)){toast('সঠিক UID দিন');return}
+  try{await F.setDoc(F.doc(db,'admins',id),{role:'admin',by:me.uid,t:F.serverTimestamp()});$('adUid').value='';loadAdmins();toast('যোগ হয়েছে')}catch(e){toast(errMsg(e))}};
+
+boot().catch(e=>{document.body.innerHTML='<div class="wrap"><div class="card">Firebase লোড হয়নি: '+esc(e.message)+'</div></div>'});
+</script>
+</body>
+</html>
