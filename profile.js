@@ -352,15 +352,7 @@
         '<div class="pf-acts">' +
           (u ? '<button class="pf-act" data-a="edit">' + IC.note.replace('class="i" ', '') + '<span>এডিট</span></button><button class="pf-act" data-a="logout">' + IC.out + '<span>লগ আউট</span></button>'
              : '<button class="pf-act" data-a="login">' + IC.login + '<span>লগইন</span></button>') +
-          '<button class="pf-act" data-a="export">' + IC.up + '<span>এক্সপোর্ট</span></button>' +
-          '<button class="pf-act" data-a="import">' + IC.down + '<span>ইম্পোর্ট</span></button>' +
         '</div>' +
-      '</div>' +
-      '<div class="pf-card pf-sync">' +
-        '<div class="pf-g">' + IC.g + '</div>' +
-        '<div class="pf-sync-t"><b>ক্লাউড সিঙ্ক</b><div class="pf-sync-s">' + (user && !syncErr ? IC.cloud : IC.cloudOff) + '<span id="pfSyncT"></span></div></div>' +
-        (u ? '<button class="pf-btn ghost" data-a="sync"' + (canSync ? '' : ' disabled') + '>' + (syncing ? 'সিঙ্ক হচ্ছে' : 'সিঙ্ক করুন') + '</button>'
-           : '<button class="pf-btn" data-a="login">লগইন</button>') +
       '</div>' +
       '<div class="pf-h">সর্বমোট কার্যক্রম</div>' +
       '<div class="pf-card"><div class="pf-grid4">' +
@@ -387,7 +379,6 @@
     }
     box.querySelector('#pfName').textContent = u ? (u.name || 'ব্যবহারকারী') : 'অতিথি';
     box.querySelector('#pfMail').textContent = u ? u.email : 'লগইন করলে ডেটা ক্লাউডে সংরক্ষিত থাকবে';
-    box.querySelector('#pfSyncT').textContent = lastSyncText();
     var ex = box.querySelector('#pfExtra');
     if (u && (u.gender || u.bio || u.username)) {
       ex.innerHTML = (u.username ? '<div class="pf-un">@' + esc(u.username) + '</div>' : '') + (GENDER[u.gender] ? '<span class="pf-chip">' + esc(GENDER[u.gender]) + '</span>' : '') +
@@ -463,7 +454,7 @@
   /* =====================================================================
      ৬) Firebase: লগইন + Firestore সিঙ্ক
      ===================================================================== */
-  var user = null, fbP = null, syncing = false, syncErr = '', again = false, pushTimer = null, authReady = false;
+  var errShown = false, user = null, fbP = null, syncing = false, syncErr = '', again = false, pushTimer = null, authReady = false;
 
   function cfg() { return window.LOD_FIREBASE || {}; }
   function hasConfig() { var c = cfg(); return !!(c.apiKey && c.projectId && c.appId); }
@@ -820,7 +811,7 @@
       syncErr = (c === 'permission-denied') ? 'অনুমতি নেই — Firestore Rules দেখুন'
               : (c === 'unavailable' || !navigator.onLine) ? 'ইন্টারনেট নেই — পরে সিঙ্ক হবে'
               : 'সিঙ্ক ব্যর্থ — আবার চেষ্টা করুন';
-      if (manual) toast(syncErr);
+      if (manual || (c !== 'unavailable' && navigator.onLine && !errShown)) { errShown = true; toast(syncErr); }
     }).then(function () {
       syncing = false; render();
       if (manual && !syncErr) toast('সিঙ্ক সম্পন্ন');
