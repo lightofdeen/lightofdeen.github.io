@@ -7,7 +7,7 @@
   'use strict';
 
   /* ---------- স্টোরেজ কী ---------- */
-  var K = { bm: 'quranBookmarks', pins: 'lodPins', notes: 'lodNotes', stats: 'lodProfile', meta: 'lodSyncMeta', user: 'lodUser', on: 'lodAuthOn', pend: 'lodAuthPending' };
+  var K = { bm: 'quranBookmarks', pins: 'lodPins', notes: 'lodNotes', stats: 'lodProfile', meta: 'lodSyncMeta', user: 'lodUser', prof: 'lodProf', on: 'lodAuthOn', pend: 'lodAuthPending' };
   var FB_VER = '10.14.1';
 
   function jget(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
@@ -219,7 +219,7 @@
     '.pf-av img{width:100%;height:100%;object-fit:cover;display:block}' +
     '.pf-name{font-weight:700;font-size:17px;line-height:1.35;overflow-wrap:anywhere}' +
     '.pf-mail{color:var(--muted);font-size:13px;margin-top:2px;overflow-wrap:anywhere}' +
-    '.pf-acts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}' +
+    '.pf-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}' +
     '.pf-act{background:none;border:0;border-inline-start:1px solid var(--line);color:var(--text);font:inherit;font-size:13.5px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
     '.pf-act:first-child{border-inline-start:0}' +
     '.pf-act svg{width:24px;height:24px;color:var(--blue)}' +
@@ -270,6 +270,14 @@
     '.pf-or:before,.pf-or:after{content:"";flex:1;height:1px;background:var(--line)}' +
     '.pf-switch{text-align:center;color:var(--muted);font-size:14px;margin-top:14px}' +
     '.pf-switch button{background:none;border:0;color:var(--blue);font:inherit;font-weight:700;cursor:pointer;padding:0 2px}' +
+    '.pf-av[data-a]{cursor:pointer}' +
+    '.pf-hint{font-size:12.5px;color:var(--muted);line-height:1.5;margin:-4px 2px 10px}' +
+    '.pf-un{color:var(--blue);font-size:13.5px;font-weight:600;margin-top:2px;overflow-wrap:anywhere}' +
+    '.pf-av-lg{width:96px;height:96px;margin:0 auto 12px;font-size:36px}' +
+    '.pf-ph{display:flex;gap:8px;justify-content:center;margin-bottom:16px}' +
+    '.pf-lbl{display:block;font-size:13px;color:var(--muted);margin:2px 2px 6px}' +
+    '.pf-bio{font-size:13.5px;line-height:1.6;margin-top:6px;overflow-wrap:anywhere;white-space:pre-wrap}' +
+    '.pf-chip{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-top:6px}' +
     '.ayah-foot button.b-pin.on,.ayah-foot button.b-note.on{color:var(--blue)}' +
     '.ayah-foot button.b-pin.on svg{fill:currentColor}';
 
@@ -287,6 +295,7 @@
       var a = b.getAttribute('data-a');
       if (a === 'login') login();
       else if (a === 'logout') logout();
+      else if (a === 'edit') openEdit();
       else if (a === 'export') doExport();
       else if (a === 'import') doImport();
       else if (a === 'sync') syncNow(true);
@@ -305,8 +314,17 @@
 
   function uname(u) { return u.displayName || (u.email ? u.email.split('@')[0] : ''); }
 
+  var GENDER = { m: 'পুরুষ', f: 'মহিলা' };
+  var UN_RE = /^[a-z][a-z0-9_.]{2,19}$/;
+  var UN_HELP = '৩–২০ অক্ষর; ইংরেজি ছোট হাতের অক্ষর (a–z), সংখ্যা, _ বা . ; শুরুতে অক্ষর হতে হবে';
+  function profFor(uid) { var p = jget(K.prof, null); return (uid && p && typeof p === 'object' && p.uid === uid) ? p : null; }
+  function userInfo(u) {
+    var p = profFor(u.uid) || {};
+    return { uid: u.uid, name: p.name || uname(u), email: u.email || '', photo: p.photo || u.photoURL || '', bio: p.bio || '', gender: p.gender || '', username: p.username || '' };
+  }
+
   function displayUser() {
-    if (user) return { name: uname(user), email: user.email || '', photo: user.photoURL || '' };
+    if (user) return userInfo(user);
     if (sget(K.on) === '1') { var c = jget(K.user, null); if (c) return c; }
     return null;
   }
@@ -330,9 +348,9 @@
 
     box.innerHTML =
       '<div class="pf-card">' +
-        '<div class="pf-user"><div class="pf-av" id="pfAv"></div><div style="min-width:0"><div class="pf-name" id="pfName"></div><div class="pf-mail" id="pfMail"></div></div></div>' +
+        '<div class="pf-user"><div class="pf-av" id="pfAv"></div><div style="min-width:0"><div class="pf-name" id="pfName"></div><div class="pf-mail" id="pfMail"></div><div id="pfExtra"></div></div></div>' +
         '<div class="pf-acts">' +
-          (u ? '<button class="pf-act" data-a="logout">' + IC.out + '<span>লগ আউট</span></button>'
+          (u ? '<button class="pf-act" data-a="edit">' + IC.note.replace('class="i" ', '') + '<span>এডিট</span></button><button class="pf-act" data-a="logout">' + IC.out + '<span>লগ আউট</span></button>'
              : '<button class="pf-act" data-a="login">' + IC.login + '<span>লগইন</span></button>') +
           '<button class="pf-act" data-a="export">' + IC.up + '<span>এক্সপোর্ট</span></button>' +
           '<button class="pf-act" data-a="import">' + IC.down + '<span>ইম্পোর্ট</span></button>' +
@@ -370,6 +388,12 @@
     box.querySelector('#pfName').textContent = u ? (u.name || 'ব্যবহারকারী') : 'অতিথি';
     box.querySelector('#pfMail').textContent = u ? u.email : 'লগইন করলে ডেটা ক্লাউডে সংরক্ষিত থাকবে';
     box.querySelector('#pfSyncT').textContent = lastSyncText();
+    var ex = box.querySelector('#pfExtra');
+    if (u && (u.gender || u.bio || u.username)) {
+      ex.innerHTML = (u.username ? '<div class="pf-un">@' + esc(u.username) + '</div>' : '') + (GENDER[u.gender] ? '<span class="pf-chip">' + esc(GENDER[u.gender]) + '</span>' : '') +
+                     (u.bio ? '<div class="pf-bio">' + esc(u.bio) + '</div>' : '');
+    }
+    if (u && user) av.setAttribute('data-a', 'edit');
   }
   function stat(k, icon, n, label) {
     return '<button class="pf-st" data-a="list" data-k="' + k + '"><div class="pf-ic">' + icon + '</div><b>' + num(n) + '</b><span>' + label + '</span></button>';
@@ -464,7 +488,7 @@
     user = u; authReady = true;
     if (u) {
       sset(K.on, '1');
-      jset(K.user, { name: uname(u), email: u.email || '', photo: u.photoURL || '' });
+      jset(K.user, userInfo(u));
       render(); syncNow(false);
     } else {
       if (sget(K.on) === '1' && !sget(K.pend)) { /* সেশন শেষ — ক্যাশ করা তথ্য সরাই */ sdel(K.on); sdel(K.user); }
@@ -550,11 +574,12 @@
       }
       if (mode === 'signup') {
         return f.A.createUserWithEmailAndPassword(f.auth, em, pw).then(function (cred) {
-          closeModal(); toast('একাউন্ট তৈরি হয়েছে');
-          if (!nm) return;
-          return f.A.updateProfile(cred.user, { displayName: nm }).catch(function () {}).then(function () {
-            jset(K.user, { name: uname(cred.user), email: cred.user.email || '', photo: '' });
-            render(); syncNow(false);
+          closeModal(); toast('একাউন্ট তৈরি হয়েছে — ইমেইলে যাচাই লিংক পাঠানো হয়েছে (স্প্যামও দেখুন)');
+          f.A.sendEmailVerification(cred.user).catch(function () {});
+          var pr = nm ? f.A.updateProfile(cred.user, { displayName: nm }).catch(function () {}) : Promise.resolve();
+          return pr.then(function () {
+            jset(K.user, userInfo(cred.user)); render(); syncNow(false);
+            setTimeout(openEdit, 500);   // একাউন্ট খোলার পরপরই প্রোফাইল সম্পূর্ণ করার শিট
           });
         });
       }
@@ -582,6 +607,143 @@
         else toast('লগইন ব্যর্থ' + (c ? ' (' + c + ')' : ''));
       });
     }).catch(function () { toast('Firebase লোড করা যায়নি — ইন্টারনেট দেখুন'); });
+  }
+
+  /* ---------- প্রোফাইল এডিট: নাম, পরিচয়, লিঙ্গ, ছবি ---------- */
+  function setAv(el, photo, ch) {
+    el.textContent = '';
+    if (photo) { var im = document.createElement('img'); im.alt = ''; im.src = photo; el.appendChild(im); }
+    else el.textContent = ch;
+  }
+
+  // ছবি চৌকো করে কেটে ২৫৬×২৫৬ JPEG বানায় (ছোট সাইজ, Firestore-এ রাখা যায়)
+  function resizeImg(file, cb) {
+    var r = new FileReader();
+    r.onerror = function () { cb(null); };
+    r.onload = function () {
+      var im = new Image();
+      im.onerror = function () { cb(null); };
+      im.onload = function () {
+        try {
+          var S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+          var m = Math.min(im.width, im.height);
+          c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S);
+          cb(c.toDataURL('image/jpeg', 0.82));
+        } catch (e) { cb(null); }
+      };
+      im.src = r.result;
+    };
+    r.readAsDataURL(file);
+  }
+
+  // ইউজারনেম ইউনিক রাখতে usernames/{নাম} ডকুমেন্টে uid লিখে "দখল" করা হয় (ট্রানজেকশনে)
+  function claimUsername(nu, old) {
+    return fbLoad().then(function (f) {
+      var F = f.F, db = f.db, uid = user.uid;
+      return F.runTransaction(db, function (tx) {
+        var nr = nu ? F.doc(db, 'usernames', nu) : null, orf = old ? F.doc(db, 'usernames', old) : null;
+        return Promise.all([nr ? tx.get(nr) : null, orf ? tx.get(orf) : null]).then(function (r) {
+          var ns = r[0], os = r[1];
+          if (ns && ns.exists() && ns.data().uid !== uid) throw { code: 'lod/username-taken' };
+          if (nr && !ns.exists()) tx.set(nr, { uid: uid, t: Date.now() });
+          if (orf && os && os.exists() && os.data().uid === uid) tx.delete(orf);
+        });
+      });
+    });
+  }
+
+  function openEdit() {
+    if (!user) { login(); return; }
+    var p0 = profFor(user.uid) || {}, cur = displayUser(), pend;   // pend: undefined = ছবি বদলায়নি
+    var initial = (cur.name || cur.email || '?').trim().charAt(0).toUpperCase();
+    openModal(
+      '<h3 class="pf-mh">প্রোফাইল এডিট</h3>' +
+      '<div class="pf-av pf-av-lg" id="pfEdAv"></div>' +
+      '<div class="pf-ph"><button class="pf-btn ghost" data-m="photo">ছবি বদলান</button><button class="pf-btn ghost" data-m="rmphoto">ছবি সরান</button></div>' +
+      '<input type="file" id="pfPhotoIn" accept="image/*" hidden>' +
+      '<label class="pf-lbl" for="pfEdName">নাম</label>' +
+      '<input class="pf-in" id="pfEdName" type="text" maxlength="50" autocomplete="name">' +
+      '<label class="pf-lbl" for="pfEdUser">ইউজারনেম</label>' +
+      '<input class="pf-in" id="pfEdUser" type="text" maxlength="21" dir="ltr" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="username">' +
+      '<div class="pf-hint" id="pfEdUH"></div>' +
+      '<label class="pf-lbl" for="pfEdBio">পরিচয়</label>' +
+      '<textarea class="pf-ta" id="pfEdBio" rows="3" maxlength="160" placeholder="নিজের সম্পর্কে সংক্ষেপে লিখুন" style="margin-bottom:10px"></textarea>' +
+      '<label class="pf-lbl" for="pfEdG">লিঙ্গ</label>' +
+      '<select class="pf-in" id="pfEdG"><option value="">উল্লেখ করতে চাই না</option><option value="m">পুরুষ</option><option value="f">মহিলা</option></select>' +
+      '<div class="pf-err" id="pfEdErr"></div>' +
+      '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">বাতিল</button><button class="pf-btn" data-m="save">সেভ</button></div>',
+      function (act, box) {
+        var av = box.querySelector('#pfEdAv');
+        if (act === 'x') { closeModal(); return; }
+        if (act === 'photo') { box.querySelector('#pfPhotoIn').click(); return; }
+        if (act === 'rmphoto') { pend = ''; setAv(av, user.photoURL || '', initial); return; }
+        if (act === 'save') {
+          var btn = box.querySelector('[data-m="save"]'), err = box.querySelector('#pfEdErr');
+          var nu = box.querySelector('#pfEdUser').value.trim().replace(/^@/, '').toLowerCase();
+          var old = p0.username || '';
+          err.textContent = '';
+          if (nu && !UN_RE.test(nu)) { err.textContent = 'ইউজারনেম: ' + UN_HELP; return; }
+          btn.disabled = true;
+          var done = function () {
+            var np = profFor(user.uid) || { uid: user.uid };
+            np.uid = user.uid;
+            np.name = box.querySelector('#pfEdName').value.trim();
+            np.bio = box.querySelector('#pfEdBio').value.trim();
+            np.gender = box.querySelector('#pfEdG').value;
+            np.username = nu;
+            if (pend !== undefined) np.photo = pend;
+            np.t = Date.now();
+            jset(K.prof, np);
+            jset(K.user, userInfo(user));
+            touch('prof');
+            closeModal(); render(); toast('প্রোফাইল সেভ হয়েছে');
+          };
+          if (nu === old) { done(); return; }
+          claimUsername(nu, old).then(done).catch(function (e) {
+            btn.disabled = false;
+            var c = e && e.code;
+            err.textContent = c === 'lod/username-taken' ? 'এই ইউজারনেম আগেই নেওয়া হয়েছে, অন্যটা চেষ্টা করুন'
+              : c === 'permission-denied' ? 'অনুমতি নেই — Firestore Rules-এ usernames যোগ করুন'
+              : 'ইউজারনেম সেভ হয়নি — ইন্টারনেট দেখে আবার চেষ্টা করুন';
+          });
+        }
+      },
+      function (box) {
+        var av = box.querySelector('#pfEdAv'), nameEl = box.querySelector('#pfEdName');
+        setAv(av, cur.photo, initial);
+        nameEl.value = p0.name || user.displayName || '';
+        nameEl.placeholder = user.email ? user.email.split('@')[0] : 'আপনার নাম';
+        box.querySelector('#pfEdBio').value = p0.bio || '';
+        var ue = box.querySelector('#pfEdUser'), hint = box.querySelector('#pfEdUH'), tmr;
+        ue.value = p0.username || '';
+        hint.textContent = UN_HELP;
+        ue.addEventListener('input', function () {
+          clearTimeout(tmr);
+          var v = ue.value.trim().replace(/^@/, '').toLowerCase();
+          hint.style.color = ''; hint.textContent = UN_HELP;
+          if (!v || v === (p0.username || '')) return;
+          if (!UN_RE.test(v)) { hint.style.color = '#e5484d'; return; }
+          hint.textContent = 'যাচাই হচ্ছে…';
+          tmr = setTimeout(function () {
+            fbLoad().then(function (f) { return f.F.getDoc(f.F.doc(f.db, 'usernames', v)); }).then(function (sn) {
+              if (ue.value.trim().replace(/^@/, '').toLowerCase() !== v) return;
+              if (sn.exists() && sn.data().uid !== user.uid) { hint.style.color = '#e5484d'; hint.textContent = 'এই ইউজারনেম নেওয়া হয়ে গেছে'; }
+              else { hint.style.color = '#2e9e5b'; hint.textContent = 'ইউজারনেমটি পাওয়া যাবে ✓'; }
+            }).catch(function () { hint.textContent = UN_HELP; });
+          }, 500);
+        });
+        box.querySelector('#pfEdG').value = p0.gender || '';
+        box.querySelector('#pfPhotoIn').addEventListener('change', function () {
+          var f = this.files && this.files[0]; this.value = '';
+          if (!f) return;
+          if (f.size > 12 * 1024 * 1024) { toast('ছবিটি অনেক বড়'); return; }
+          resizeImg(f, function (d) {
+            if (!d) { toast('ছবিটি পড়া যায়নি, অন্য ছবি দিন'); return; }
+            pend = d; setAv(av, d, initial);
+          });
+        });
+      }
+    );
   }
 
   function logout() {
@@ -630,17 +792,27 @@
         out.bm = (out.bm || []).filter(function (x) { return typeof x === 'string'; });
         out.pins = (out.pins || []).filter(function (x) { return typeof x === 'string'; });
         out.notes = (out.notes || []).filter(function (n) { return n && n.k && n.x; });
+        // প্রোফাইল তথ্য (নাম/পরিচয়/লিঙ্গ/ছবি): যেটা নতুন সেটা জেতে
+        var lp = profFor(uid), lpT = m.profT || 0;
+        var cp = (cloud && cloud.prof && typeof cloud.prof === 'object') ? cloud.prof : null, cpT = cloud ? (cloud.profT || 0) : 0;
+        var op, opT;
+        if (!cp) { op = lp; opT = lp ? (lpT || Date.now()) : 0; }
+        else if (!lp || cpT > lpT) { op = cp; opT = cpT; }
+        else { op = lp; opT = lpT; }
+        if (op) jset(K.prof, { uid: uid, name: op.name || '', bio: op.bio || '', gender: op.gender || '', photo: op.photo || '', username: op.username || '', t: opT });
         applyLocal(out);
 
-        var now = Date.now(), nm = { uid: uid, last: now, bmT: res.bm.t || now, pinsT: res.pins.t || now, notesT: res.notes.t || now };
+        var now = Date.now(), nm = { uid: uid, last: now, bmT: res.bm.t || now, pinsT: res.pins.t || now, notesT: res.notes.t || now, profT: opT || 0 };
         if (first) { nm.bmT = nm.pinsT = nm.notesT = now; }
         jset(K.meta, nm);
 
         var u = user;
         return f.F.setDoc(ref, {
-          v: 1, name: u.displayName || '', email: u.email || '', photo: u.photoURL || '',
+          v: 1, name: (op && op.name) || u.displayName || '', email: u.email || '', photo: u.photoURL || '',
           bm: out.bm, pins: out.pins, notes: out.notes, bmT: nm.bmT, pinsT: nm.pinsT, notesT: nm.notesT,
-          stats: out.stats, updatedAt: f.F.serverTimestamp()
+          stats: out.stats, profT: opT || 0,
+          prof: op ? { name: op.name || '', bio: op.bio || '', gender: op.gender || '', photo: op.photo || '', username: op.username || '' } : null,
+          updatedAt: f.F.serverTimestamp()
         });
       });
     }).catch(function (e) {
