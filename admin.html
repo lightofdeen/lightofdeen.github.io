@@ -341,7 +341,7 @@ function actHtml(u,l){
     return '<div class="muted">• '+esc(k)+': '+esc(String(rest).slice(0,60))+(v.t?' ('+ago(new Date(v.t))+')':'')+'</div>'}).join('');
   const notes=(u.notes||[]).slice().sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,5).map(n=>'<div class="muted">📝 '+esc(n.k)+': '+esc(String(n.x||'').slice(0,80))+'</div>').join('');
   return '<h2 style="margin-top:14px">কার্যক্রম</h2><div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">'+
-   [['মোট সময়',fmt(secs)],['সক্রিয় দিন',active],['আয়াত পড়া',cnt(st.ay)],['সূরা খোলা',Object.keys(st.read||{}).length],['হাদিস পড়া',cnt(st.hd)],['তাসবিহ',tb],['কুইজ উত্তর',Object.values(st.qzd||{}).reduce((x,y)=>x+(+y||0),0)],['অন্যান্য বিষয়',cnt(st.tpc)]].map(x=>'<div class="st"><b style="font-size:18px">'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>'+chart+
+   [['মোট সময়',fmt(secs)],['সক্রিয় দিন',active],['আয়াত পড়া',cnt(st.ay)],['সূরা খোলা',Object.keys(st.read||{}).length],['হাদিস পড়া',cnt(st.hd)],['তাসবিহ',tb],['কুইজ সঠিক',Object.values(st.qcd||{}).reduce((x,y)=>x+(+y||0),0)],['কুইজ ভুল',Object.values(st.qwd||{}).reduce((x,y)=>x+(+y||0),0)],['অন্যান্য বিষয়',cnt(st.tpc)]].map(x=>'<div class="st"><b style="font-size:18px">'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>'+chart+
    (lastH?'<div style="margin-top:10px"><b>শেষ পড়া</b>'+lastH+'</div>':'')+(notes?'<div style="margin-top:10px"><b>সাম্প্রতিক নোট</b>'+notes+'</div>':'');
 }
 

@@ -18,7 +18,7 @@
 
   function arr(k) { var v = jget(k, []); return Array.isArray(v) ? v : []; }
   function stats() { var s = jget(K.stats, null); if (!s || typeof s !== 'object') s = {}; if (!s.days || typeof s.days !== 'object') s.days = {}; if (!s.read || typeof s.read !== 'object') s.read = {};
-    ['ay', 'hd', 'tbd', 'last', 'tpc', 'qzd'].forEach(function (f) { if (!s[f] || typeof s[f] !== 'object' || Array.isArray(s[f])) s[f] = {}; });
+    ['ay', 'hd', 'tbd', 'last', 'tpc', 'qcd', 'qwd'].forEach(function (f) { if (!s[f] || typeof s[f] !== 'object' || Array.isArray(s[f])) s[f] = {}; });
     return s; }
   function meta() { var m = jget(K.meta, null); return (m && typeof m === 'object') ? m : {}; }
 
@@ -55,6 +55,8 @@
     hadith: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/></svg>',
     tasbih: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8"/><circle cx="18" cy="9" r="1.8"/><circle cx="6" cy="9" r="1.8"/><circle cx="16" cy="16" r="1.8"/><circle cx="8" cy="16" r="1.8"/><path d="M12 19v3"/></svg>',
     topic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',
+    xc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
     chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
     g: '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.500c3.540 0 6.710 1.220 9.210 3.600l6.850-6.850C35.900 2.380 30.470 0 24 0 14.620 0 6.510 5.380 2.560 13.220l7.980 6.190C12.430 13.720 17.740 9.500 24 9.500z"/><path fill="#4285F4" d="M46.980 24.550c0-1.570-.15-3.090-.38-4.550H24v9.020h12.940c-.58 2.960-2.260 5.480-4.780 7.180l7.730 6c4.510-4.180 7.090-10.360 7.090-17.650z"/><path fill="#FBBC05" d="M10.530 28.590c-.48-1.450-.76-2.990-.76-4.590s.27-3.140.76-4.590l-7.980-6.190C.92 16.460 0 20.120 0 24c0 3.880.92 7.540 2.560 10.780l7.970-6.190z"/><path fill="#34A853" d="M24 48c6.480 0 11.930-2.130 15.890-5.810l-7.730-6c-2.150 1.450-4.920 2.300-8.160 2.300-6.260 0-11.570-4.220-13.470-9.910l-7.980 6.190C6.510 42.620 14.620 48 24 48z"/></svg>'
   };
@@ -121,11 +123,21 @@
     s.tbd[k] = (+s.tbd[k] || 0) + pendTb; pendTb = 0;
     jset(K.stats, s); touch('stats');
   }
-  var lastQz = 0;
-  function onQuiz() {
-    var now = Date.now(); if (now - lastQz < 600) return; lastQz = now;   // দ্রুত দুইবার চাপলে একবার গোনা
-    var s = stats(), k = dkey(); s.qzd[k] = (+s.qzd[k] || 0) + 1;
+  // কুইজ: সঠিক উত্তরে ৫, ভুল উত্তরে ২ পয়েন্ট। উত্তর সঠিক কিনা কুইজের ফিডব্যাক কার্ড (.qz-fb.ok) থেকে বোঝা হয়
+  function markQuiz(ok) {
+    var s = stats(), k = dkey(), f = ok ? 'qcd' : 'qwd';
+    s[f][k] = (+s[f][k] || 0) + 1;
     jset(K.stats, s); touch('stats');
+  }
+  function wrapQuiz() {
+    var o = window.quizAns; if (typeof o !== 'function' || o.__lod) return;
+    var w = function () {
+      var had = !!document.querySelector('#qzBody .qz-fb');   // আগে থেকেই উত্তর দেওয়া থাকলে এই ট্যাপ গোনা হবে না
+      var r = o.apply(this, arguments);
+      try { if (!had) { var fb = document.querySelector('#qzBody .qz-fb'); if (fb) markQuiz(fb.classList.contains('ok')); } } catch (e) {}
+      return r;
+    };
+    w.__lod = 1; window.quizAns = w;
   }
   function onTasbih() { pendTb++; clearTimeout(tbTimer); tbTimer = setTimeout(flushTb, 1500); }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushTb(); });
@@ -186,7 +198,7 @@
     // তাসবিহ
     wrap('incrementTasbih', onTasbih);
     // কুইজ: প্রতিটি উত্তর দিলে
-    wrap('quizAns', onQuiz);
+    wrapQuiz();
     // সর্বশেষ বিষয়
     wrap('openSub', function (name) { if (gTopic() === 1) setTopic(name, gTopicName(1), 'sub', name, 1); });
     wrap('openHadithSub', function (name) { setTopic(name, 'বিষয়ভিত্তিক হাদিস', 'sub', name, 2); });
@@ -246,11 +258,12 @@
     var set = {}; active.forEach(function (d) { set[d] = 1; });
     var today = dnum(dkey()), cur = 0, d = set[today] ? today : today - 1;
     while (set[d]) { cur++; d--; }
-    var td = dkey(), tb = 0, qz = 0;
+    var td = dkey(), tb = 0, qc = 0, qw = 0;
     Object.keys(s.tbd).forEach(function (k) { tb += (+s.tbd[k] || 0); });
-    Object.keys(s.qzd).forEach(function (k) { qz += (+s.qzd[k] || 0); });
+    Object.keys(s.qcd).forEach(function (k) { qc += (+s.qcd[k] || 0); });
+    Object.keys(s.qwd).forEach(function (k) { qw += (+s.qwd[k] || 0); });
     return { secs: secs, activeDays: active.length, streak: cur, best: best, read: Object.keys(s.read).length,
-             ay: setCount(s.ay), hd: setCount(s.hd), qz: qz, tp: setCount(s.tpc), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {}, lastDay: lastDay };
+             ay: setCount(s.ay), hd: setCount(s.hd), qc: qc, qw: qw, tp: setCount(s.tpc), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {}, lastDay: lastDay };
   }
 
   function fmtTime(secs) {
@@ -471,6 +484,20 @@
     '.pf-chip{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-top:6px}' +
     '.ayah-foot button.b-pin.on,.ayah-foot button.b-note.on{color:var(--blue)}' +
     '.ayah-foot button.b-pin.on svg{fill:currentColor}' +
+    '.pf-prof{padding:12px 14px}' +
+    '.pf-prof .pf-user{gap:12px}' +
+    '.pf-prof .pf-av{width:54px;height:54px;font-size:22px;border-width:2px}' +
+    '.pf-prof .pf-name{font-size:16px;line-height:1.3}' +
+    '.pf-prof .pf-mail{font-size:12.5px;margin-top:0}' +
+    '.pf-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}' +
+    '.pf-meta .pf-un,.pf-meta .pf-chip{margin-top:0}' +
+    '.pf-meta .pf-chip{padding:0 9px;font-size:11.5px}' +
+    '.pf-prof .pf-bio{font-size:12.5px;line-height:1.5;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}' +
+    '.pf-prof .pf-acts{margin-top:10px;padding-top:6px}' +
+    '.pf-prof .pf-act{flex-direction:row;justify-content:center;gap:8px;padding:8px 4px;font-size:13.5px}' +
+    '.pf-prof .pf-act svg{width:20px;height:20px}' +
+    '.pf-grid3 .pf-ic{width:42px;height:42px}' +
+    '.pf-grid3 .pf-st{gap:4px}' +
     '.pf-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 4px;text-align:center}' +
     '.pf-grid3 .pf-st b{font-size:19px}' +
     '.pf-last{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;background:none;border:0;border-top:1px solid var(--line);color:var(--text);font:inherit;text-align:start;padding:12px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
@@ -587,7 +614,7 @@
     var canSync = !!user && !syncing;
 
     box.innerHTML =
-      '<div class="pf-card">' +
+      '<div class="pf-card pf-prof">' +
         '<div class="pf-user"><div class="pf-av" id="pfAv"></div><div style="min-width:0"><div class="pf-name" id="pfName"></div><div class="pf-mail" id="pfMail"></div><div id="pfExtra"></div></div></div>' +
         '<div class="pf-acts">' +
           (u ? '<button class="pf-act" data-a="edit">' + IC.note.replace('class="i" ', '') + '<span>এডিট</span></button><button class="pf-act" data-a="points">' + IC.cup + '<span>পয়েন্ট</span></button>'
@@ -600,6 +627,9 @@
         stat('ay', IC.book, cs.ay, 'আয়াত পড়া') +
         stat('hd', IC.hadith, cs.hd, 'হাদিস পড়া') +
         statStatic(IC.tasbih, cs.tb, 'তাসবিহ') +
+        statStatic(IC.check, cs.qc, 'কুইজ সঠিক') +
+        statStatic(IC.xc, cs.qw, 'কুইজ ভুল') +
+        statStatic(IC.topic, cs.tp, 'বিষয় পড়া') +
         stat('bm', IC.bm, counts.bm, 'বুকমার্ক') +
         stat('pins', IC.pin.replace('class="i" ', ''), counts.pins, 'পিন') +
         stat('notes', IC.note.replace('class="i" ', ''), counts.notes, 'নোট') +
@@ -632,7 +662,7 @@
     box.querySelector('#pfMail').textContent = u ? u.email : 'লগইন করলে ডেটা ক্লাউডে সংরক্ষিত থাকবে';
     var ex = box.querySelector('#pfExtra');
     if (u && (u.gender || u.bio || u.username)) {
-      ex.innerHTML = (u.username ? '<div class="pf-un">@' + esc(u.username) + '</div>' : '') + (GENDER[u.gender] ? '<span class="pf-chip">' + esc(GENDER[u.gender]) + '</span>' : '') +
+      ex.innerHTML = ((u.username || GENDER[u.gender]) ? '<div class="pf-meta">' + (u.username ? '<span class="pf-un">@' + esc(u.username) + '</span>' : '') + (GENDER[u.gender] ? '<span class="pf-chip">' + esc(GENDER[u.gender]) + '</span>' : '') + '</div>' : '') +
                      (u.bio ? '<div class="pf-bio">' + esc(u.bio) + '</div>' : '');
     }
     if (u && user) av.setAttribute('data-a', 'edit');
@@ -671,9 +701,9 @@
   var LB_TABS = [['score', 'পয়েন্ট'], ['streak', 'স্ট্রিক'], ['ay', 'আয়াত'], ['hd', 'হাদিস'], ['tb', 'তাসবিহ'], ['secs', 'সময়']];
   var thumbC = { src: '', v: '' }, lbTimer = null;
 
-  // পয়েন্ট: আয়াত ১০, হাদিস ৭, তাসবিহ ১ (প্রতিটি), কুইজ ৩ (প্রতি উত্তর), অন্যান্য বিষয় ৪ (প্রতিটি আলাদা বিষয়)
-  var PT = { ay: 10, hd: 7, tb: 1, qz: 3, tp: 4 };
-  function lbScore(cs) { return cs.ay * PT.ay + cs.hd * PT.hd + cs.tb * PT.tb + cs.qz * PT.qz + cs.tp * PT.tp; }
+  // পয়েন্ট: আয়াত ১০, হাদিস ৭, তাসবিহ ১ (প্রতিটি), কুইজ: সঠিক উত্তর ৫ / ভুল উত্তর ২, অন্যান্য বিষয় ৪ (প্রতিটি আলাদা বিষয়)
+  var PT = { ay: 10, hd: 7, tb: 1, qc: 5, qw: 2, tp: 4 };
+  function lbScore(cs) { return cs.ay * PT.ay + cs.hd * PT.hd + cs.tb * PT.tb + cs.qc * PT.qc + cs.qw * PT.qw + cs.tp * PT.tp; }
   function effStreak(x) {
     var y = dkey(new Date(Date.now() - 86400000));
     return (x && x.last && x.last >= y) ? (+x.streak || 0) : 0;
@@ -703,7 +733,7 @@
       var cs = computeStats(), p = op || profFor(uid) || {};
       var name = String(p.name || u.displayName || p.username || '').trim().slice(0, 60) || 'ব্যবহারকারী';
       lbThumb(p.photo || u.photoURL || '', function (th) {
-        var d = { name: name, un: String(p.username || '').slice(0, 21), photo: th, ay: cs.ay, hd: cs.hd, tb: cs.tb, qz: cs.qz, tp: cs.tp, secs: cs.secs,
+        var d = { name: name, un: String(p.username || '').slice(0, 21), photo: th, ay: cs.ay, hd: cs.hd, tb: cs.tb, qc: cs.qc, qw: cs.qw, tp: cs.tp, secs: cs.secs,
                   streak: cs.streak, best: cs.best, days: cs.activeDays, score: lbScore(cs), last: cs.lastDay || '' };
         var sig = uid + '|' + JSON.stringify(d), now = Date.now();
         var lastT = +sget('lodLbT') || 0, lastS = sget('lodLbSig') || '';
@@ -751,12 +781,12 @@
       var me = user && x.uid === user.uid, nm = String(x.name || 'ব্যবহারকারী'), ph = lbPhoto(x.photo);
       var rk = i < 3 ? '<div class="lb-rk m">' + ['🥇', '🥈', '🥉'][i] + '</div>' : '<div class="lb-rk">' + num(i + 1) + '</div>';
       var av = ph ? '<img alt="" referrerpolicy="no-referrer" src="' + esc(ph) + '">' : esc(nm.charAt(0).toUpperCase());
-      var sub = (tab === 'score' ? '' : 'পয়েন্ট ' + num(+x.score || 0) + ' · ') + 'আয়াত ' + num(+x.ay || 0) + ' · হাদিস ' + num(+x.hd || 0) + (tab === 'score' ? ' · তাসবিহ ' + num(+x.tb || 0) + ' · কুইজ ' + num(+x.qz || 0) : ' · স্ট্রিক ' + num(effStreak(x)) + ' দিন');
+      var sub = (tab === 'score' ? '' : 'পয়েন্ট ' + num(+x.score || 0) + ' · ') + 'আয়াত ' + num(+x.ay || 0) + ' · হাদিস ' + num(+x.hd || 0) + (tab === 'score' ? ' · তাসবিহ ' + num(+x.tb || 0) + ' · কুইজ ' + num((+x.qc || 0) + (+x.qw || 0)) : ' · স্ট্রিক ' + num(effStreak(x)) + ' দিন');
       h += '<div class="lb-row' + (me ? ' me' : '') + '">' + rk + '<div class="lb-av">' + av + '</div>' +
            '<div class="lb-nm"><b>' + esc(nm) + '</b><small>' + esc(sub) + '</small></div><div class="lb-v">' + esc(lbVal(tab, x)) + '</div></div>';
     });
     h += '<p class="lb-note">এখানে আপনার নাম ও প্রোফাইল ছবি (থাকলে) সবাই দেখতে পাবে। ' +
-         'পয়েন্ট: প্রতি আয়াত ১০, প্রতি হাদিস ৭, প্রতি তাসবিহ ১, কুইজের প্রতি উত্তর ৩ এবং অন্যান্য প্রতিটি আলাদা বিষয় ৪। স্ট্রিক মানে টানা প্রতিদিন অ্যাপে আসা।</p>';
+         'পয়েন্ট: প্রতি আয়াত ১০, প্রতি হাদিস ৭, প্রতি তাসবিহ ১, কুইজের সঠিক উত্তর ৫, ভুল উত্তর ২ এবং অন্যান্য প্রতিটি আলাদা বিষয় ৪। স্ট্রিক মানে টানা প্রতিদিন অ্যাপে আসা।</p>';
     body.innerHTML = h;
   }
 
@@ -834,7 +864,7 @@
 
   function mergeInto(base, inc) {
     // ইম্পোর্ট/প্রথম-সিঙ্কের জন্য: ইউনিয়ন (কিছু হারায় না)
-    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {}, tpc: {}, qzd: {} } };
+    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {}, tpc: {}, qcd: {}, qwd: {} } };
     function uni(a, b) { var s = {}, r = []; (a || []).concat(b || []).forEach(function (x) { if (typeof x === 'string' && !s[x]) { s[x] = 1; r.push(x); } }); return r; }
     out.bm = uni(base.bm, inc.bm); out.pins = uni(base.pins, inc.pins);
     var nm = {};
@@ -855,7 +885,8 @@
         Object.keys(m).forEach(function (k) { if (Array.isArray(m[k])) m[k].forEach(function (v) { uAdd(f, k, v); }); });
       });
       Object.keys(s.tbd || {}).forEach(function (k) { var v = +s.tbd[k] || 0; if (v > (out.stats.tbd[k] || 0)) out.stats.tbd[k] = v; });
-      Object.keys(s.qzd || {}).forEach(function (k) { var v = +s.qzd[k] || 0; if (v > (out.stats.qzd[k] || 0)) out.stats.qzd[k] = v; });
+      Object.keys(s.qcd || {}).forEach(function (k) { var v = +s.qcd[k] || 0; if (v > (out.stats.qcd[k] || 0)) out.stats.qcd[k] = v; });
+      Object.keys(s.qwd || {}).forEach(function (k) { var v = +s.qwd[k] || 0; if (v > (out.stats.qwd[k] || 0)) out.stats.qwd[k] = v; });
       var L = s.last || {};
       Object.keys(L).forEach(function (k) {
         if (L[k] && typeof L[k] === 'object' && (L[k].t || 0) >= ((out.stats.last[k] || {}).t || 0)) out.stats.last[k] = L[k];
@@ -1211,7 +1242,7 @@
     openModal('<h3 class="pf-mh">আপনার পয়েন্ট</h3>' +
       '<div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;font-weight:800;color:var(--blue)">' + num(total) + '</div><div style="opacity:.7;font-size:13px">মোট পয়েন্ট</div></div>' +
       r('আয়াত পড়া', cs.ay, PT.ay) + r('হাদিস পড়া', cs.hd, PT.hd) + r('তাসবিহ', cs.tb, PT.tb) +
-      r('কুইজের উত্তর', cs.qz, PT.qz) + r('অন্যান্য বিষয় পড়া', cs.tp, PT.tp) +
+      r('কুইজ — সঠিক উত্তর', cs.qc, PT.qc) + r('কুইজ — ভুল উত্তর', cs.qw, PT.qw) + r('অন্যান্য বিষয় পড়া', cs.tp, PT.tp) +
       '<p class="lb-note" style="margin:12px 0 4px">এই পয়েন্ট অনুযায়ী লিডারবোর্ডে আপনার অবস্থান নির্ধারিত হয়।</p>' +
       '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">বন্ধ</button><button class="pf-btn" data-m="lb">লিডারবোর্ড</button></div>',
       function (act) {
