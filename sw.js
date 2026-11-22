@@ -1,8 +1,9 @@
-/* Light of Deen – Service Worker (v2) */
-const VERSION = 'lod-v2';          // অ্যাপের ফাইল (index.html ইত্যাদি)
+/* Light of Deen – Service Worker (v3) */
+const VERSION = 'lod-v3';          // অ্যাপের ফাইল (index.html ইত্যাদি)
 const DATA_CACHE = 'lod-data-v1';  // কুরআন/হাদিস/তাফসীরের ডেটা (আপডেটে মুছবে না)
 const SHELL = ['./', './index.html', './manifest.webmanifest',
-  './icon-192.png', './icon-512.png'];
+  './icon-192.png', './icon-512.png',
+  './profile.js', './firebase-config.js'];
 
 // যেসব সাইটের ডেটা একবার দেখলে ফোনে জমা থাকবে
 const DATA_HOSTS = [
@@ -40,6 +41,17 @@ function staleWhileRevalidate(req, cacheName) {
   );
 }
 
+// আগে নেট (সর্বশেষ কোড পেতে), নেট না থাকলে ক্যাশ
+function networkFirst(req) {
+  return fetch(req).then(res => {
+    if (res && res.ok) {
+      const copy = res.clone();
+      caches.open(VERSION).then(c => c.put(req, copy));
+    }
+    return res;
+  }).catch(() => caches.match(req));
+}
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
@@ -70,6 +82,12 @@ self.addEventListener('fetch', e => {
     return;
   }
 
+  // প্রোফাইল ও Firebase কনফিগ: আগে নেট (পরে বদলালে ভার্সন নম্বর না বাড়ালেও নতুনটা আসবে)
+  if (url.origin === location.origin && /\/(profile|firebase-config)\.js$/.test(url.pathname)) {
+    e.respondWith(networkFirst(req));
+    return;
+  }
+
   // নিজের সাইটের ফাইল: আগে ক্যাশ
   if (url.origin === location.origin) {
     e.respondWith(
@@ -80,5 +98,5 @@ self.addEventListener('fetch', e => {
       }))
     );
   }
-  // বাকি সব (অডিও, বই খোঁজা, অনুবাদ ইত্যাদি): সরাসরি নেট
+  // বাকি সব (অডিও, বই খোঁজা, অনুবাদ, Firebase/Google লগইন ইত্যাদি): সরাসরি নেট
 });
