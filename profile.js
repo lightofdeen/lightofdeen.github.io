@@ -947,10 +947,8 @@
     var btn = reset ? 'রিসেট লিংক পাঠান' : sign ? 'সাইন আপ' : 'লগইন';
     var html = '<h3 class="pf-mh">' + title + '</h3>' +
       (reset ? '<p class="pf-empty" style="padding:0 0 12px;text-align:start">আপনার ইমেইল দিন, পাসওয়ার্ড বদলানোর লিংক পাঠানো হবে।</p>' : '') +
-      (sign ? '<p class="pf-empty" style="padding:0 0 12px;text-align:start">একাউন্ট খুললে আপনার বুকমার্ক, নোট ও পড়ার তথ্য ক্লাউডে সংরক্ষিত থাকবে এবং যেকোনো ডিভাইস থেকে পাবেন।</p>' +
-        '<input class="pf-in" id="pfLName" type="text" maxlength="60" autocomplete="name" placeholder="আপনার নাম">' +
-        '<input class="pf-in" id="pfLUser" type="text" maxlength="20" dir="ltr" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ইউজারনেম (যেমন: abdullah_01)">' +
-        '<div class="pf-hint" style="margin:-4px 2px 10px">' + UN_HELP + '</div>' : '') +
+      (sign ? '<p class="pf-empty" style="padding:0 0 12px;text-align:start">শুধু নাম, ইমেইল ও পাসওয়ার্ড দিন। ছবি, ইউজারনেম ও বাকি তথ্য একাউন্ট খোলার পর দিতে পারবেন।</p>' +
+        '<input class="pf-in" id="pfLName" type="text" maxlength="60" autocomplete="name" placeholder="আপনার নাম">' : '') +
       '<input class="pf-in" id="pfLEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="ইমেইল">' +
       (reset ? '' : '<input class="pf-in" id="pfLPass" type="password" autocomplete="' + (sign ? 'new-password' : 'current-password') + '" placeholder="পাসওয়ার্ড">') +
       '<div class="pf-err" id="pfLErr" role="alert"></div>' +
@@ -989,12 +987,7 @@
       btn.disabled = false;
     }
     err.textContent = '';
-    var unEl = box.querySelector('#pfLUser'), un = unEl ? unEl.value.trim().replace(/^@/, '').toLowerCase() : '';
-    if (mode === 'signup') {
-      if (!nm) { err.textContent = 'আপনার নাম লিখুন'; return; }
-      if (!un) { err.textContent = 'একটি ইউজারনেম দিন'; return; }
-      if (!UN_RE.test(un)) { err.textContent = 'ইউজারনেম: ' + UN_HELP; return; }
-    }
+    if (mode === 'signup' && !nm) { err.textContent = 'আপনার নাম লিখুন'; return; }
     if (!em) { err.textContent = ERR['auth/missing-email']; return; }
     if (mode !== 'reset' && !pw) { err.textContent = ERR['auth/missing-password']; return; }
     btn.disabled = true;
@@ -1010,17 +1003,12 @@
           closeModal();
           f.A.sendEmailVerification(cred.user).catch(function () {});
           var uid = cred.user.uid;
-          return f.A.updateProfile(cred.user, { displayName: nm }).catch(function () {})
-            .then(function () { return claimUsername(un, '', uid).then(function () { return true; }, function (e) { return e || false; }); })
-            .then(function (r) {
-              var ok = (r === true);
-              jset(K.prof, { uid: uid, name: nm, bio: '', gender: '', photo: '', username: ok ? un : '', t: Date.now() });
-              jset(K.user, userInfo(cred.user)); touch('prof'); render(); syncNow(false);
-              toast(ok ? 'একাউন্ট তৈরি হয়েছে — ইমেইলে যাচাই লিংক পাঠানো হয়েছে (স্প্যামও দেখুন)'
-                : (r && r.code === 'lod/username-taken' ? 'একাউন্ট তৈরি হয়েছে, কিন্তু ইউজারনেমটি আগেই নেওয়া — অন্য একটি দিন'
-                  : 'একাউন্ট তৈরি হয়েছে, তবে ইউজারনেম সেভ হয়নি — প্রোফাইলে গিয়ে দিন'));
-              setTimeout(openEdit, 500);
-            });
+          return f.A.updateProfile(cred.user, { displayName: nm }).catch(function () {}).then(function () {
+            jset(K.prof, { uid: uid, name: nm, bio: '', gender: '', photo: '', username: '', t: Date.now() });
+            jset(K.user, userInfo(cred.user)); touch('prof'); render(); syncNow(false);
+            toast('একাউন্ট তৈরি হয়েছে — এবার প্রোফাইল সম্পূর্ণ করুন');
+            setTimeout(openEdit, 600);   // লগইন হওয়ার পর: ছবি, ইউজারনেম, লিঙ্গ, পরিচয়
+          });
         });
       }
       return f.A.signInWithEmailAndPassword(f.auth, em, pw).then(function () {
@@ -1077,9 +1065,9 @@
   }
 
   // ইউজারনেম ইউনিক রাখতে usernames/{নাম} ডকুমেন্টে uid লিখে "দখল" করা হয় (ট্রানজেকশনে)
-  function claimUsername(nu, old, uidArg) {
+  function claimUsername(nu, old) {
     return fbLoad().then(function (f) {
-      var F = f.F, db = f.db, uid = uidArg || user.uid;
+      var F = f.F, db = f.db, uid = user.uid;
       return F.runTransaction(db, function (tx) {
         var nr = nu ? F.doc(db, 'usernames', nu) : null, orf = old ? F.doc(db, 'usernames', old) : null;
         return Promise.all([nr ? tx.get(nr) : null, orf ? tx.get(orf) : null]).then(function (r) {
