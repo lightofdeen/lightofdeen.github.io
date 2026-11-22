@@ -109,13 +109,13 @@ pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius
   <section id="t-dash">
     <div class="card"><h2>সারাংশ</h2><div class="stats" id="dashStats"><span class="muted">লোড হচ্ছে…</span></div>
       <div class="row" style="margin-top:12px"><button class="btn" id="dashRef">রিফ্রেশ</button></div></div>
-    <div class="card"><h2>শীর্ষ ১০ ইউজার (স্কোর অনুযায়ী)</h2><div class="list" id="dashTop"></div></div>
+    <div class="card"><h2>শীর্ষ ১০ ইউজার (পয়েন্ট অনুযায়ী)</h2><div class="list" id="dashTop"></div></div>
   </section>
 
   <section id="t-users" class="hide">
     <div class="card">
       <div class="row">
-        <select id="uMode" style="width:auto"><option value="all">সব ইউজার — সর্বশেষ সক্রিয় আগে</option><option value="lb">লিডারবোর্ড — স্কোর অনুযায়ী</option></select>
+        <select id="uMode" style="width:auto"><option value="all">সব ইউজার — সর্বশেষ সক্রিয় আগে</option><option value="lb">লিডারবোর্ড — পয়েন্ট অনুযায়ী</option></select>
         <input type="search" id="uQ" class="grow" placeholder="নাম / ইউজারনেম / ইমেইল / UID দিয়ে খুঁজুন">
         <button class="btn pri" id="uSearch">খুঁজুন</button>
         <button class="btn" id="uCsv">CSV ডাউনলোড</button>
@@ -242,7 +242,7 @@ const dkey=d=>d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.ge
 function avatar(photo,name){const ch=Array.from(String(name||'?'))[0]||'?';
   return '<div class="av">'+(/^(data:image\/|https:\/\/)/.test(photo||'')?'<img src="'+esc(photo)+'" alt="">':esc(ch.toUpperCase()))+'</div>'}
 function userRow(id,d,extra){return '<div class="it" data-uid="'+esc(id)+'">'+avatar(d.photo,d.name)+
-  '<div class="nm"><b>'+esc(d.name||'নামহীন')+(d.un?' <small>@'+esc(d.un)+'</small>':'')+'</b><small>স্কোর '+(d.score||0)+' · স্ট্রিক '+(d.streak||0)+' · শেষ '+esc(d.last||'—')+'</small></div>'+(extra||'')+'</div>'}
+  '<div class="nm"><b>'+esc(d.name||'নামহীন')+(d.un?' <small>@'+esc(d.un)+'</small>':'')+'</b><small>পয়েন্ট '+(d.score||0)+' · স্ট্রিক '+(d.streak||0)+' · শেষ '+esc(d.last||'—')+'</small></div>'+(extra||'')+'</div>'}
 
 async function loadDash(){
   const box=$('dashStats');box.innerHTML='<span class="muted">লোড হচ্ছে…</span>';
@@ -269,7 +269,7 @@ function ago(d){if(!d)return '—';const m=Math.floor((Date.now()-d.getTime())/6
   if(m<1)return 'এইমাত্র';if(m<60)return m+' মিনিট আগে';const h=Math.floor(m/60);if(h<24)return h+' ঘণ্টা আগে';const dd=Math.floor(h/24);if(dd<30)return dd+' দিন আগে';return d.toLocaleDateString('bn-BD')}
 function rowHtml(r){const online=r.sync&&Date.now()-r.sync.getTime()<86400000;
   return '<div class="it" data-uid="'+esc(r.id)+'">'+avatar(r.photo,r.name)+'<div class="nm"><b>'+esc(r.name||'নামহীন')+(r.un?' <small>@'+esc(r.un)+'</small>':'')+'</b><small>'+
-  esc(r.email||'')+(r.email?' · ':'')+(r.sync?'শেষ সিঙ্ক '+ago(r.sync):'')+(r.score!=null?(r.sync?' · ':'')+'স্কোর '+r.score+' · স্ট্রিক '+(r.streak||0):'')+'</small></div>'+(online?'<span class="tag" style="background:rgba(27,138,75,.15);color:var(--ok)">আজ সক্রিয়</span>':'')+'</div>'}
+  esc(r.email||'')+(r.email?' · ':'')+(r.sync?'শেষ সিঙ্ক '+ago(r.sync):'')+(r.score!=null?(r.sync?' · ':'')+'পয়েন্ট '+r.score+' · স্ট্রিক '+(r.streak||0):'')+'</small></div>'+(online?'<span class="tag" style="background:rgba(27,138,75,.15);color:var(--ok)">আজ সক্রিয়</span>':'')+'</div>'}
 let mode='all',rows={all:[],lb:[]},uLast=null,aToken=null,uMoreOk=false;
 async function idTok(){return auth.currentUser.getIdToken()}
 async function restUsers(token,size){
@@ -341,7 +341,7 @@ function actHtml(u,l){
     return '<div class="muted">• '+esc(k)+': '+esc(String(rest).slice(0,60))+(v.t?' ('+ago(new Date(v.t))+')':'')+'</div>'}).join('');
   const notes=(u.notes||[]).slice().sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,5).map(n=>'<div class="muted">📝 '+esc(n.k)+': '+esc(String(n.x||'').slice(0,80))+'</div>').join('');
   return '<h2 style="margin-top:14px">কার্যক্রম</h2><div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">'+
-   [['মোট সময়',fmt(secs)],['সক্রিয় দিন',active],['আয়াত পড়া',cnt(st.ay)],['সূরা খোলা',Object.keys(st.read||{}).length],['হাদিস পড়া',cnt(st.hd)],['তাসবিহ',tb]].map(x=>'<div class="st"><b style="font-size:18px">'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>'+chart+
+   [['মোট সময়',fmt(secs)],['সক্রিয় দিন',active],['আয়াত পড়া',cnt(st.ay)],['সূরা খোলা',Object.keys(st.read||{}).length],['হাদিস পড়া',cnt(st.hd)],['তাসবিহ',tb],['কুইজ উত্তর',Object.values(st.qzd||{}).reduce((x,y)=>x+(+y||0),0)],['অন্যান্য বিষয়',cnt(st.tpc)]].map(x=>'<div class="st"><b style="font-size:18px">'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>'+chart+
    (lastH?'<div style="margin-top:10px"><b>শেষ পড়া</b>'+lastH+'</div>':'')+(notes?'<div style="margin-top:10px"><b>সাম্প্রতিক নোট</b>'+notes+'</div>':'');
 }
 
@@ -360,7 +360,7 @@ async function openUser(uid){
     $('modalBody').innerHTML=MHEAD+'<div class="row">'+avatar(p.photo||l.photo||u.photo,name)+'<div class="grow"><b>'+esc(name)+'</b> '+(blocked?'<span class="tag bad">ব্লক করা</span>':'')+'<br><span class="muted">'+esc(u.email||'ইমেইল নেই')+'</span></div></div>'+
     '<div class="kv"><span>UID</span><span>'+esc(uid)+'</span><span>ইউজারনেম</span><span>'+esc(p.username||l.un||'—')+'</span><span>পরিচয়</span><span>'+esc(p.bio||'—')+'</span>'+
     '<span>বুকমার্ক</span><span>'+((u.bm||[]).length)+'</span><span>পিন / নোট</span><span>'+((u.pins||[]).length)+' / '+((u.notes||[]).length)+'</span>'+
-    '<span>সক্রিয় দিন</span><span>'+days+'</span><span>স্কোর / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+actHtml(u,l)+
+    '<span>সক্রিয় দিন</span><span>'+days+'</span><span>পয়েন্ট / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+actHtml(u,l)+
     '<div class="row" style="margin-top:14px">'+
     (blocked?'<button class="btn" data-a="unblock">আনব্লক</button>':'<button class="btn bad" data-a="block">ব্লক করুন</button>')+
     '<button class="btn" data-a="lbdel">লিডারবোর্ড থেকে সরান</button>'+

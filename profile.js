@@ -18,7 +18,7 @@
 
   function arr(k) { var v = jget(k, []); return Array.isArray(v) ? v : []; }
   function stats() { var s = jget(K.stats, null); if (!s || typeof s !== 'object') s = {}; if (!s.days || typeof s.days !== 'object') s.days = {}; if (!s.read || typeof s.read !== 'object') s.read = {};
-    ['ay', 'hd', 'tbd', 'last'].forEach(function (f) { if (!s[f] || typeof s[f] !== 'object' || Array.isArray(s[f])) s[f] = {}; });
+    ['ay', 'hd', 'tbd', 'last', 'tpc', 'qzd'].forEach(function (f) { if (!s[f] || typeof s[f] !== 'object' || Array.isArray(s[f])) s[f] = {}; });
     return s; }
   function meta() { var m = jget(K.meta, null); return (m && typeof m === 'object') ? m : {}; }
 
@@ -109,6 +109,8 @@
     if (!title) return;
     var s = stats();
     s.last.tp = { n: String(title), c: cat || '', f: f || '', a: (a === undefined || a === null) ? '' : a, ct: ct || 0, t: Date.now() };
+    // পয়েন্টের জন্য: প্রতিটি আলাদা বিষয় একবার গোনা হয় (হাদিস বইয়ের নেভিগেশন ও বিষয়ভিত্তিক হাদিস বাদ)
+    if (f !== 'hbook' && ct !== 2) setAdd(s.tpc, String(cat || 'x'), String(title));
     jset(K.stats, s); touch('stats');
   }
 
@@ -117,6 +119,12 @@
     if (!pendTb) return;
     var s = stats(), k = dkey();
     s.tbd[k] = (+s.tbd[k] || 0) + pendTb; pendTb = 0;
+    jset(K.stats, s); touch('stats');
+  }
+  var lastQz = 0;
+  function onQuiz() {
+    var now = Date.now(); if (now - lastQz < 600) return; lastQz = now;   // দ্রুত দুইবার চাপলে একবার গোনা
+    var s = stats(), k = dkey(); s.qzd[k] = (+s.qzd[k] || 0) + 1;
     jset(K.stats, s); touch('stats');
   }
   function onTasbih() { pendTb++; clearTimeout(tbTimer); tbTimer = setTimeout(flushTb, 1500); }
@@ -177,6 +185,8 @@
     }
     // তাসবিহ
     wrap('incrementTasbih', onTasbih);
+    // কুইজ: প্রতিটি উত্তর দিলে
+    wrap('quizAns', onQuiz);
     // সর্বশেষ বিষয়
     wrap('openSub', function (name) { if (gTopic() === 1) setTopic(name, gTopicName(1), 'sub', name, 1); });
     wrap('openHadithSub', function (name) { setTopic(name, 'বিষয়ভিত্তিক হাদিস', 'sub', name, 2); });
@@ -236,10 +246,11 @@
     var set = {}; active.forEach(function (d) { set[d] = 1; });
     var today = dnum(dkey()), cur = 0, d = set[today] ? today : today - 1;
     while (set[d]) { cur++; d--; }
-    var td = dkey(), tb = 0;
+    var td = dkey(), tb = 0, qz = 0;
     Object.keys(s.tbd).forEach(function (k) { tb += (+s.tbd[k] || 0); });
+    Object.keys(s.qzd).forEach(function (k) { qz += (+s.qzd[k] || 0); });
     return { secs: secs, activeDays: active.length, streak: cur, best: best, read: Object.keys(s.read).length,
-             ay: setCount(s.ay), hd: setCount(s.hd), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {}, lastDay: lastDay };
+             ay: setCount(s.ay), hd: setCount(s.hd), qz: qz, tp: setCount(s.tpc), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {}, lastDay: lastDay };
   }
 
   function fmtTime(secs) {
@@ -502,7 +513,8 @@
       var b = e.target.closest('[data-a]'); if (!b) return;
       var a = b.getAttribute('data-a');
       if (a === 'login') login();
-      else if (a === 'logout') logout();
+      else if (a === 'logout') confirmLogout();
+      else if (a === 'points') openPoints();
       else if (a === 'edit') openEdit();
       else if (a === 'export') doExport();
       else if (a === 'import') doImport();
@@ -578,7 +590,7 @@
       '<div class="pf-card">' +
         '<div class="pf-user"><div class="pf-av" id="pfAv"></div><div style="min-width:0"><div class="pf-name" id="pfName"></div><div class="pf-mail" id="pfMail"></div><div id="pfExtra"></div></div></div>' +
         '<div class="pf-acts">' +
-          (u ? '<button class="pf-act" data-a="edit">' + IC.note.replace('class="i" ', '') + '<span>এডিট</span></button><button class="pf-act" data-a="logout">' + IC.out + '<span>লগ আউট</span></button>'
+          (u ? '<button class="pf-act" data-a="edit">' + IC.note.replace('class="i" ', '') + '<span>এডিট</span></button><button class="pf-act" data-a="points">' + IC.cup + '<span>পয়েন্ট</span></button>'
              : '<button class="pf-act" data-a="login">' + IC.login + '<span>লগইন</span></button>') +
         '</div>' +
       '</div>' +
@@ -605,7 +617,8 @@
         row(IC.fire, num(cs.streak), 'স্ট্রিক') +
         row(IC.cup, num(cs.best), 'সেরা স্ট্রিক') +
         row(IC.tasbih, num(cs.tbToday), 'আজকের তাসবিহ') +
-      '</div></div>';
+      '</div></div>' +
+      (u ? '<button class="pf-btn ghost pf-full pf-logout" data-a="logout" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0 8px;color:#e5484d">' + IC.out.replace('<svg ', '<svg width="20" height="20" ') + '<span>লগ আউট</span></button>' : '');
 
     var av = box.querySelector('#pfAv');
     if (u && u.photo) {
@@ -655,10 +668,12 @@
      স্কোর = আয়াত + হাদিস + (তাসবিহ ÷ ৩৩) + (সময় ÷ ১০ মিনিট) + (সেরা স্ট্রিক × ৫)
      ===================================================================== */
   var LB = { tab: 'score', cache: {}, busy: false, err: '' };
-  var LB_TABS = [['score', 'সার্বিক'], ['streak', 'স্ট্রিক'], ['ay', 'আয়াত'], ['hd', 'হাদিস'], ['tb', 'তাসবিহ'], ['secs', 'সময়']];
+  var LB_TABS = [['score', 'পয়েন্ট'], ['streak', 'স্ট্রিক'], ['ay', 'আয়াত'], ['hd', 'হাদিস'], ['tb', 'তাসবিহ'], ['secs', 'সময়']];
   var thumbC = { src: '', v: '' }, lbTimer = null;
 
-  function lbScore(cs) { return cs.ay + cs.hd + Math.floor(cs.tb / 33) + Math.floor(cs.secs / 600) + cs.best * 5; }
+  // পয়েন্ট: আয়াত ১০, হাদিস ৭, তাসবিহ ১ (প্রতিটি), কুইজ ৩ (প্রতি উত্তর), অন্যান্য বিষয় ৪ (প্রতিটি আলাদা বিষয়)
+  var PT = { ay: 10, hd: 7, tb: 1, qz: 3, tp: 4 };
+  function lbScore(cs) { return cs.ay * PT.ay + cs.hd * PT.hd + cs.tb * PT.tb + cs.qz * PT.qz + cs.tp * PT.tp; }
   function effStreak(x) {
     var y = dkey(new Date(Date.now() - 86400000));
     return (x && x.last && x.last >= y) ? (+x.streak || 0) : 0;
@@ -688,7 +703,7 @@
       var cs = computeStats(), p = op || profFor(uid) || {};
       var name = String(p.name || u.displayName || p.username || '').trim().slice(0, 60) || 'ব্যবহারকারী';
       lbThumb(p.photo || u.photoURL || '', function (th) {
-        var d = { name: name, un: String(p.username || '').slice(0, 21), photo: th, ay: cs.ay, hd: cs.hd, tb: cs.tb, secs: cs.secs,
+        var d = { name: name, un: String(p.username || '').slice(0, 21), photo: th, ay: cs.ay, hd: cs.hd, tb: cs.tb, qz: cs.qz, tp: cs.tp, secs: cs.secs,
                   streak: cs.streak, best: cs.best, days: cs.activeDays, score: lbScore(cs), last: cs.lastDay || '' };
         var sig = uid + '|' + JSON.stringify(d), now = Date.now();
         var lastT = +sget('lodLbT') || 0, lastS = sget('lodLbSig') || '';
@@ -709,6 +724,7 @@
   function lbVal(tab, x) {
     if (tab === 'streak') return num(effStreak(x)) + ' দিন';
     if (tab === 'secs') return fmtTime(+x.secs || 0);
+    if (tab === 'score') return num(+x.score || 0) + ' পয়েন্ট';
     return num(+x[tab] || 0);
   }
   function lbPhoto(s) { return (typeof s === 'string' && /^(data:image\/|https:\/\/)/.test(s)) ? s : ''; }
@@ -735,12 +751,12 @@
       var me = user && x.uid === user.uid, nm = String(x.name || 'ব্যবহারকারী'), ph = lbPhoto(x.photo);
       var rk = i < 3 ? '<div class="lb-rk m">' + ['🥇', '🥈', '🥉'][i] + '</div>' : '<div class="lb-rk">' + num(i + 1) + '</div>';
       var av = ph ? '<img alt="" referrerpolicy="no-referrer" src="' + esc(ph) + '">' : esc(nm.charAt(0).toUpperCase());
-      var sub = 'আয়াত ' + num(+x.ay || 0) + ' · হাদিস ' + num(+x.hd || 0) + ' · স্ট্রিক ' + num(effStreak(x)) + ' দিন';
+      var sub = (tab === 'score' ? '' : 'পয়েন্ট ' + num(+x.score || 0) + ' · ') + 'আয়াত ' + num(+x.ay || 0) + ' · হাদিস ' + num(+x.hd || 0) + (tab === 'score' ? ' · তাসবিহ ' + num(+x.tb || 0) + ' · কুইজ ' + num(+x.qz || 0) : ' · স্ট্রিক ' + num(effStreak(x)) + ' দিন');
       h += '<div class="lb-row' + (me ? ' me' : '') + '">' + rk + '<div class="lb-av">' + av + '</div>' +
            '<div class="lb-nm"><b>' + esc(nm) + '</b><small>' + esc(sub) + '</small></div><div class="lb-v">' + esc(lbVal(tab, x)) + '</div></div>';
     });
     h += '<p class="lb-note">এখানে আপনার নাম ও প্রোফাইল ছবি (থাকলে) সবাই দেখতে পাবে। ' +
-         'স্কোর = আয়াত + হাদিস + (তাসবিহ ÷ ৩৩) + (সময় ÷ ১০ মিনিট) + (সেরা স্ট্রিক × ৫)। স্ট্রিক মানে টানা প্রতিদিন অ্যাপে আসা।</p>';
+         'পয়েন্ট: প্রতি আয়াত ১০, প্রতি হাদিস ৭, প্রতি তাসবিহ ১, কুইজের প্রতি উত্তর ৩ এবং অন্যান্য প্রতিটি আলাদা বিষয় ৪। স্ট্রিক মানে টানা প্রতিদিন অ্যাপে আসা।</p>';
     body.innerHTML = h;
   }
 
@@ -818,7 +834,7 @@
 
   function mergeInto(base, inc) {
     // ইম্পোর্ট/প্রথম-সিঙ্কের জন্য: ইউনিয়ন (কিছু হারায় না)
-    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {} } };
+    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {}, tpc: {}, qzd: {} } };
     function uni(a, b) { var s = {}, r = []; (a || []).concat(b || []).forEach(function (x) { if (typeof x === 'string' && !s[x]) { s[x] = 1; r.push(x); } }); return r; }
     out.bm = uni(base.bm, inc.bm); out.pins = uni(base.pins, inc.pins);
     var nm = {};
@@ -834,11 +850,12 @@
       if (!s) return;
       Object.keys(s.days || {}).forEach(function (k) { var v = +s.days[k] || 0; if (v > (out.stats.days[k] || 0)) out.stats.days[k] = v; });
       Object.keys(s.read || {}).forEach(function (k) { out.stats.read[k] = 1; });
-      ['ay', 'hd'].forEach(function (f) {
+      ['ay', 'hd', 'tpc'].forEach(function (f) {
         var m = s[f] || {};
         Object.keys(m).forEach(function (k) { if (Array.isArray(m[k])) m[k].forEach(function (v) { uAdd(f, k, v); }); });
       });
       Object.keys(s.tbd || {}).forEach(function (k) { var v = +s.tbd[k] || 0; if (v > (out.stats.tbd[k] || 0)) out.stats.tbd[k] = v; });
+      Object.keys(s.qzd || {}).forEach(function (k) { var v = +s.qzd[k] || 0; if (v > (out.stats.qzd[k] || 0)) out.stats.qzd[k] = v; });
       var L = s.last || {};
       Object.keys(L).forEach(function (k) {
         if (L[k] && typeof L[k] === 'object' && (L[k].t || 0) >= ((out.stats.last[k] || {}).t || 0)) out.stats.last[k] = L[k];
@@ -1172,6 +1189,35 @@
         });
       }
     );
+  }
+
+  function confirmLogout() {
+    openModal('<h3 class="pf-mh">লগ আউট</h3>' +
+      '<p class="pf-empty" style="padding:0 0 14px;text-align:start">আপনি কি সত্যিই লগ আউট করতে চান?</p>' +
+      '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">না, থাকুন</button>' +
+      '<button class="pf-btn" data-m="yes" style="background:#e5484d;color:#fff">হ্যাঁ, লগ আউট</button></div>',
+      function (act) {
+        if (act === 'x') { closeModal(); return; }
+        if (act === 'yes') { closeModal(); logout(); }
+      });
+  }
+
+  function openPoints() {
+    var cs = computeStats(), total = lbScore(cs);
+    function r(label, n, per) {
+      return '<div style="display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)">' +
+        '<span>' + label + ' <small style="opacity:.65">' + num(n) + ' × ' + num(per) + '</small></span><b>' + num(n * per) + '</b></div>';
+    }
+    openModal('<h3 class="pf-mh">আপনার পয়েন্ট</h3>' +
+      '<div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;font-weight:800;color:var(--blue)">' + num(total) + '</div><div style="opacity:.7;font-size:13px">মোট পয়েন্ট</div></div>' +
+      r('আয়াত পড়া', cs.ay, PT.ay) + r('হাদিস পড়া', cs.hd, PT.hd) + r('তাসবিহ', cs.tb, PT.tb) +
+      r('কুইজের উত্তর', cs.qz, PT.qz) + r('অন্যান্য বিষয় পড়া', cs.tp, PT.tp) +
+      '<p class="lb-note" style="margin:12px 0 4px">এই পয়েন্ট অনুযায়ী লিডারবোর্ডে আপনার অবস্থান নির্ধারিত হয়।</p>' +
+      '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">বন্ধ</button><button class="pf-btn" data-m="lb">লিডারবোর্ড</button></div>',
+      function (act) {
+        if (act === 'x') { closeModal(); return; }
+        if (act === 'lb') { closeModal(); if (typeof switchView === 'function') switchView('leaderboard'); }
+      });
   }
 
   function logout() {
