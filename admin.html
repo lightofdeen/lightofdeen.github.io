@@ -50,6 +50,7 @@ label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
 .modal-bg.show{display:flex}
 .modal{background:var(--card);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:18px}
+.mhead{position:sticky;top:-18px;z-index:2;background:var(--card);display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-18px -18px 12px;padding:12px 18px;border-bottom:1px solid var(--line)}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:14px;margin:10px 0}
 .kv span:nth-child(odd){color:var(--muted)}
 .kv span{word-break:break-all}
@@ -335,16 +336,19 @@ function actHtml(u,l){
    (lastH?'<div style="margin-top:10px"><b>শেষ পড়া</b>'+lastH+'</div>':'')+(notes?'<div style="margin-top:10px"><b>সাম্প্রতিক নোট</b>'+notes+'</div>':'');
 }
 
-function closeModal(){$('modal').classList.remove('show')}
+function closeModal(){$('modal').classList.remove('show');if(history.state&&history.state.m)history.back()}
+window.addEventListener('popstate',()=>$('modal').classList.remove('show'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+const MHEAD='<div class="mhead"><b>ইউজারের বিবরণ</b><button class="btn" data-a="close">✕ বন্ধ</button></div>';
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
 async function openUser(uid){
-  $('modalBody').innerHTML='<p class="muted">লোড হচ্ছে…</p>';$('modal').classList.add('show');
+  $('modalBody').innerHTML=MHEAD+'<p class="muted">লোড হচ্ছে…</p>';$('modalBody').onclick=ev=>{if(ev.target.closest('[data-a=close]'))closeModal()};$('modal').classList.add('show');if(!(history.state&&history.state.m))history.pushState({m:1},'');
   try{
     const [us,ls,bs]=await Promise.all([F.getDoc(F.doc(db,'users',uid)),F.getDoc(F.doc(db,'leaderboard',uid)),F.getDoc(F.doc(db,'blocked',uid))]);
     const u=us.exists()?us.data():{}, l=ls.exists()?ls.data():{}, p=u.prof||{}, name=p.name||l.name||u.name||'নামহীন', blocked=bs.exists();
     const days=u.stats&&u.stats.days?Object.keys(u.stats.days).length:0;
     const upd=u.updatedAt&&u.updatedAt.toDate?u.updatedAt.toDate().toLocaleString('bn-BD'):'—';
-    $('modalBody').innerHTML='<div class="row">'+avatar(p.photo||l.photo||u.photo,name)+'<div class="grow"><b>'+esc(name)+'</b> '+(blocked?'<span class="tag bad">ব্লক করা</span>':'')+'<br><span class="muted">'+esc(u.email||'ইমেইল নেই')+'</span></div></div>'+
+    $('modalBody').innerHTML=MHEAD+'<div class="row">'+avatar(p.photo||l.photo||u.photo,name)+'<div class="grow"><b>'+esc(name)+'</b> '+(blocked?'<span class="tag bad">ব্লক করা</span>':'')+'<br><span class="muted">'+esc(u.email||'ইমেইল নেই')+'</span></div></div>'+
     '<div class="kv"><span>UID</span><span>'+esc(uid)+'</span><span>ইউজারনেম</span><span>'+esc(p.username||l.un||'—')+'</span><span>পরিচয়</span><span>'+esc(p.bio||'—')+'</span>'+
     '<span>বুকমার্ক</span><span>'+((u.bm||[]).length)+'</span><span>পিন / নোট</span><span>'+((u.pins||[]).length)+' / '+((u.notes||[]).length)+'</span>'+
     '<span>সক্রিয় দিন</span><span>'+days+'</span><span>স্কোর / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+actHtml(u,l)+
@@ -370,7 +374,7 @@ async function openUser(uid){
         if(!$('t-users').classList.contains('hide')){loaded.users=1;loadUsers(true)}
         if(!$('t-blocked').classList.contains('hide'))loadBlocked();
       }catch(e){toast(errMsg(e))}};
-  }catch(e){$('modalBody').innerHTML='<p>'+esc(errMsg(e))+'</p><button class="btn" onclick="document.getElementById(\'modal\').classList.remove(\'show\')">বন্ধ</button>'}
+  }catch(e){$('modalBody').innerHTML=MHEAD+'<p>'+esc(errMsg(e))+'</p>'}
 }
 
 /* ---------- ব্লক তালিকা ---------- */
