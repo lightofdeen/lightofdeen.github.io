@@ -113,10 +113,12 @@ pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius
   <section id="t-users" class="hide">
     <div class="card">
       <div class="row">
+        <select id="uMode" style="width:auto"><option value="all">সব ইউজার — সর্বশেষ সক্রিয় আগে</option><option value="lb">লিডারবোর্ড — স্কোর অনুযায়ী</option></select>
         <input type="search" id="uQ" class="grow" placeholder="নাম / ইউজারনেম / ইমেইল / UID দিয়ে খুঁজুন">
         <button class="btn pri" id="uSearch">খুঁজুন</button>
+        <button class="btn" id="uCsv">CSV ডাউনলোড</button>
       </div>
-      <p class="muted">নাম দিয়ে খুঁজলে নিচের লোড করা তালিকায় ফিল্টার হয়। পুরো ইমেইল (a@b.com), সঠিক ইউজারনেম বা UID দিলে সরাসরি ডাটাবেস থেকে আনে।</p>
+      <p class="muted">"সব ইউজার" মোডে যারা অন্তত একবার লগইন করে সিঙ্ক করেছে তারা সবাই আসে। খুঁজলে লোড করা তালিকায় ফিল্টার হয়; পুরো ইমেইল, সঠিক ইউজারনেম বা UID দিলে সরাসরি ডাটাবেস থেকে আনে। কারও নামে চাপ দিলে তার কার্যক্রম দেখা যাবে।</p>
     </div>
     <div class="card"><div class="list" id="uList"></div>
       <div class="row" style="margin-top:10px"><button class="btn" id="uMore">আরও লোড করুন</button><span class="muted" id="uInfo"></span></div></div>
@@ -238,40 +240,96 @@ async function loadDash(){
     const st=[['সিঙ্ক করা ইউজার',users],['লিডারবোর্ডে',lb],['আজ সক্রিয়',today],['গত ৭ দিনে সক্রিয়',week],['ব্লক করা',blk]];
     box.innerHTML=st.map(x=>'<div class="st"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join('');
     const top=await F.getDocs(F.query(col,F.orderBy('score','desc'),F.limit(10)));
-    $('dashTop').innerHTML=top.docs.map(d=>userRow(d.id,d.data())).join('')||'<p class="muted">কেউ নেই</p>';
+    $('dashTop').innerHTML=top.docs.map(d=>{const x=d.data();return rowHtml({id:d.id,name:x.name,un:x.un,photo:x.photo,score:x.score||0,streak:x.streak||0})}).join('')||'<p class="muted">কেউ নেই</p>';
   }catch(e){box.innerHTML='<span class="muted">'+esc(errMsg(e))+'</span>'}
 }
 $('dashRef').onclick=loadDash;
 
 /* ---------- ইউজার ---------- */
-let uLast=null,uRows=[];
-async function loadUsers(reset){
-  if(reset){uLast=null;uRows=[]}
-  const parts=[F.collection(db,'leaderboard'),F.orderBy('score','desc')];if(uLast)parts.push(F.startAfter(uLast));parts.push(F.limit(50));
-  try{const sn=await F.getDocs(F.query(...parts));
-    sn.docs.forEach(d=>uRows.push({id:d.id,d:d.data()}));uLast=sn.docs[sn.docs.length-1]||uLast;
-    $('uMore').classList.toggle('hide',sn.docs.length<50);renderUsers(uRows)}catch(e){toast(errMsg(e))}
+const DB_REST='https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(cfg.projectId)+'/databases/(default)/documents';
+function fsv(v){if(!v)return null;if('stringValue'in v)return v.stringValue;if('integerValue'in v)return +v.integerValue;if('doubleValue'in v)return v.doubleValue;if('booleanValue'in v)return v.booleanValue;
+  if('timestampValue'in v)return new Date(v.timestampValue);if('mapValue'in v){const o={},f=v.mapValue.fields||{};for(const k in f)o[k]=fsv(f[k]);return o}
+  if('arrayValue'in v)return (v.arrayValue.values||[]).map(fsv);return null}
+function ago(d){if(!d)return '—';const m=Math.floor((Date.now()-d.getTime())/60000);
+  if(m<1)return 'এইমাত্র';if(m<60)return m+' মিনিট আগে';const h=Math.floor(m/60);if(h<24)return h+' ঘণ্টা আগে';const dd=Math.floor(h/24);if(dd<30)return dd+' দিন আগে';return d.toLocaleDateString('bn-BD')}
+function rowHtml(r){const online=r.sync&&Date.now()-r.sync.getTime()<86400000;
+  return '<div class="it" data-uid="'+esc(r.id)+'">'+avatar(r.photo,r.name)+'<div class="nm"><b>'+esc(r.name||'নামহীন')+(r.un?' <small>@'+esc(r.un)+'</small>':'')+'</b><small>'+
+  esc(r.email||'')+(r.email?' · ':'')+(r.sync?'শেষ সিঙ্ক '+ago(r.sync):'')+(r.score!=null?(r.sync?' · ':'')+'স্কোর '+r.score+' · স্ট্রিক '+(r.streak||0):'')+'</small></div>'+(online?'<span class="tag" style="background:rgba(27,138,75,.15);color:var(--ok)">আজ সক্রিয়</span>':'')+'</div>'}
+let mode='all',rows={all:[],lb:[]},uLast=null,aToken=null,uMoreOk=false;
+async function idTok(){return auth.currentUser.getIdToken()}
+async function restUsers(token,size){
+  const q=['pageSize='+size,'orderBy='+encodeURIComponent('updatedAt desc')];
+  ['name','email','updatedAt','prof.name','prof.username'].forEach(f=>q.push('mask.fieldPaths='+encodeURIComponent(f)));
+  if(token)q.push('pageToken='+encodeURIComponent(token));
+  const r=await fetch(DB_REST+'/users?'+q.join('&'),{headers:{Authorization:'Bearer '+await idTok()}});
+  if(!r.ok){const j=await r.json().catch(()=>({}));const e=new Error((j.error&&j.error.message)||('HTTP '+r.status));if(r.status===403)e.code='permission-denied';throw e}
+  const j=await r.json();
+  return {next:j.nextPageToken||null,rows:(j.documents||[]).map(d=>{const f=d.fields||{},p=fsv(f.prof)||{};
+    return {id:d.name.split('/').pop(),name:p.name||fsv(f.name)||'',un:p.username||'',email:fsv(f.email)||'',sync:fsv(f.updatedAt)||new Date(d.updateTime)}})};
 }
-function renderUsers(rows){$('uList').innerHTML=rows.map(r=>userRow(r.id,r.d)).join('')||'<p class="muted">কোনো ইউজার নেই</p>';$('uInfo').textContent=rows.length+' জন দেখানো হচ্ছে'}
+async function loadUsers(reset){
+  try{
+    if(mode==='all'){
+      if(reset){rows.all=[];aToken=null}
+      const r=await restUsers(aToken,100);rows.all.push(...r.rows);aToken=r.next;uMoreOk=!!aToken;
+    }else{
+      if(reset){rows.lb=[];uLast=null}
+      const parts=[F.collection(db,'leaderboard'),F.orderBy('score','desc')];if(uLast)parts.push(F.startAfter(uLast));parts.push(F.limit(50));
+      const sn=await F.getDocs(F.query(...parts));
+      sn.docs.forEach(d=>{const x=d.data();rows.lb.push({id:d.id,name:x.name,un:x.un,photo:x.photo,score:x.score||0,streak:x.streak||0})});
+      uLast=sn.docs[sn.docs.length-1]||uLast;uMoreOk=sn.docs.length>=50;
+    }
+    renderUsers(rows[mode]);
+  }catch(e){toast(errMsg(e))}
+}
+function renderUsers(list){$('uList').innerHTML=list.map(rowHtml).join('')||'<p class="muted">কোনো ইউজার নেই</p>';
+  $('uMore').classList.toggle('hide',!uMoreOk);$('uInfo').textContent=list.length+' জন দেখানো হচ্ছে'}
+$('uMode').onchange=e=>{mode=e.target.value;$('uQ').value='';if(rows[mode].length)renderUsers(rows[mode]);else loadUsers(true)};
 $('uMore').onclick=()=>loadUsers(false);
 $('uSearch').onclick=async()=>{
-  const q=$('uQ').value.trim();if(!q){renderUsers(uRows);return}
-  const lc=q.toLowerCase();let found=[];
-  try{
-    if(q.includes('@')){const sn=await F.getDocs(F.query(F.collection(db,'users'),F.where('email','==',q),F.limit(5)));
-      for(const d of sn.docs){const l=await F.getDoc(F.doc(db,'leaderboard',d.id));const u=d.data();found.push({id:d.id,d:l.exists()?l.data():{name:u.name,photo:u.photo}})}}
-    else{
-      found=uRows.filter(r=>[r.d.name,r.d.un,r.id].some(v=>String(v||'').toLowerCase().includes(lc)));
-      if(!found.length){let uid=null;const un=await F.getDoc(F.doc(db,'usernames',lc));if(un.exists())uid=un.data().uid;else if(/^[A-Za-z0-9]{20,}$/.test(q))uid=q;
-        if(uid){const l=await F.getDoc(F.doc(db,'leaderboard',uid));if(l.exists())found.push({id:uid,d:l.data()});else{const u=await F.getDoc(F.doc(db,'users',uid));if(u.exists())found.push({id:uid,d:{name:u.data().name,photo:u.data().photo}})}}}
-    }
-  }catch(e){toast(errMsg(e))}
-  renderUsers(found);if(!found.length)toast('পাওয়া যায়নি');
+  const q=$('uQ').value.trim();if(!q){renderUsers(rows[mode]);return}
+  const lc=q.toLowerCase();
+  let found=rows[mode].filter(r=>[r.name,r.un,r.email,r.id].some(v=>String(v||'').toLowerCase().includes(lc)));
+  if(!found.length){
+    try{let uid=null;
+      if(q.includes('@')){const sn=await F.getDocs(F.query(F.collection(db,'users'),F.where('email','==',q),F.limit(1)));if(sn.docs[0])uid=sn.docs[0].id}
+      else{const un=await F.getDoc(F.doc(db,'usernames',lc));if(un.exists())uid=un.data().uid;else if(/^[A-Za-z0-9]{20,}$/.test(q))uid=q}
+      if(uid){const u=await F.getDoc(F.doc(db,'users',uid));if(u.exists()){const x=u.data(),p=x.prof||{};
+        found.push({id:uid,name:p.name||x.name,un:p.username,email:x.email,sync:x.updatedAt&&x.updatedAt.toDate?x.updatedAt.toDate():null})}}
+    }catch(e){toast(errMsg(e))}
+  }
+  renderUsers(found);$('uMore').classList.add('hide');if(!found.length)toast('পাওয়া যায়নি'+(uMoreOk?' — "আরও লোড করুন" দিয়ে আবার খুঁজুন':''));
 };
 $('uQ').addEventListener('keydown',e=>{if(e.key==='Enter')$('uSearch').click()});
+$('uCsv').onclick=async e=>{
+  if(!confirm('সব ইউজারের তালিকা নামানো হবে। ইউজার প্রতি ১টি Firestore রিড খরচ হবে (ফ্রি সীমা দিনে ৫০,০০০)। চালিয়ে যাবেন?'))return;
+  e.target.disabled=true;
+  try{let all=[],tk=null;do{const r=await restUsers(tk,300);all.push(...r.rows);tk=r.next}while(tk&&all.length<20000);
+    const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+    const csv='﻿uid,name,username,email,last_sync\n'+all.map(r=>[r.id,r.name,r.un,r.email,r.sync?r.sync.toISOString():''].map(q).join(',')).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='lod-users-'+dkey(new Date())+'.csv';a.click();toast(all.length+' জন ডাউনলোড হয়েছে')}
+  catch(x){toast(errMsg(x))}e.target.disabled=false};
 document.addEventListener('click',e=>{const it=e.target.closest('.it[data-uid]');if(it)openUser(it.dataset.uid)});
 
 /* ---------- ইউজারের বিস্তারিত ---------- */
+function actHtml(u,l){
+  const st=u.stats||{},days=st.days||{},tbd=st.tbd||{};
+  const secs=Object.values(days).reduce((a,b)=>a+(+b||0),0),active=Object.values(days).filter(v=>v>=10).length;
+  const cnt=m=>Object.values(m||{}).reduce((a,b)=>a+(Array.isArray(b)?b.length:0),0);
+  const tb=Object.values(tbd).reduce((a,b)=>a+(+b||0),0);
+  const fmt=x=>x<60?x+' সে':Math.floor(x/60)<60?Math.floor(x/60)+' মি':Math.floor(x/3600)+' ঘ '+Math.floor(x%3600/60)+' মি';
+  const bars=[];let mx=1;
+  for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000),k=dkey(d),v=+days[k]||0;mx=Math.max(mx,v);bars.push([k,v])}
+  const chart='<div style="display:flex;align-items:flex-end;gap:3px;height:70px;margin:8px 0 2px">'+bars.map(b=>'<div title="'+b[0]+' — '+fmt(b[1])+'" style="flex:1;background:'+(b[1]?'var(--pri)':'var(--line)')+';height:'+Math.max(4,Math.round(b[1]/mx*100))+'%;border-radius:3px"></div>').join('')+'</div><div class="muted" style="display:flex;justify-content:space-between"><span>'+bars[0][0].slice(5)+'</span><span>গত ১৪ দিনের ব্যবহার</span><span>আজ</span></div>';
+  const last=st.last||{};
+  const lastH=Object.keys(last).map(k=>{const v=last[k]||{};const rest=Object.keys(v).filter(x=>x!=='t').map(x=>v[x]).join(' · ');
+    return '<div class="muted">• '+esc(k)+': '+esc(String(rest).slice(0,60))+(v.t?' ('+ago(new Date(v.t))+')':'')+'</div>'}).join('');
+  const notes=(u.notes||[]).slice().sort((a,b)=>(b.t||0)-(a.t||0)).slice(0,5).map(n=>'<div class="muted">📝 '+esc(n.k)+': '+esc(String(n.x||'').slice(0,80))+'</div>').join('');
+  return '<h2 style="margin-top:14px">কার্যক্রম</h2><div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">'+
+   [['মোট সময়',fmt(secs)],['সক্রিয় দিন',active],['আয়াত পড়া',cnt(st.ay)],['সূরা খোলা',Object.keys(st.read||{}).length],['হাদিস পড়া',cnt(st.hd)],['তাসবিহ',tb]].map(x=>'<div class="st"><b style="font-size:18px">'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>'+chart+
+   (lastH?'<div style="margin-top:10px"><b>শেষ পড়া</b>'+lastH+'</div>':'')+(notes?'<div style="margin-top:10px"><b>সাম্প্রতিক নোট</b>'+notes+'</div>':'');
+}
+
 function closeModal(){$('modal').classList.remove('show')}
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
 async function openUser(uid){
@@ -284,7 +342,7 @@ async function openUser(uid){
     $('modalBody').innerHTML='<div class="row">'+avatar(p.photo||l.photo||u.photo,name)+'<div class="grow"><b>'+esc(name)+'</b> '+(blocked?'<span class="tag bad">ব্লক করা</span>':'')+'<br><span class="muted">'+esc(u.email||'ইমেইল নেই')+'</span></div></div>'+
     '<div class="kv"><span>UID</span><span>'+esc(uid)+'</span><span>ইউজারনেম</span><span>'+esc(p.username||l.un||'—')+'</span><span>পরিচয়</span><span>'+esc(p.bio||'—')+'</span>'+
     '<span>বুকমার্ক</span><span>'+((u.bm||[]).length)+'</span><span>পিন / নোট</span><span>'+((u.pins||[]).length)+' / '+((u.notes||[]).length)+'</span>'+
-    '<span>সক্রিয় দিন</span><span>'+days+'</span><span>স্কোর / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+
+    '<span>সক্রিয় দিন</span><span>'+days+'</span><span>স্কোর / স্ট্রিক</span><span>'+(l.score||0)+' / '+(l.streak||0)+'</span><span>শেষ সিঙ্ক</span><span>'+esc(upd)+'</span></div>'+actHtml(u,l)+
     '<div class="row" style="margin-top:14px">'+
     (blocked?'<button class="btn" data-a="unblock">আনব্লক</button>':'<button class="btn bad" data-a="block">ব্লক করুন</button>')+
     '<button class="btn" data-a="lbdel">লিডারবোর্ড থেকে সরান</button>'+
