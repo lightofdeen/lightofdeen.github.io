@@ -1548,6 +1548,47 @@
     }).catch(function () {});
   }
 
+  /* =====================================================================
+     রিফ্রেশ দিলে যে পেজে ছিলেন সেখানেই থাকা
+     • পেজ ছাড়ার সময় এখনকার স্ক্রিন (NAV.curDesc) ও স্ক্রল sessionStorage-এ রাখা হয়
+     • রিফ্রেশের পর অ্যাপের নিজস্ব ব্যাক/ফরওয়ার্ড লজিক (popstate) দিয়ে সেই স্ক্রিন আবার আঁকা হয়
+     ===================================================================== */
+  var VIEW_KEY = 'lodLastView';
+
+  function saveView() {
+    try {
+      var N = window.NAV; if (!N || !N.curDesc) return;
+      sessionStorage.setItem(VIEW_KEY, JSON.stringify({ d: N.curDesc, y: window.pageYOffset || 0, t: Date.now() }));
+    } catch (e) {}
+  }
+  window.addEventListener('pagehide', saveView);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') saveView(); });
+
+  function syncNavAct(v) {
+    var links = document.querySelectorAll('.nav a'), hit = null;
+    for (var i = 0; i < links.length; i++) if (links[i].getAttribute('href') === '#' + v) hit = links[i];
+    if (!hit) return;
+    for (var j = 0; j < links.length; j++) links[j].classList.remove('act');
+    hit.classList.add('act');
+  }
+
+  function restoreView() {
+    try {
+      var N = window.NAV, raw = sessionStorage.getItem(VIEW_KEY);
+      if (!N || !raw) return;
+      var o = JSON.parse(raw), d = o && o.d;
+      if (!d || !d.v || d.v === 'home' || Date.now() - (o.t || 0) > 12 * 3600 * 1000) return;
+      if (!document.getElementById(d.v + '-view')) return;
+      if (N.i > 0 || (N.ov && N.ov.length)) return;                 // ইতিমধ্যে ইউজার অন্য কোথাও গেছে
+      N.scroll = N.scroll || {};
+      N.scroll[JSON.stringify(d)] = +o.y || 0;
+      window.dispatchEvent(new PopStateEvent('popstate', { state: { nav: 1, i: 0, d: d, ovn: 0 } }));
+      N.i = 1;
+      history.pushState({ nav: 1, i: 1, d: d, ovn: 0 }, '');         // ব্যাক চাপলে হোমে ফেরা যাবে
+      syncNavAct(d.v);
+    } catch (e) {}
+  }
+
   function init() {
     injectUI();
     injectBell();
@@ -1565,4 +1606,5 @@
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  window.addEventListener('load', function () { setTimeout(restoreView, 120); });
 })();
