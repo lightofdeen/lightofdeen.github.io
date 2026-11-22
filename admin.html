@@ -73,6 +73,7 @@ pre{background:var(--bg);border:1px solid var(--line);padding:10px;border-radius
       <button class="btn pri grow" id="lgBtn">লগইন</button>
       <button class="btn grow" id="lgGoogle">Google দিয়ে লগইন</button>
     </div>
+    <p style="margin:12px 0 0"><a href="#" id="lgReset" class="muted">পাসওয়ার্ড সেট / ভুলে গেছেন? ইমেইলে লিংক পাঠান</a></p>
     <p id="lgMsg" class="muted" style="color:var(--bad)"></p>
   </div>
 </div>
@@ -208,6 +209,10 @@ $('lgBtn').onclick=async()=>{$('lgMsg').textContent='';
   try{await A.signInWithEmailAndPassword(auth,$('lgEmail').value.trim(),$('lgPass').value)}catch(e){$('lgMsg').textContent=errMsg(e)}};
 $('lgGoogle').onclick=async()=>{$('lgMsg').textContent='';
   try{await A.signInWithPopup(auth,new A.GoogleAuthProvider())}catch(e){$('lgMsg').textContent=errMsg(e)}};
+$('lgReset').onclick=async e=>{e.preventDefault();const m=$('lgEmail').value.trim();
+  if(!m){$('lgMsg').textContent='আগে ইমেইল ঘরে ইমেইল লিখুন';return}
+  try{await A.sendPasswordResetEmail(auth,m);$('lgMsg').style.color='var(--ok)';$('lgMsg').textContent='লিংক পাঠানো হয়েছে — ইমেইলের ইনবক্স ও স্প্যাম দেখুন'}
+  catch(x){$('lgMsg').style.color='var(--bad)';$('lgMsg').textContent=errMsg(x)}};
 $('lgPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('lgBtn').click()});
 $('outBtn').onclick=$('dnOut').onclick=()=>A.signOut(auth);
 
