@@ -259,6 +259,17 @@
     '.pf-li-main b{display:block;font-size:15px}' +
     '.pf-li-main small{display:block;color:var(--muted);font-size:13.5px;margin-top:4px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;max-height:5.2em;overflow:hidden}' +
     '.pf-li-x{flex:none;width:44px;background:none;border:0;border-inline-start:1px solid var(--line);color:var(--muted);font-size:16px;cursor:pointer}' +
+    '.pf-in{display:block;width:100%;box-sizing:border-box;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px 14px;font:inherit;font-size:15.5px;margin-bottom:10px;outline:none}' +
+    '.pf-in:focus{border-color:var(--blue)}' +
+    '.pf-full{width:100%;display:flex;align-items:center;justify-content:center;gap:10px}' +
+    '.pf-gbtn svg{width:20px;height:20px;flex:none}' +
+    '.pf-err{color:#e5484d;font-size:13.5px;line-height:1.6;min-height:0;margin:0 2px 10px}' +
+    '.pf-err:empty{display:none}' +
+    '.pf-link{background:none;border:0;color:var(--blue);font:inherit;font-size:13.5px;padding:10px 2px 0;cursor:pointer;display:block;margin:0 auto}' +
+    '.pf-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:14px 0}' +
+    '.pf-or:before,.pf-or:after{content:"";flex:1;height:1px;background:var(--line)}' +
+    '.pf-switch{text-align:center;color:var(--muted);font-size:14px;margin-top:14px}' +
+    '.pf-switch button{background:none;border:0;color:var(--blue);font:inherit;font-weight:700;cursor:pointer;padding:0 2px}' +
     '.ayah-foot button.b-pin.on,.ayah-foot button.b-note.on{color:var(--blue)}' +
     '.ayah-foot button.b-pin.on svg{fill:currentColor}';
 
@@ -292,8 +303,10 @@
     });
   }
 
+  function uname(u) { return u.displayName || (u.email ? u.email.split('@')[0] : ''); }
+
   function displayUser() {
-    if (user) return { name: user.displayName || '', email: user.email || '', photo: user.photoURL || '' };
+    if (user) return { name: uname(user), email: user.email || '', photo: user.photoURL || '' };
     if (sget(K.on) === '1') { var c = jget(K.user, null); if (c) return c; }
     return null;
   }
@@ -327,9 +340,9 @@
       '</div>' +
       '<div class="pf-card pf-sync">' +
         '<div class="pf-g">' + IC.g + '</div>' +
-        '<div class="pf-sync-t"><b>Google Sync</b><div class="pf-sync-s">' + (user && !syncErr ? IC.cloud : IC.cloudOff) + '<span id="pfSyncT"></span></div></div>' +
+        '<div class="pf-sync-t"><b>ক্লাউড সিঙ্ক</b><div class="pf-sync-s">' + (user && !syncErr ? IC.cloud : IC.cloudOff) + '<span id="pfSyncT"></span></div></div>' +
         (u ? '<button class="pf-btn ghost" data-a="sync"' + (canSync ? '' : ' disabled') + '>' + (syncing ? 'সিঙ্ক হচ্ছে' : 'সিঙ্ক করুন') + '</button>'
-           : '<button class="pf-btn" data-a="login">Google লগইন</button>') +
+           : '<button class="pf-btn" data-a="login">লগইন</button>') +
       '</div>' +
       '<div class="pf-h">সর্বমোট কার্যক্রম</div>' +
       '<div class="pf-card"><div class="pf-grid4">' +
@@ -451,7 +464,7 @@
     user = u; authReady = true;
     if (u) {
       sset(K.on, '1');
-      jset(K.user, { name: u.displayName || '', email: u.email || '', photo: u.photoURL || '' });
+      jset(K.user, { name: uname(u), email: u.email || '', photo: u.photoURL || '' });
       render(); syncNow(false);
     } else {
       if (sget(K.on) === '1' && !sget(K.pend)) { /* সেশন শেষ — ক্যাশ করা তথ্য সরাই */ sdel(K.on); sdel(K.user); }
@@ -459,8 +472,103 @@
     }
   }
 
-  function login() {
+  /* ---------- লগইন: ইমেইল/পাসওয়ার্ড + Google ---------- */
+  var ERR = {
+    'auth/invalid-email': 'ইমেইল সঠিক নয়',
+    'auth/missing-email': 'ইমেইল লিখুন',
+    'auth/missing-password': 'পাসওয়ার্ড দিন',
+    'auth/invalid-credential': 'ইমেইল বা পাসওয়ার্ড ভুল। আগে Google দিয়ে একাউন্ট খুলে থাকলে Google দিয়ে লগইন করুন, অথবা "পাসওয়ার্ড ভুলে গেছেন?" দিয়ে পাসওয়ার্ড সেট করুন',
+    'auth/wrong-password': 'পাসওয়ার্ড ভুল',
+    'auth/user-not-found': 'এই ইমেইলে কোনো একাউন্ট নেই',
+    'auth/user-disabled': 'এই একাউন্ট বন্ধ করা হয়েছে',
+    'auth/email-already-in-use': 'এই ইমেইলে আগেই একাউন্ট আছে। লগইন করুন বা পাসওয়ার্ড রিসেট করুন',
+    'auth/weak-password': 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন',
+    'auth/too-many-requests': 'অনেকবার চেষ্টা হয়েছে, একটু পরে আবার চেষ্টা করুন',
+    'auth/network-request-failed': 'ইন্টারনেট সংযোগ দেখুন',
+    'auth/operation-not-allowed': 'Firebase Console-এ Email/Password চালু করা হয়নি',
+    'auth/unauthorized-domain': 'এই ডোমেইন Firebase → Authorized domains এ যোগ করুন'
+  };
+
+  function login() { openLogin('login'); }
+
+  function openLogin(mode) {
     if (!hasConfig()) { toast('firebase-config.js এ Firebase কনফিগ বসান'); return; }
+    mode = mode || 'login';
+    var sign = mode === 'signup', reset = mode === 'reset';
+    var title = reset ? 'পাসওয়ার্ড রিসেট' : sign ? 'নতুন একাউন্ট' : 'লগইন';
+    var btn = reset ? 'রিসেট লিংক পাঠান' : sign ? 'সাইন আপ' : 'লগইন';
+    var html = '<h3 class="pf-mh">' + title + '</h3>' +
+      (reset ? '<p class="pf-empty" style="padding:0 0 12px;text-align:start">আপনার ইমেইল দিন, পাসওয়ার্ড বদলানোর লিংক পাঠানো হবে।</p>' : '') +
+      (sign ? '<input class="pf-in" id="pfLName" type="text" maxlength="60" autocomplete="name" placeholder="আপনার নাম (ঐচ্ছিক)">' : '') +
+      '<input class="pf-in" id="pfLEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="ইমেইল">' +
+      (reset ? '' : '<input class="pf-in" id="pfLPass" type="password" autocomplete="' + (sign ? 'new-password' : 'current-password') + '" placeholder="পাসওয়ার্ড">') +
+      '<div class="pf-err" id="pfLErr" role="alert"></div>' +
+      '<button class="pf-btn pf-full" data-m="submit">' + btn + '</button>' +
+      (mode === 'login' ? '<button class="pf-link" data-m="reset">পাসওয়ার্ড ভুলে গেছেন?</button>' : '') +
+      (reset ? '' : '<div class="pf-or"><span>অথবা</span></div><button class="pf-btn ghost pf-full pf-gbtn" data-m="google">' + IC.g + '<span>Google দিয়ে চালিয়ে যান</span></button>') +
+      '<div class="pf-switch">' + (mode === 'login'
+        ? 'একাউন্ট নেই? <button data-m="signup">সাইন আপ</button>'
+        : 'একাউন্ট আছে? <button data-m="login">লগইন</button>') + '</div>' +
+      '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">বন্ধ</button></div>';
+
+    openModal(html, function (act, box, b) {
+      if (act === 'x') { closeModal(); return; }
+      if (act === 'google') { closeModal(); loginGoogle(); return; }
+      if (act === 'login' || act === 'signup' || act === 'reset') { openLogin(act); return; }
+      if (act === 'submit') emailAuth(mode, box, b);
+    }, function (box) {
+      var em = box.querySelector('#pfLEmail');
+      box.querySelectorAll('.pf-in').forEach(function (inp) {
+        inp.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); box.querySelector('[data-m="submit"]').click(); }
+        });
+      });
+      setTimeout(function () { if (em) em.focus(); }, 80);
+    });
+  }
+
+  function emailAuth(mode, box, btn) {
+    var err = box.querySelector('#pfLErr');
+    var em = box.querySelector('#pfLEmail').value.trim();
+    var pwEl = box.querySelector('#pfLPass'), pw = pwEl ? pwEl.value : '';
+    var nmEl = box.querySelector('#pfLName'), nm = nmEl ? nmEl.value.trim() : '';
+    function fail(e) {
+      var c = e && e.code;
+      err.textContent = ERR[c] || ('কিছু একটা সমস্যা হয়েছে' + (c ? ' (' + c + ')' : ''));
+      btn.disabled = false;
+    }
+    err.textContent = '';
+    if (!em) { err.textContent = ERR['auth/missing-email']; return; }
+    if (mode !== 'reset' && !pw) { err.textContent = ERR['auth/missing-password']; return; }
+    btn.disabled = true;
+
+    fbLoad().then(function (f) {
+      if (mode === 'reset') {
+        return f.A.sendPasswordResetEmail(f.auth, em).then(function () {
+          closeModal(); toast('রিসেট লিংক ইমেইলে পাঠানো হয়েছে (স্প্যামও দেখুন)');
+        });
+      }
+      if (mode === 'signup') {
+        return f.A.createUserWithEmailAndPassword(f.auth, em, pw).then(function (cred) {
+          closeModal(); toast('একাউন্ট তৈরি হয়েছে');
+          if (!nm) return;
+          return f.A.updateProfile(cred.user, { displayName: nm }).catch(function () {}).then(function () {
+            jset(K.user, { name: uname(cred.user), email: cred.user.email || '', photo: '' });
+            render(); syncNow(false);
+          });
+        });
+      }
+      return f.A.signInWithEmailAndPassword(f.auth, em, pw).then(function () {
+        closeModal(); toast('লগইন সম্পন্ন');
+      });
+    }).catch(function (e) {
+      if (e && e.message === 'no-config') { err.textContent = 'Firebase কনফিগ বসানো হয়নি'; btn.disabled = false; return; }
+      if (e && !e.code) { err.textContent = 'Firebase লোড করা যায়নি — ইন্টারনেট দেখুন'; btn.disabled = false; return; }
+      fail(e);
+    });
+  }
+
+  function loginGoogle() {
     fbLoad().then(function (f) {
       var p = new f.A.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
       return f.A.signInWithPopup(f.auth, p).catch(function (e) {
