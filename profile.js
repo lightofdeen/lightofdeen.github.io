@@ -17,7 +17,9 @@
   function sdel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
   function arr(k) { var v = jget(k, []); return Array.isArray(v) ? v : []; }
-  function stats() { var s = jget(K.stats, null); if (!s || typeof s !== 'object') s = {}; if (!s.days || typeof s.days !== 'object') s.days = {}; if (!s.read || typeof s.read !== 'object') s.read = {}; return s; }
+  function stats() { var s = jget(K.stats, null); if (!s || typeof s !== 'object') s = {}; if (!s.days || typeof s.days !== 'object') s.days = {}; if (!s.read || typeof s.read !== 'object') s.read = {};
+    ['ay', 'hd', 'tbd', 'last'].forEach(function (f) { if (!s[f] || typeof s[f] !== 'object' || Array.isArray(s[f])) s[f] = {}; });
+    return s; }
   function meta() { var m = jget(K.meta, null); return (m && typeof m === 'object') ? m : {}; }
 
   /* ---------- ছোট ইউটিলিটি ---------- */
@@ -50,6 +52,10 @@
     cup: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5v1a3 3 0 0 0 3 3M16 6h3v1a3 3 0 0 1-3 3M12 13v4M8.500 20h7M10 17h4"/></svg>',
     cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.6-7.960A5.500 5.500 0 0 1 17 9.500 4.200 4.200 0 0 1 17 18z"/></svg>',
     cloudOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.6-7.960A5.500 5.500 0 0 1 17 9.500 4.200 4.200 0 0 1 17 18z"/><path d="M4 4l16 16"/></svg>',
+    hadith: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/></svg>',
+    tasbih: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8"/><circle cx="18" cy="9" r="1.8"/><circle cx="6" cy="9" r="1.8"/><circle cx="16" cy="16" r="1.8"/><circle cx="8" cy="16" r="1.8"/><path d="M12 19v3"/></svg>',
+    topic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
     g: '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.500c3.540 0 6.710 1.220 9.210 3.600l6.850-6.850C35.900 2.380 30.470 0 24 0 14.620 0 6.510 5.380 2.560 13.220l7.980 6.190C12.430 13.720 17.740 9.500 24 9.500z"/><path fill="#4285F4" d="M46.980 24.550c0-1.570-.15-3.090-.38-4.550H24v9.020h12.940c-.58 2.960-2.260 5.480-4.780 7.180l7.730 6c4.510-4.180 7.090-10.360 7.090-17.650z"/><path fill="#FBBC05" d="M10.530 28.590c-.48-1.450-.76-2.990-.76-4.590s.27-3.140.76-4.590l-7.980-6.190C.92 16.460 0 20.120 0 24c0 3.880.92 7.540 2.560 10.780l7.970-6.190z"/><path fill="#34A853" d="M24 48c6.480 0 11.930-2.130 15.890-5.810l-7.730-6c-2.150 1.450-4.920 2.300-8.160 2.300-6.260 0-11.570-4.220-13.470-9.910l-7.980 6.190C6.510 42.620 14.620 48 24 48z"/></svg>'
   };
 
@@ -73,6 +79,151 @@
     if (!s.read[n]) { s.read[n] = 1; jset(K.stats, s); touch('stats'); }
   }
 
+  /* ---- বিস্তারিত পাঠ-ট্র্যাকিং: আয়াত, হাদিস, তাসবিহ, শেষ পড়া ---- */
+  var ioAy = null, ioHd = null, pendTb = 0, tbTimer = null;
+
+  function normNo(v) { var n = +v; return (isFinite(n) && String(n) === String(v)) ? n : String(v); }
+  function setAdd(map, key, v) {
+    var a = map[key]; if (!Array.isArray(a)) a = map[key] = [];
+    v = normNo(v); if (a.indexOf(v) > -1) return false;
+    a.push(v); return true;
+  }
+  function setCount(map) {
+    var c = 0; Object.keys(map || {}).forEach(function (k) { if (Array.isArray(map[k])) c += map[k].length; });
+    return c;
+  }
+
+  function markAyah(sNo, a) {
+    sNo = +sNo; a = +a; if (!sNo || !a) return;
+    var s = stats();
+    setAdd(s.ay, String(sNo), a);
+    s.last.ay = { s: sNo, a: a, t: Date.now() };
+    jset(K.stats, s); touch('stats');
+  }
+  function markHadith(bk, no) {
+    if (!bk || no === '' || no == null) return;
+    var s = stats();
+    if (setAdd(s.hd, String(bk), no)) { jset(K.stats, s); touch('stats'); }
+  }
+  function setTopic(title, cat, f, a, ct) {
+    if (!title) return;
+    var s = stats();
+    s.last.tp = { n: String(title), c: cat || '', f: f || '', a: (a === undefined || a === null) ? '' : a, ct: ct || 0, t: Date.now() };
+    jset(K.stats, s); touch('stats');
+  }
+
+  // তাসবিহ: প্রতি ট্যাপে ডিস্কে না লিখে জমিয়ে একসাথে সেভ
+  function flushTb() {
+    if (!pendTb) return;
+    var s = stats(), k = dkey();
+    s.tbd[k] = (+s.tbd[k] || 0) + pendTb; pendTb = 0;
+    jset(K.stats, s); touch('stats');
+  }
+  function onTasbih() { pendTb++; clearTimeout(tbTimer); tbTimer = setTimeout(flushTb, 1500); }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushTb(); });
+  window.addEventListener('pagehide', flushTb);
+
+  // পড়ার হিসাব: স্ক্রিনে অর্ধেকের বেশি দেখা গেলে এবং ~২ সেকেন্ড থাকলে "পড়া" ধরা হয়
+  var ioTimers = new WeakMap();
+  function mkIO(cb) {
+    if (!('IntersectionObserver' in window)) return null;
+    return new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var el = e.target, t = ioTimers.get(el);
+        var vis = e.isIntersecting && (e.intersectionRatio >= 0.5 || e.intersectionRect.height >= window.innerHeight * 0.45);
+        if (vis && !t) {
+          ioTimers.set(el, setTimeout(function () {
+            ioTimers.delete(el);
+            if (document.visibilityState === 'visible') cb(el);
+          }, 2000));
+        } else if (!vis && t) { clearTimeout(t); ioTimers.delete(el); }
+      });
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+  }
+  function watchBox(id, fn) {
+    var box = document.getElementById(id); if (!box || !window.MutationObserver) return;
+    new MutationObserver(function (ms) {
+      ms.forEach(function (m) { Array.prototype.forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) fn(n); }); });
+    }).observe(box, { childList: true });
+  }
+  function wrap(name, fn) {
+    var o = window[name]; if (typeof o !== 'function' || o.__lod) return;
+    var w = function () { try { fn.apply(this, arguments); } catch (e) {} return o.apply(this, arguments); };
+    w.__lod = 1; window[name] = w;
+  }
+  function gTopic() { try { return (typeof curTopic !== 'undefined') ? curTopic : 0; } catch (e) { return 0; } }
+  function gTopicName(n) { try { return (typeof TOPICS !== 'undefined' && TOPICS[n - 1]) || ''; } catch (e) { return ''; } }
+  function gBook() { try { return (typeof hd !== 'undefined') ? hd.book : null; } catch (e) { return null; } }
+
+  function setupTracking() {
+    // আয়াত
+    ioAy = mkIO(function (el) { var p = String(el.dataset.k || '').split(':'); if (p.length === 2) markAyah(p[0], p[1]); });
+    // হাদিস (কিতাব + বিষয়ভিত্তিক)
+    ioHd = mkIO(function (el) { var v = String(el.dataset.hk || ''), i = v.lastIndexOf('|'); if (i > 0) markHadith(v.slice(0, i), v.slice(i + 1)); });
+    if (ioHd) {
+      watchBox('hdBody', function (n) {
+        if (!n.classList.contains('hb-card') || n.dataset.no == null) return;
+        var b = gBook(); if (!b) return;
+        n.dataset.hk = b.id + '|' + n.dataset.no; ioHd.observe(n);
+      });
+      watchBox('topicBody', function (n) {
+        if (!n.classList.contains('hd-item') || gTopic() !== 2) return;
+        var sub; try { sub = (typeof curSub !== 'undefined') ? curSub : ''; } catch (e) { sub = ''; }
+        if (!sub) return;
+        var idx = Array.prototype.indexOf.call(n.parentNode.querySelectorAll('.hd-item'), n);
+        if (idx < 0) return;
+        n.dataset.hk = 't:' + sub + '|' + (idx + 1); ioHd.observe(n);
+      });
+    }
+    // তাসবিহ
+    wrap('incrementTasbih', onTasbih);
+    // সর্বশেষ বিষয়
+    wrap('openSub', function (name) { if (gTopic() === 1) setTopic(name, gTopicName(1), 'sub', name, 1); });
+    wrap('openHadithSub', function (name) { setTopic(name, 'বিষয়ভিত্তিক হাদিস', 'sub', name, 2); });
+    wrap('openQasasQ', function (title) { var ct = gTopic(); setTopic(title, gTopicName(ct), 'sub', title, ct); });
+    wrap('openBioPerson', function (name) { setTopic(name, 'জীবনী সমূহ', 'bio', name, 3); });
+    wrap('openAsma', function (n) { try { setTopic(ASMA[n - 1][1], 'আসমাউল হুসনা', 'asma', n, 0); } catch (e) {} });
+    wrap('openHadithBook', function (b) { if (b && b.name) setTopic(b.name, 'হাদিস', 'hbook', b.id, 0); });
+    wrap('openHadithChapter', function (k, name) { var b = gBook(); if (b && name) setTopic(name, b.name, 'hbook', b.id, 0); });
+  }
+
+  function reopenTopic(t) {
+    if (!t) return;
+    try {
+      if (t.f === 'sub') { curTopic = +t.ct; openSub(t.a); }
+      else if (t.f === 'bio') { curTopic = 3; switchView('topic'); openBioPerson(t.a); }
+      else if (t.f === 'asma') { switchView('asma'); openAsma(+t.a); }
+      else if (t.f === 'hbook') {
+        var b = null; HADITH_BOOKS.forEach(function (x) { if (String(x.id) === String(t.a)) b = x; });
+        if (b) { switchView('hadith'); openHadithBook(b); }
+      }
+    } catch (e) {}
+  }
+
+  function openLast(kind) {
+    var L = stats().last || {};
+    if (kind === 'tp') { reopenTopic(L.tp); return; }
+    var l = L.ay; if (!l || typeof openSurah !== 'function') return;
+    openSurah(+l.s);
+    var key = l.s + ':' + l.a, n = 0;
+    var iv = setInterval(function () {
+      var el = document.querySelector('#rdAyahs .ayah[data-k="' + key + '"]');
+      if (el) { clearInterval(iv); el.scrollIntoView({ block: 'center' }); }
+      else if (++n > 40) clearInterval(iv);
+    }, 150);
+  }
+
+  function fmtWhen(t) {
+    if (!t) return '';
+    var d = new Date(t), now = new Date(), hm;
+    try { hm = d.toLocaleTimeString('bn-BD', { hour: 'numeric', minute: '2-digit' }); } catch (e) { hm = d.toLocaleTimeString(); }
+    if (dkey(d) === dkey(now)) return 'আজ, ' + hm;
+    var y = new Date(now.getTime() - 86400000);
+    if (dkey(d) === dkey(y)) return 'গতকাল, ' + hm;
+    var ds; try { ds = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' }); } catch (e) { ds = dkey(d); }
+    return ds + ', ' + hm;
+  }
+
   function computeStats() {
     var s = stats(), secs = 0, active = [];
     Object.keys(s.days).forEach(function (k) {
@@ -85,10 +236,14 @@
     var set = {}; active.forEach(function (d) { set[d] = 1; });
     var today = dnum(dkey()), cur = 0, d = set[today] ? today : today - 1;
     while (set[d]) { cur++; d--; }
-    return { secs: secs, activeDays: active.length, streak: cur, best: best, read: Object.keys(s.read).length };
+    var td = dkey(), tb = 0;
+    Object.keys(s.tbd).forEach(function (k) { tb += (+s.tbd[k] || 0); });
+    return { secs: secs, activeDays: active.length, streak: cur, best: best, read: Object.keys(s.read).length,
+             ay: setCount(s.ay), hd: setCount(s.hd), tb: tb + pendTb, tbToday: (+s.tbd[td] || 0) + pendTb, today: +s.days[td] || 0, last: s.last || {} };
   }
 
   function fmtTime(secs) {
+    if (secs < 60) return num(secs) + ' সে';
     var m = Math.floor(secs / 60);
     if (m < 60) return num(m) + ' মি';
     var h = Math.floor(m / 60); m = m % 60;
@@ -110,6 +265,7 @@
 
   function bind(el, s, a) {
     var key = s + ':' + a;
+    if (ioAy && el) { el.dataset.k = key; ioAy.observe(el); }
     var bp = el.querySelector('.b-pin'), bnn = el.querySelector('.b-note');
     if (bp) bp.onclick = function (e) {
       e.stopPropagation();
@@ -172,7 +328,7 @@
   window.addEventListener('popstate', closeModal);
 
   function openList(kind) {
-    var title, items = [];
+    var title, items = [], total = null;
     if (kind === 'bm') { title = 'বুকমার্ক'; items = arr(K.bm).map(function (k) { return { k: k }; }); }
     else if (kind === 'pins') { title = 'পিন'; items = pins().map(function (k) { return { k: k }; }); }
     else if (kind === 'notes') { title = 'নোট'; items = notes().slice().sort(function (a, b) { return b.t - a.t; }); }
@@ -180,14 +336,37 @@
       title = 'পড়া সূরা';
       items = Object.keys(stats().read).map(Number).sort(function (a, b) { return a - b; }).map(function (n) { return { k: n + ':1', surah: true }; });
     }
-    var html = '<h3 class="pf-mh">' + esc(title) + ' (' + num(items.length) + ')</h3>';
+    else if (kind === 'ay') {
+      title = 'পড়া আয়াত';
+      var ay = stats().ay; total = setCount(ay);
+      items = Object.keys(ay).map(Number).filter(Boolean).sort(function (a, b) { return a - b; }).map(function (n) {
+        var c = (ay[n] || []).length, tot = 0;
+        try { tot = SURAH_INFO[n].cnt || 0; } catch (e) {}
+        return { k: n + ':1', surah: true, x: num(c) + (tot ? ' / ' + num(tot) : '') + ' আয়াত পড়া' };
+      });
+    }
+    else if (kind === 'hd') {
+      title = 'পড়া হাদিস';
+      var hs = stats().hd; total = setCount(hs);
+      items = Object.keys(hs).filter(function (k) { return Array.isArray(hs[k]) && hs[k].length; }).sort(function (a, b) {
+        var ta = a.indexOf('t:') === 0, tb = b.indexOf('t:') === 0;
+        if (ta !== tb) return ta ? 1 : -1;
+        return ta ? a.localeCompare(b) : (+a - +b);
+      }).map(function (k) {
+        var c = hs[k].length;
+        if (k.indexOf('t:') === 0) { var nm = k.slice(2); return { k: k, hb: { f: 'sub', a: nm, ct: 2 }, label: 'বিষয়ভিত্তিক হাদিস · ' + nm, x: num(c) + 'টি হাদিস পড়া' }; }
+        var bk = null; try { HADITH_BOOKS.forEach(function (x) { if (String(x.id) === String(k)) bk = x; }); } catch (e) {}
+        return { k: k, hb: { f: 'hbook', a: k }, label: bk ? bk.name : ('কিতাব ' + num(k)), x: num(c) + 'টি হাদিস পড়া' };
+      });
+    }
+    var html = '<h3 class="pf-mh">' + esc(title) + ' (' + num(total == null ? items.length : total) + ')</h3>';
     if (!items.length) html += '<p class="pf-empty">এখনো কিছু নেই।</p>';
     items.forEach(function (it, i) {
       var p = String(it.k).split(':');
-      var label = it.surah ? 'সূরা ' + sname(+p[0]) : refText(it.k);
+      var label = it.label || (it.surah ? 'সূরা ' + sname(+p[0]) : refText(it.k));
       html += '<div class="pf-li"><button class="pf-li-main" data-m="open" data-i="' + i + '"><b>' + esc(label) + '</b>' +
               (it.x ? '<small>' + esc(it.x) + '</small>' : '') + '</button>' +
-              (it.surah ? '' : '<button class="pf-li-x" data-m="rm" data-i="' + i + '" aria-label="সরান">✕</button>') + '</div>';
+              ((it.surah || it.hb) ? '' : '<button class="pf-li-x" data-m="rm" data-i="' + i + '" aria-label="সরান">✕</button>') + '</div>';
     });
     html += '<div class="pf-mrow"><span style="flex:1"></span><button class="pf-btn ghost" data-m="x">বন্ধ</button></div>';
     openModal(html, function (act, box, b) {
@@ -195,6 +374,7 @@
       if (act === 'x') { closeModal(); return; }
       if (act === 'open' && it) {
         closeModal();
+        if (it.hb) { reopenTopic(it.hb); return; }
         var p = String(it.k).split(':');
         if (typeof openSurah === 'function') openSurah(+p[0]);
         return;
@@ -279,7 +459,18 @@
     '.pf-bio{font-size:13.5px;line-height:1.6;margin-top:6px;overflow-wrap:anywhere;white-space:pre-wrap}' +
     '.pf-chip{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-top:6px}' +
     '.ayah-foot button.b-pin.on,.ayah-foot button.b-note.on{color:var(--blue)}' +
-    '.ayah-foot button.b-pin.on svg{fill:currentColor}';
+    '.ayah-foot button.b-pin.on svg{fill:currentColor}' +
+    '.pf-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 4px;text-align:center}' +
+    '.pf-grid3 .pf-st b{font-size:19px}' +
+    '.pf-last{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;background:none;border:0;border-top:1px solid var(--line);color:var(--text);font:inherit;text-align:start;padding:12px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
+    '.pf-last:first-child{border-top:0}' +
+    '.pf-last[disabled]{cursor:default}' +
+    '.pf-last .pf-ic{flex:none;width:44px;height:44px}' +
+    '.pf-lt{flex:1;min-width:0}' +
+    '.pf-lt span{display:block;color:var(--muted);font-size:12.5px}' +
+    '.pf-lt b{display:block;font-size:16px;line-height:1.4;margin-top:1px;overflow-wrap:anywhere}' +
+    '.pf-lt small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}' +
+    '.pf-last>svg{flex:none;width:18px;height:18px;color:var(--muted)}';
 
   function injectUI() {
     if (document.getElementById('profile-view')) return;
@@ -300,6 +491,7 @@
       else if (a === 'import') doImport();
       else if (a === 'sync') syncNow(true);
       else if (a === 'list') openList(b.getAttribute('data-k'));
+      else if (a === 'last') openLast(b.getAttribute('data-k'));
     });
 
     new MutationObserver(function () { if (v.classList.contains('active')) { render(); preload(); } })
@@ -355,18 +547,27 @@
         '</div>' +
       '</div>' +
       '<div class="pf-h">সর্বমোট কার্যক্রম</div>' +
-      '<div class="pf-card"><div class="pf-grid4">' +
-        stat('read', IC.book, cs.read, 'পড়া') +
+      '<div class="pf-card"><div class="pf-grid3">' +
+        stat('ay', IC.book, cs.ay, 'আয়াত পড়া') +
+        stat('hd', IC.hadith, cs.hd, 'হাদিস পড়া') +
+        statStatic(IC.tasbih, cs.tb, 'তাসবিহ') +
         stat('bm', IC.bm, counts.bm, 'বুকমার্ক') +
         stat('pins', IC.pin.replace('class="i" ', ''), counts.pins, 'পিন') +
         stat('notes', IC.note.replace('class="i" ', ''), counts.notes, 'নোট') +
       '</div></div>' +
+      '<div class="pf-h">সর্বশেষ পড়া</div>' +
+      '<div class="pf-card" style="padding-top:4px;padding-bottom:4px">' +
+        lastAyahRow(cs.last.ay) +
+        lastTopicRow(cs.last.tp) +
+      '</div>' +
       '<div class="pf-h">লাইফটাইম অ্যাক্টিভিটি</div>' +
       '<div class="pf-card"><div class="pf-grid2">' +
-        row(IC.clock, fmtTime(cs.secs), 'সময়') +
+        row(IC.clock, fmtTime(cs.secs), 'মোট সময়') +
+        row(IC.clock, fmtTime(cs.today), 'আজকের সময়') +
         row(IC.cal, num(cs.activeDays), 'সক্রিয় দিন') +
         row(IC.fire, num(cs.streak), 'স্ট্রিক') +
         row(IC.cup, num(cs.best), 'সেরা স্ট্রিক') +
+        row(IC.tasbih, num(cs.tbToday), 'আজকের তাসবিহ') +
       '</div></div>';
 
     var av = box.querySelector('#pfAv');
@@ -392,6 +593,22 @@
   function row(icon, val, label) {
     return '<div class="pf-row"><div class="pf-ic">' + icon + '</div><div><b>' + val + '</b><span>' + label + '</span></div></div>';
   }
+  function statStatic(icon, n, label) {
+    return '<div class="pf-st" style="cursor:default"><div class="pf-ic">' + icon + '</div><b>' + num(n) + '</b><span>' + label + '</span></div>';
+  }
+  function lastRow(kind, icon, label, val, sub, on) {
+    return '<button class="pf-last" data-a="last" data-k="' + kind + '"' + (on ? '' : ' disabled') + '><div class="pf-ic">' + icon + '</div>' +
+      '<div class="pf-lt"><span>' + label + '</span><b>' + esc(val) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</div>' + (on ? IC.chev : '') + '</button>';
+  }
+  function lastAyahRow(l) {
+    if (!l || !l.s) return lastRow('ay', IC.book, 'শেষ পড়া আয়াত', 'এখনো কোনো আয়াত পড়া হয়নি', '', false);
+    return lastRow('ay', IC.book, 'শেষ পড়া আয়াত', refText(l.s + ':' + l.a), fmtWhen(l.t), true);
+  }
+  function lastTopicRow(l) {
+    if (!l || !l.n) return lastRow('tp', IC.topic, 'সর্বশেষ পড়া বিষয়', 'এখনো কোনো বিষয় পড়া হয়নি', '', false);
+    var on = ['sub', 'bio', 'asma', 'hbook'].indexOf(l.f) > -1;
+    return lastRow('tp', IC.topic, 'সর্বশেষ পড়া বিষয়', l.n, (l.c ? l.c + ' · ' : '') + fmtWhen(l.t), on);
+  }
 
   /* =====================================================================
      ৫) এক্সপোর্ট / ইম্পোর্ট
@@ -400,16 +617,31 @@
 
   function mergeInto(base, inc) {
     // ইম্পোর্ট/প্রথম-সিঙ্কের জন্য: ইউনিয়ন (কিছু হারায় না)
-    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {} } };
+    var out = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {} } };
     function uni(a, b) { var s = {}, r = []; (a || []).concat(b || []).forEach(function (x) { if (typeof x === 'string' && !s[x]) { s[x] = 1; r.push(x); } }); return r; }
     out.bm = uni(base.bm, inc.bm); out.pins = uni(base.pins, inc.pins);
     var nm = {};
     (base.notes || []).concat(inc.notes || []).forEach(function (n) { if (n && n.k && n.x && (!nm[n.k] || (n.t || 0) > (nm[n.k].t || 0))) nm[n.k] = { k: n.k, x: String(n.x).slice(0, 2000), t: n.t || 0 }; });
     out.notes = Object.keys(nm).map(function (k) { return nm[k]; });
+    var seen = {};
+    function uAdd(f, k, v) {
+      var key = f + '\u0001' + k, sm = seen[key] || (seen[key] = {}), vv = normNo(v), id = typeof vv + vv;
+      if (sm[id]) return; sm[id] = 1;
+      (out.stats[f][k] = out.stats[f][k] || []).push(vv);
+    }
     [base.stats, inc.stats].forEach(function (s) {
       if (!s) return;
       Object.keys(s.days || {}).forEach(function (k) { var v = +s.days[k] || 0; if (v > (out.stats.days[k] || 0)) out.stats.days[k] = v; });
       Object.keys(s.read || {}).forEach(function (k) { out.stats.read[k] = 1; });
+      ['ay', 'hd'].forEach(function (f) {
+        var m = s[f] || {};
+        Object.keys(m).forEach(function (k) { if (Array.isArray(m[k])) m[k].forEach(function (v) { uAdd(f, k, v); }); });
+      });
+      Object.keys(s.tbd || {}).forEach(function (k) { var v = +s.tbd[k] || 0; if (v > (out.stats.tbd[k] || 0)) out.stats.tbd[k] = v; });
+      var L = s.last || {};
+      Object.keys(L).forEach(function (k) {
+        if (L[k] && typeof L[k] === 'object' && (L[k].t || 0) >= ((out.stats.last[k] || {}).t || 0)) out.stats.last[k] = L[k];
+      });
     });
     return out;
   }
@@ -762,7 +994,7 @@
         var first = m.uid !== uid;
         var local = snapshot();
         // অন্য অ্যাকাউন্টের ডেটা এই ফোনে থাকলে (আগে সিঙ্ক হয়েছিল) — মিশে না গিয়ে আলাদা থাকবে
-        if (first && m.uid) { local = { bm: [], pins: [], notes: [], stats: { days: {}, read: {} } }; m = {}; }
+        if (first && m.uid) { local = { bm: [], pins: [], notes: [], stats: { days: {}, read: {}, ay: {}, hd: {}, tbd: {}, last: {} } }; m = {}; }
         var res = {};
         ['bm', 'pins', 'notes'].forEach(function (k) {
           var lt = m[k + 'T'] || 0, ct = cloud ? (cloud[k + 'T'] || 0) : 0;
@@ -771,7 +1003,7 @@
           else if (lt > ct) res[k] = { v: local[k], t: lt };
           else res[k] = { v: cloud[k] || [], t: ct };
         });
-        var cs = cloud && cloud.stats ? { days: cloud.stats.days || {}, read: cloud.stats.read || {} } : { days: {}, read: {} };
+        var cs = cloud && cloud.stats ? cloud.stats : { days: {}, read: {} };
         var merged = mergeInto({ stats: local.stats }, { stats: cs }); // সময়/পড়া সবসময় ইউনিয়ন/ম্যাক্স
         var out = { stats: merged.stats };
         if (first && cloud) {
@@ -836,6 +1068,7 @@
 
   function init() {
     injectUI();
+    setupTracking();
     // আগে লগইন করা থাকলে বা রিডাইরেক্ট থেকে ফিরলে সেশন ফেরত আনি
     if (hasConfig() && (sget(K.on) === '1' || sget(K.pend))) {
       setTimeout(function () {
