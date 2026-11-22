@@ -550,7 +550,25 @@
     return 'সর্বশেষ সিঙ্ক: ' + t;
   }
 
+  /* নিচের নেভিগেশনের প্রোফাইল আইকন: লগইন থাকলে ছবি (না থাকলে নামের প্রথম অক্ষর), নইলে সাধারণ আইকন */
+  function updateNavAv() {
+    var el = document.getElementById('navAv'); if (!el) return;
+    var u = displayUser();
+    var key = u ? (u.photo || '') + '|' + (u.name || u.email || '') : '';
+    if (el.getAttribute('data-k') === key) return;
+    el.setAttribute('data-k', key);
+    if (!u) {
+      el.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.6-4 3.8-6 7.5-6s6.9 2 7.5 6"/></svg>';
+      return;
+    }
+    var nm = u.name || u.email || '', ch = nm ? Array.from(nm)[0].toUpperCase() : '?';
+    setAv(el, u.photo, ch);
+    var im = el.querySelector('img');
+    if (im) im.onerror = function () { el.textContent = ch; };
+  }
+
   function render() {
+    updateNavAv();
     var box = document.getElementById('pfBody'); if (!box) return;
     var u = displayUser(), cs = computeStats();
     var counts = { bm: arr(K.bm).length, pins: pins().length, notes: notes().length };
@@ -1251,6 +1269,7 @@
 
   function init() {
     injectUI();
+    updateNavAv();
     injectLB();
     setupTracking();
     // আগে লগইন করা থাকলে বা রিডাইরেক্ট থেকে ফিরলে সেশন ফেরত আনি
