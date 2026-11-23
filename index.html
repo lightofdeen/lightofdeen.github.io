@@ -1175,6 +1175,20 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 .qx-tab.on::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:44px;height:4px;border-radius:0 0 4px 4px;background:var(--blue)}
 .ayah.qx-flash{animation:qxFlash 2.2s ease-out}
 @keyframes qxFlash{0%,40%{box-shadow:0 0 0 3px var(--blue);background:var(--blue-l)}100%{box-shadow:0 0 0 0 transparent}}
+/* ===== অফলাইন ডাউনলোড বাটন ===== */
+.dl-wrap{display:flex;align-items:stretch;gap:7px;margin-bottom:7px}
+.dl-wrap.big{margin-bottom:12px}
+.dl-wrap>.pk-i,.dl-wrap>.au-s,.dl-wrap>.hb-book{margin-bottom:0;width:auto;flex:1 1 auto;min-width:0}
+.dl-btn{flex:none;min-width:60px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--blue);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 6px;font:inherit;font-size:10.5px;line-height:1.15;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dl-btn svg,.dl-wide svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dl-btn:active{background:var(--blue-l)}
+.dl-btn.done{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+.dl-btn.part{border-color:var(--gold);color:var(--gold)}
+.dl-btn.busy{background:linear-gradient(0deg,var(--blue-l) calc(var(--p)*1%),var(--card) 0);border-color:var(--blue)}
+.dl-wide{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 14px;margin-bottom:12px;border-radius:14px;border:1px dashed var(--blue);background:transparent;color:var(--blue);font:inherit;font-size:14px;line-height:1.4;cursor:pointer}
+.dl-wide.done{background:var(--blue);color:var(--on-blue);border-style:solid}
+.dl-wide.part{border-color:var(--gold);color:var(--gold)}
+.dl-wide.busy{border-style:solid;background:linear-gradient(90deg,var(--blue-l) calc(var(--p)*1%),transparent 0)}
 </style>
 </head>
 <body>
@@ -2890,6 +2904,7 @@ function tfUpdateNames() {
 async function tfFetch(slug, s, a) {
   const key = slug + '/' + s + '/' + a;
   if (tf.cache.has(key)) return tf.cache.get(key);
+  if (window.LODOff) { const pk = await LODOff.tfPack(slug, s); if (pk && pk.t) { const v = pk.t[a], o = v == null ? '' : String(v); tf.cache.set(key, o); return o; } }
   let txt = null, err = null;
   for (const base of TF_CDNS) {
     try {
@@ -3040,7 +3055,7 @@ function tfvRender() {
     const c = hdEl('div', 'tfv-cur'), d = hdEl('div');
     d.appendChild(hdEl('small', '', 'নির্বাচিত তাফসীর')); d.appendChild(document.createTextNode(tfFind(tf.cur).name));
     const b = hdEl('button', '', 'পরিবর্তন'); b.onclick = () => { tfvMode = 'editions'; inp.value = ''; tfvRender(); };
-    c.appendChild(d); c.appendChild(b); cur.appendChild(c);
+    c.appendChild(d); c.appendChild(b); cur.appendChild(c); if (window.LODOff) cur.appendChild(LODOff.tfEditionBtn(tf.cur, true));
     let any = false;
     for (let n = 1; n <= 114; n++) {
       const nm = surahName(n), info = SURAH_INFO[n];
@@ -3049,7 +3064,7 @@ function tfvRender() {
       const it = hdEl('button', 'pk-i'), sp = hdEl('span', '', bn(n) + '. ' + nm + ' (' + info.ar + ')');
       sp.appendChild(hdEl('small', '', bn(info.cnt) + ' আয়াত'));
       it.appendChild(sp); it.onclick = () => { window.rdFrom = 'tafsir'; openSurah(n); };
-      box.appendChild(it);
+      box.appendChild(window.LODOff ? LODOff.wrap(it, LODOff.tfSurahBtn(tf.cur, n)) : it);
     }
     if (!any) box.appendChild(hdEl('div', 'tf-msg', 'কোনো সূরা পাওয়া যায়নি।'));
     return;
@@ -3077,7 +3092,7 @@ function tfvRender() {
         tf.cur = e.slug; try { localStorage.setItem('lodTafsir', e.slug); } catch (x) {}
         tfUpdateNames(); tfvMode = 'surahs'; inp.value = ''; tfvRender(); window.scrollTo(0, 0);
       };
-      box.appendChild(it);
+      box.appendChild(window.LODOff ? LODOff.wrap(it, LODOff.tfEditionBtn(e.slug)) : it);
     });
   });
 }
@@ -3114,7 +3129,7 @@ function renderPicker() {
       if (e.author && e.author !== e.name) sp.appendChild(hdEl('small', '', e.author));
       b.appendChild(sp);
       b.onclick = () => pickTafsir(e.slug);
-      box.appendChild(b);
+      box.appendChild(window.LODOff ? LODOff.wrap(b, LODOff.tfEditionBtn(e.slug)) : b);
     });
   });
 }
@@ -3357,13 +3372,14 @@ function showHadithBooks() {
     ct.appendChild(hdEl('small', '', T('হাদিস')));
     row.appendChild(ct);
     row.onclick = () => openHadithBook(b);
-    body.appendChild(row);
+    body.appendChild(window.LODOff ? LODOff.wrap(row, LODOff.hadithBtn(b), 'big') : row);
   });
 }
 
 async function fetchEdition(slug) {
   if (!slug) return null;
   if (hd.cache[slug]) return hd.cache[slug];
+  if (window.LODOff) { const off = await LODOff.hdGet(slug); if (off) { hd.cache[slug] = off; return off; } }
   const r = await fetch(HD_CDN + slug + '.min.json');
   if (!r.ok) throw new Error('http ' + r.status);
   const j = await r.json();
@@ -14358,6 +14374,104 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
 
 })();
 </script>
+<script id="lod-offline">
+/* ===== অফলাইন ডাউনলোড: তাফসীর / অডিও কোরআন / হাদিস (IndexedDB) ===== */
+(function(){
+'use strict';
+var tt=function(s){try{return T(s)}catch(e){return s}},nb=function(x){try{return bn(x)}catch(e){return String(x)}};
+try{Object.assign(D,{'ডাউনলোড':['Download','تحميل'],'সংরক্ষিত':['Saved','محفوظ'],'ডাউনলোড শুরু হয়েছে':['Download started','بدأ التنزيل'],'ডাউনলোড সম্পন্ন — এখন অফলাইনে ব্যবহার করতে পারবেন':['Download complete — available offline','اكتمل التنزيل — متاح دون اتصال'],'ডাউনলোড বাতিল করা হয়েছে':['Download cancelled','أُلغي التنزيل'],'ডাউনলোড ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।':['Download failed. Check your connection and try again.','فشل التنزيل. تحقق من الاتصال وحاول مجددًا.'],'ডিভাইসে পর্যাপ্ত জায়গা নেই':['Not enough storage on device','لا توجد مساحة كافية'],'মুছে ফেলা হয়েছে':['Removed','تمت الإزالة'],'ডাউনলোড করা ফাইল মুছে ফেলবেন?':['Delete the downloaded data?','حذف البيانات المحملة؟'],'সূরা':['Surah','سورة']})}catch(e){}
+var CANCEL=new Error('cancel'),K=new Set(),dbp=null,mem=new Map();
+function open(){return dbp||(dbp=new Promise(function(ok,no){if(!window.indexedDB)return no(new Error('idb'));var q=indexedDB.open('lodOffline',1);q.onupgradeneeded=function(){q.result.createObjectStore('kv')};q.onsuccess=function(){ok(q.result)};q.onerror=function(){dbp=null;no(q.error)}}))}
+function tx(m,f){return open().then(function(db){return new Promise(function(ok,no){var t=db.transaction('kv',m),r=f(t.objectStore('kv'));t.oncomplete=function(){ok(r&&r.result)};t.onerror=t.onabort=function(){no(t.error||new Error('tx'))}})})}
+var get=function(k){return tx('readonly',function(s){return s.get(k)})};
+var put=function(k,v){return tx('readwrite',function(s){s.put(v,k)}).then(function(){K.add(k)})};
+var delMany=function(a){mem.clear();return tx('readwrite',function(s){a.forEach(function(k){s.delete(k)})}).then(function(){a.forEach(function(k){K.delete(k)})})};
+var byPrefix=function(p){var a=[];K.forEach(function(k){if(k.indexOf(p)===0)a.push(k)});return a};
+var ready=tx('readonly',function(s){return s.getAllKeys()}).then(function(a){(a||[]).forEach(function(k){K.add(k)});repaintAll()}).catch(function(){});
+/* ---- জেনেরিক বাটন ---- */
+var jobs=new Map(),btns=new Map(),tm=null;
+function repaintAll(){clearTimeout(tm);tm=setTimeout(function(){btns.forEach(function(s){s.forEach(function(b){if(b.isConnected)paint(b);else if(Date.now()-b._t>4000)s.delete(b)})})},120)}
+var IC={d:'<path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/>',ok:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>'};
+function paint(b){
+  var o=b._o,j=jobs.get(b.dataset.id),c=o.count(),st=j?'busy':c>=o.total?'done':c>0?'part':'idle',p=j?Math.min(99,j.pct||0):st==='done'?100:0,lab,w=o.wide;
+  if(w){lab=st==='busy'?tt('ডাউনলোড হচ্ছে…')+' '+nb(Math.round(p))+'%'+(j.text?' · '+j.text:'')+' ('+tt('বাতিল করতে ট্যাপ করুন')+')':st==='done'?tt('ডাউনলোড করা আছে (মুছতে ট্যাপ করুন)'):st==='part'?nb(c)+'/'+nb(o.total)+' '+tt('ডাউনলোড হয়েছে — চালিয়ে যান'):tt(o.label)}
+  else lab=st==='busy'?nb(Math.round(p))+'%':st==='done'?tt('সংরক্ষিত'):st==='part'?nb(c)+'/'+nb(o.total):tt('ডাউনলোড');
+  b.className=(w?'dl-wide ':'dl-btn ')+st;b.style.setProperty('--p',p);
+  b.title=st==='done'?tt('মুছতে ট্যাপ করুন'):st==='busy'?tt('বাতিল করতে ট্যাপ করুন'):tt('অফলাইনের জন্য ডাউনলোড');
+  b.innerHTML='<svg viewBox="0 0 24 24">'+(st==='busy'?IC.x:st==='done'?IC.ok:IC.d)+'</svg><span></span>';b.lastChild.textContent=lab;
+}
+function mk(id,o){
+  var b=document.createElement('button');b.type='button';b.dataset.id=id;b._o=o;b._t=Date.now();
+  (btns.get(id)||btns.set(id,new Set()).get(id)).add(b);
+  b.onclick=function(e){e.stopPropagation();click(b)};paint(b);return b;
+}
+async function click(b){
+  var o=b._o,id=b.dataset.id,j=jobs.get(id),c=o.count();
+  if(j){j.ctl.cancelled=true;return}
+  if(c>=o.total){if(!confirm(tt('ডাউনলোড করা ফাইল মুছে ফেলবেন?')))return;try{await o.remove()}catch(e){}repaintAll();lodToast(tt('মুছে ফেলা হয়েছে'));return}
+  if(o.ask&&c===0&&!confirm(tt(o.ask)))return;
+  var ctl={cancelled:false};j={ctl:ctl,pct:0,text:''};jobs.set(id,j);repaintAll();
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+  lodToast(tt('ডাউনলোড শুরু হয়েছে'));
+  try{await o.start(function(p,t){j.pct=p;if(t!=null)j.text=t;repaintAll()},ctl);lodToast(tt('ডাউনলোড সম্পন্ন — এখন অফলাইনে ব্যবহার করতে পারবেন'))}
+  catch(e){lodToast(e===CANCEL?tt('ডাউনলোড বাতিল করা হয়েছে'):e&&e.name==='QuotaExceededError'?tt('ডিভাইসে পর্যাপ্ত জায়গা নেই'):tt('ডাউনলোড ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।'))}
+  jobs.delete(id);repaintAll();
+}
+/* ---- তাফসীর ---- */
+var tfx=function(j){return j.text!=null?j.text:j.tafsir&&j.tafsir.text!=null?j.tafsir.text:j.data&&j.data.text!=null?j.data.text:j.content!=null?j.content:''};
+async function tfSurah(slug,s,ctl){
+  var cnt=SURAH_INFO[s].cnt,t=null,i,r,j,a;
+  for(i=0;i<TF_CDNS.length&&!t;i++){try{r=await fetch(TF_CDNS[i]+'/'+slug+'/'+s+'.json');if(!r.ok)continue;j=await r.json();a=Array.isArray(j)?j:j.ayahs||j.verses||null;
+    if(a&&a.length>=cnt*.9){var m={},n=0;a.forEach(function(x){var k=x.ayah!=null?x.ayah:x.verse!=null?x.verse:x.number;if(k!=null){m[k]=String(tfx(x)==null?'':tfx(x));n++}});if(n>=cnt*.9)t=m}}catch(e){}}
+  if(!t){t={};var nx=1,bad=null,stop=false,w=async function(){while(nx<=cnt&&!stop&&!ctl.cancelled){var k=nx++,v=null;
+      for(var q=0;q<TF_CDNS.length;q++){try{var rr=await fetch(TF_CDNS[q]+'/'+slug+'/'+s+'/'+k+'.json');if(rr.status===404){v='';break}if(!rr.ok)continue;v=String(tfx(await rr.json()));break}catch(e){bad=e}}
+      if(v===null){stop=true;throw bad||new Error('net')}t[k]=v}};
+    await Promise.all([w(),w(),w(),w(),w(),w()])}
+  if(ctl.cancelled)throw CANCEL;
+  await put('tf:'+slug+':'+s,{t:t});
+}
+async function tfAll(slug,p,ctl){for(var s=1;s<=114;s++){if(ctl.cancelled)throw CANCEL;if(!K.has('tf:'+slug+':'+s))await tfSurah(slug,s,ctl);p(s/1.14,tt('সূরা')+' '+nb(s)+'/'+nb(114))}}
+/* ---- অডিও ---- */
+async function auGet(rid,n,urls,p,ctl){
+  var err,i,r,b,rd,x,parts,got,tot;
+  for(i=0;i<urls.length;i++){try{r=await fetch(urls[i]);if(!r.ok)throw new Error('http');tot=+r.headers.get('content-length')||0;
+    if(r.body&&r.body.getReader&&tot){rd=r.body.getReader();parts=[];got=0;for(;;){if(ctl.cancelled){try{rd.cancel()}catch(e){}throw CANCEL}x=await rd.read();if(x.done)break;parts.push(x.value);got+=x.value.length;p(got/tot*100)}b=new Blob(parts,{type:'audio/mpeg'})}else b=await r.blob();
+    if(ctl.cancelled)throw CANCEL;if(b.size<20000)throw new Error('small');await put('au:'+rid+':'+n,b);return}
+  catch(e){if(e===CANCEL||e.name==='QuotaExceededError')throw e;err=e}}
+  throw err||new Error('net');
+}
+/* ---- হাদিস ---- */
+var hdBases=function(){return [HD_CDN,'https://fastly.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/','https://gcore.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/']};
+async function hdOne(slug,p,ctl){
+  var bs=hdBases(),err,i,r,tot,rd,parts,got,x,j;
+  for(i=0;i<bs.length;i++){try{r=await fetch(bs[i]+slug+'.min.json');if(!r.ok)throw new Error('http');tot=+r.headers.get('content-length')||0;
+    if(r.body&&r.body.getReader){rd=r.body.getReader();parts=[];got=0;for(;;){if(ctl.cancelled){try{rd.cancel()}catch(e){}throw CANCEL}x=await rd.read();if(x.done)break;parts.push(x.value);got+=x.value.length;if(tot)p(got/tot*100)}j=JSON.parse(await new Blob(parts).text())}else j=await r.json();
+    if(ctl.cancelled)throw CANCEL;await put('hd:'+slug,j);return}
+  catch(e){if(e===CANCEL||e.name==='QuotaExceededError')throw e;err=e}}
+  throw err||new Error('net');
+}
+var hdSlugs=function(b){var a=[b.ara,b.ben];if(typeof LANG!=='undefined'&&LANG==='en'&&b.ben)a.push(b.ben.replace('ben-','eng-'));return a.filter(function(v,i){return v&&a.indexOf(v)===i})};
+/* ---- বাইরে খোলা API ---- */
+window.LODOff={
+  ready:ready,
+  wrap:function(main,btn,cls){var w=document.createElement('div');w.className='dl-wrap'+(cls?' '+cls:'');w.appendChild(main);w.appendChild(btn);return w},
+  tfPack:async function(slug,s){var k='tf:'+slug+':'+s;if(!K.has(k))return null;if(mem.has(k))return mem.get(k);try{var v=await get(k);if(mem.size>8)mem.clear();mem.set(k,v);return v||null}catch(e){return null}},
+  tfSurahBtn:function(slug,s){var k='tf:'+slug+':'+s;return mk(k,{total:1,count:function(){return K.has(k)?1:0},start:function(p,c){return tfSurah(slug,s,c)},remove:function(){return delMany([k])}})},
+  tfEditionBtn:function(slug,wide){return mk('tfE:'+slug+(wide?':w':''),{wide:wide,label:'⬇ এই তাফসীরের সব সূরা ডাউনলোড করুন (অফলাইনে পড়ুন)',total:114,count:function(){return byPrefix('tf:'+slug+':').length},start:function(p,c){return tfAll(slug,p,c)},remove:function(){return delMany(byPrefix('tf:'+slug+':'))}})},
+  hasAudio:function(rid,n){return K.has('au:'+rid+':'+n)},
+  audioGet:function(rid,n){return get('au:'+rid+':'+n)},
+  audioBtn:function(r,n,urls){var k='au:'+r[0]+':'+n;return mk(k,{total:1,count:function(){return K.has(k)?1:0},start:function(p,c){return auGet(r[0],n,urls,p,c)},remove:function(){return delMany([k])}})},
+  audioAllBtn:function(r,urlsOf){var pre='au:'+r[0]+':';return mk('auAll:'+r[0],{wide:true,label:'⬇ সব ১১৪টি সূরা ডাউনলোড করুন (অফলাইনে শুনুন)',ask:'পুরো কোরআনের অডিও অনেক বড় (কয়েকশো MB থেকে ১ GB-এর বেশি) হতে পারে। ডাউনলোড করবেন?',total:114,count:function(){return byPrefix(pre).length},
+    start:async function(p,c){var bad=0;for(var n=1;n<=114;n++){if(c.cancelled)throw CANCEL;if(K.has(pre+n))continue;try{await auGet(r[0],n,urlsOf(n),function(q){p(((n-1)+q/100)/1.14,tt('সূরা')+' '+nb(n)+'/'+nb(114))},c);bad=0}catch(e){if(e===CANCEL||e.name==='QuotaExceededError'||++bad>=3)throw e}}},
+    remove:function(){return delMany(byPrefix(pre))}})},
+  hadithBtn:function(b){var sl=hdSlugs(b);return mk('hd:'+b.id+':'+sl.join(),{total:sl.length,count:function(){return sl.filter(function(s){return K.has('hd:'+s)}).length},
+    start:async function(p,c){for(var i=0;i<sl.length;i++){if(K.has('hd:'+sl[i]))continue;await hdOne(sl[i],function(q){p((i+Math.min(q,99)/100)/sl.length*100)},c);p((i+1)/sl.length*100)}},
+    remove:function(){return delMany(sl.map(function(s){return 'hd:'+s}))}})},
+  hdGet:async function(slug){if(!K.has('hd:'+slug))return null;try{return await get('hd:'+slug)||null}catch(e){return null}}
+};
+})();
+</script>
+
 <script>
 /* ===== অডিও কোরআন: কারী তালিকা + সূরা প্লেয়ার ===== */
 (function(){
@@ -14405,13 +14519,21 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
   }
 
   /* ---------- প্লেব্যাক ---------- */
+  var blobUrl=null;
   function play(r,n){
     st.rec=r; st.n=n; st.urls=candidates(r,n); st.ui=0;
+    var tok=st.tok=(st.tok||0)+1;
     try{if(typeof player!=='undefined')player.pause()}catch(e){}
-    au.src=st.urls[0];
-    var pr=au.play(); if(pr&&pr.catch)pr.catch(function(){});
     document.body.classList.add('au-on'); $('auMini').classList.add('show');
     meta(); mark(); mediaSession();
+    function go(){au.src=st.urls[0]; var pr=au.play(); if(pr&&pr.catch)pr.catch(function(){})}
+    if(window.LODOff&&LODOff.hasAudio(r[0],n)){
+      LODOff.audioGet(r[0],n).then(function(b){
+        if(tok!==st.tok)return;
+        if(b){ if(blobUrl)try{URL.revokeObjectURL(blobUrl)}catch(e){} blobUrl=URL.createObjectURL(b); st.urls.unshift(blobUrl); }
+        go();
+      }).catch(function(){ if(tok===st.tok)go(); });
+    } else go();
   }
   au.addEventListener('error',function(){
     if(!st.rec)return;
@@ -14472,7 +14594,7 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
     RECS.forEach(function(r){
       h+='<button class="au-rec" data-r="'+r[0]+'">'+av(r)+'<span class="au-rt"><b>'+esc(rname(r))+'</b><span class="au-ar" lang="ar">'+(L()==='ar'?esc(r[3]):esc(r[2]))+'</span></span><span class="au-eq"><i></i><i></i><i></i></span><span class="au-chev">\u203A</span></button>';
     });
-    h+='<p class="au-note">'+esc(tr('অডিও ইন্টারনেট থেকে স্ট্রিম হয়; মোবাইল ডেটা খরচ হতে পারে।'))+'</p>';
+    h+='<p class="au-note">'+esc(tr('অডিও ইন্টারনেট থেকে স্ট্রিম হয়। সূরার পাশের ডাউনলোড বাটনে চাপলে অফলাইনেও শুনতে পারবেন।'))+'</p>';
     $('audRoot').innerHTML=h;
     $('audRoot').querySelectorAll('.au-rec').forEach(function(b){
       b.onclick=function(){var r=byId(b.getAttribute('data-r'));st.filter='';renderSurahs(r);if(window.NAV&&NAV.commit)NAV.commit();};
@@ -14482,10 +14604,11 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
   function renderSurahs(r){
     st.view='surahs'; st.cur=r;
     var h='<div class="au-hd">'+av(r)+'<div><b>'+esc(rname(r))+'</b><small>'+esc(L()==='ar'?r[3]:r[2])+'</small></div></div>'+
-      '<input class="au-search" id="auSearch" type="search" placeholder="'+esc(tr('সূরার নাম বা নম্বর খুঁজুন...'))+'" value="'+esc(st.filter)+'"><div id="auList"></div>';
+      '<input class="au-search" id="auSearch" type="search" placeholder="'+esc(tr('সূরার নাম বা নম্বর খুঁজুন...'))+'" value="'+esc(st.filter)+'"><div id="auAll"></div><div id="auList"></div>';
     $('audRoot').innerHTML=h;
     var inp=$('auSearch');
     inp.oninput=function(){st.filter=inp.value;fillList()};
+    if(window.LODOff)$('auAll').appendChild(LODOff.audioAllBtn(r,function(n){return candidates(r,n)}));
     fillList(); window.scrollTo(0,0);
   }
   function fillList(){
@@ -14493,10 +14616,11 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
     SURAHS.forEach(function(s,i){
       var n=i+1;
       if(q&&String(n)!==q&&bnd(n)!==q&&s[0].toLowerCase().indexOf(q)<0&&s[1].indexOf(q)<0)return;
-      h+='<button class="au-s" data-s="'+n+'"><span class="au-no">'+bnd(n)+'</span><span class="au-st"><b>'+esc(sname(s))+'<span class="au-eq"><i></i><i></i><i></i></span></b><span>'+bnd(s[2])+' '+esc(tr('আয়াত'))+'</span></span><span class="au-ar" lang="ar">'+esc(s[1])+'</span></button>';
+      h+='<button class="au-s" data-s="'+n+'"><span class="au-no">'+bnd(n)+'</span><span class="au-st"><b>'+esc(sname(s))+'<span class="au-eq"><i></i><i></i><i></i></span></b><span>'+bnd(s[2])+' '+esc(tr('আয়াত'))+'</span></span><span class="au-ar" lang="ar">'+esc(s[1])+'</span></button><span class="dl-slot" data-n="'+n+'"></span>';
     });
     if(!h)h='<p class="au-note">'+esc(tr('কোনো সূরা পাওয়া যায়নি'))+'</p>';
     $('auList').innerHTML=h;
+    if(window.LODOff)$('auList').querySelectorAll('.dl-slot').forEach(function(sl){var n=+sl.getAttribute('data-n'),b=sl.previousSibling,w=document.createElement('div');w.className='dl-wrap';sl.parentNode.insertBefore(w,b);w.appendChild(b);w.appendChild(LODOff.audioBtn(r,n,candidates(r,n)));sl.remove()});
     $('auList').querySelectorAll('.au-s').forEach(function(b){
       b.onclick=function(){
         var n=+b.getAttribute('data-s');
