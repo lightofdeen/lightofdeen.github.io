@@ -97,6 +97,7 @@
 
   function markAyah(sNo, a) {
     sNo = +sNo; a = +a; if (!sNo || !a) return;
+    try { if (window.trkAuto) trkAuto('ayah', sNo + ':' + a); } catch (e) {}
     var s = stats();
     setAdd(s.ay, String(sNo), a);
     s.last.ay = { s: sNo, a: a, t: Date.now() };
@@ -104,6 +105,7 @@
   }
   function markHadith(bk, no) {
     if (!bk || no === '' || no == null) return;
+    try { if (window.trkAuto) trkAuto('hadith', String(bk) + ':' + String(no)); } catch (e) {}
     var s = stats();
     if (setAdd(s.hd, String(bk), no)) { jset(K.stats, s); touch('stats'); }
   }

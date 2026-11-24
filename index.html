@@ -1223,6 +1223,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
 <symbol id="hadith" viewBox="0 0 24 24"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
 <symbol id="dua" viewBox="0 0 24 24"><path d="M12 21s-8-4.6-8-10.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 8 2.5C20 16.4 12 21 12 21z"/><path d="M12 3v3M9.5 4.2l1 1.8M14.5 4.2l-1 1.8"/></symbol>
 <symbol id="amal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></symbol>
+<symbol id="trk" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></symbol>
 <symbol id="history" viewBox="0 0 24 24"><path d="M12 2.5c-.6 1.3-1.8 2-1.8 3.5a1.8 1.8 0 0 0 3.6 0c0-1.5-1.2-2.2-1.8-3.5z"/><path d="M6 21v-7a6 6 0 0 1 12 0v7M3 21h18M10 21v-4a2 2 0 0 1 4 0v4"/></symbol>
 <symbol id="qibla" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
 <symbol id="tasbih" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><circle cx="18" cy="9" r="2"/><circle cx="6" cy="9" r="2"/><circle cx="16" cy="16.5" r="2"/><circle cx="8" cy="16.5" r="2"/><path d="M12 19v3"/></symbol>
@@ -1308,6 +1309,7 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
         <button class="m" onclick="switchView('hadith')"><div class="ic"><svg class="i"><use href="#hadith"/></svg></div>হাদিস<small>Hadith</small></button>
         <button class="m" onclick="switchView('dua')"><div class="ic"><svg class="i"><use href="#dua"/></svg></div>দোয়া<small>Dua</small></button>
         <button class="m" onclick="switchView('amal')"><div class="ic"><svg class="i"><use href="#amal"/></svg></div>দৈনন্দিন আমল<small>Daily Amal</small></button>
+        <button class="m" onclick="switchView('trk')"><div class="ic"><svg class="i"><use href="#trk"/></svg></div>আমল ট্র্যাকার<small>Amal Tracker</small></button>
         <button class="m" onclick="switchView('qibla')"><div class="ic"><svg class="i"><use href="#qibla"/></svg></div>ক্বিবলা<small>Qibla</small></button>
         <button class="m" onclick="switchView('tasbih')"><div class="ic"><svg class="i"><use href="#tasbih"/></svg></div>তাসবিহ<small>Tasbih</small></button>
         <button class="m" onclick="switchView('hijri')"><div class="ic"><svg class="i"><use href="#hijri"/></svg></div>হিজরি ক্যালেন্ডার<small>Hijri</small></button>
@@ -1642,6 +1644,429 @@ details.zk-d[open] summary::after{transform:rotate(-135deg);margin-top:4px}
     </div>
     <div class="hd-wrap" id="amalBody"></div>
   </div>
+
+  <!-- আমল ট্র্যাকার ভিউ -->
+  <div id="trk-view" class="view-section">
+    <style id="trkCss">
+      #trk-view .trk-wrap{padding:14px 16px 44px;max-width:640px;margin:0 auto}
+      .trk-date{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+      .trk-nb{flex:none;width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--blue);font-size:22px;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);font-family:inherit;padding:0;-webkit-tap-highlight-color:transparent}
+      .trk-nb:disabled{opacity:.35;cursor:default}
+      .trk-dm{flex:1;min-width:0;position:relative;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 10px;box-shadow:var(--shadow);cursor:pointer}
+      .trk-dm b{display:block;font-size:15.5px;color:var(--text)}
+      .trk-dm small{display:block;font-size:12px;color:var(--muted)}
+      .trk-dm input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0}
+      .trk-sum{background:linear-gradient(160deg,var(--blue),var(--blue-d));color:#fff;border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+      .trk-s1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+      .trk-s1 b{font-size:15px}
+      .trk-s1 span{font-size:26px;font-weight:800}
+      .trk-bar{height:8px;background:rgba(255,255,255,.25);border-radius:8px;overflow:hidden}
+      .trk-bar i{display:block;height:100%;width:0;background:#fff;border-radius:8px;transition:width .3s}
+      .trk-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;text-align:center}
+      .trk-mini div{background:rgba(255,255,255,.14);border-radius:14px;padding:8px 4px}
+      .trk-mini b{display:block;font-size:17px}
+      .trk-mini small{display:block;font-size:11px;opacity:.9;line-height:1.3}
+      .trk-h{font-size:16.5px;font-weight:700;margin:20px 2px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+      .trk-h span{font-size:12.5px;color:var(--muted);font-weight:500}
+      .trk-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+      .trk-pr{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+      .trk-pr:last-child,.trk-cn:last-child,.trk-hi:last-child{border-bottom:0}
+      .trk-pn{flex:1 1 70px;font-weight:600;font-size:15px;min-width:0}
+      .trk-chips{display:flex;gap:6px}
+      .trk-chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 12px;font-size:12.5px;font-family:inherit;cursor:pointer;line-height:1.2;-webkit-tap-highlight-color:transparent}
+      .trk-chip:disabled{opacity:.4;cursor:not-allowed}
+      .trk-pn small,.trk-ot span small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+      .trk-pr.lock .trk-pn,.trk-ot.lock{opacity:.6}
+      .trk-ot:disabled{cursor:not-allowed}
+      .trk-chip.on{background:var(--blue);border-color:var(--blue);color:var(--on-blue,#fff);font-weight:600}
+      .trk-cn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+      .trk-cl{flex:1 1 130px;min-width:0}
+      .trk-cl b{display:block;font-size:14.5px}
+      .trk-cl small{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+      .trk-st{display:flex;align-items:center;gap:6px;margin-left:auto}
+      .trk-sb{width:34px;height:34px;border-radius:11px;border:1px solid var(--line);background:var(--bg);color:var(--blue);font-size:20px;line-height:1;cursor:pointer;font-family:inherit;padding:0;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+      .trk-sb:active{background:var(--blue-l)}
+      .trk-in{width:60px;height:34px;text-align:center;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text);font-size:15px;font-weight:700;font-family:inherit;padding:0;min-width:0}
+      .trk-big{height:34px;padding:0 9px;border-radius:11px;border:1px solid var(--blue);background:transparent;color:var(--blue);font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer}
+      .trk-big:active{background:var(--blue-l)}
+      .trk-og{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+      .trk-ot{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;padding:10px;font-family:inherit;font-size:13.5px;text-align:left;cursor:pointer;line-height:1.3;-webkit-tap-highlight-color:transparent}
+      .trk-ot i{flex:none;width:22px;height:22px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:13px;color:transparent}
+      .trk-ot.on{border-color:var(--blue);background:var(--blue-l)}
+      .trk-ot.on i{background:var(--blue);border-color:var(--blue);color:var(--on-blue,#fff)}
+      .trk-wk{display:flex;gap:6px;height:140px;padding:14px 10px 10px}
+      .trk-wb{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;font-family:inherit;color:var(--muted);font-size:11px;cursor:pointer}
+      .trk-wa{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
+      .trk-wa i{display:block;width:100%;max-width:30px;border-radius:8px 8px 4px 4px;background:var(--line);min-height:4px;transition:height .3s}
+      .trk-wb.has .trk-wa i{background:linear-gradient(180deg,var(--blue),var(--blue-d))}
+      .trk-wb.cur{color:var(--blue);font-weight:700}
+      .trk-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+      .trk-tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .trk-tl{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+      .trk-tl b{display:block;font-size:22px;color:var(--blue);line-height:1.25}
+      .trk-tl span{display:block;font-size:12.5px;color:var(--text)}
+      .trk-tl small{display:block;font-size:11px;color:var(--muted)}
+      .trk-hi{display:flex;align-items:center;gap:12px;padding:11px 14px;border:0;border-bottom:1px solid var(--line);cursor:pointer;width:100%;background:none;text-align:left;font-family:inherit;color:var(--text)}
+      .trk-hi.cur{background:var(--blue-l)}
+      .trk-hd{flex:none;width:48px;text-align:center;line-height:1.2}
+      .trk-hd b{display:block;font-size:19px;color:var(--blue)}
+      .trk-hd small{display:block;font-size:11px;color:var(--muted)}
+      .trk-hm{flex:1;min-width:0;font-size:12.5px;color:var(--muted);line-height:1.55}
+      .trk-hm b{display:block;font-size:14px;color:var(--text)}
+      .trk-hp{flex:none;font-weight:700;font-size:13px;color:var(--blue)}
+      .trk-empty{padding:18px 14px;text-align:center;color:var(--muted);font-size:13.5px}
+      .trk-more,.trk-del{display:block;width:100%;margin-top:10px;padding:11px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--blue);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+      .trk-del{color:var(--muted);font-weight:500;background:transparent;margin-top:18px}
+    </style>
+    <div class="rd-bar">
+      <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
+      <h3>আমল ট্র্যাকার</h3>
+    </div>
+    <div class="trk-wrap" id="trkBody"></div>
+  </div>
+  <script>
+  /* ===== আমল ট্র্যাকার — তারিখ অনুযায়ী দৈনিক হিসাব (localStorage: lodTrk) ===== */
+  (function () {
+    'use strict';
+    if (window.trkRender) return;
+    var KEY = 'lodTrk', DG = '০১২৩৪৫৬৭৮৯';
+    var MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+    var DAYS = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+    var DSH = ['রবি','সোম','মঙ্গল','বুধ','বৃহঃ','শুক্র','শনি'];
+    var PR = [['fajr','ফজর'],['dhuhr','যোহর'],['asr','আসর'],['maghrib','মাগরিব'],['isha','ইশা']];
+    var PST = [[2,'জামাতে'],[1,'একা'],[3,'কাযা']];
+    var CN = [
+      {k:'ayah',t:'কুরআন তিলাওয়াত',u:'আয়াত · কুরআন পড়লে নিজে নিজে যোগ হয়',big:10,lbl:'আয়াত'},
+      {k:'hadith',t:'হাদিস পাঠ',u:'টি · হাদিস পড়লে নিজে নিজে যোগ হয়',big:5,lbl:'হাদিস'},
+      {k:'tasbih',t:'তাসবিহ',u:'বার · ডিজিটাল তাসবিহে চাপলে নিজে নিজে যোগ হয়',big:33,lbl:'তাসবিহ'},
+      {k:'durud',t:'দরুদ শরীফ',u:'বার',big:10,lbl:'দরুদ'},
+      {k:'istighfar',t:'ইস্তিগফার',u:'বার',big:100,lbl:'ইস্তিগফার'},
+      {k:'dua',t:'দোয়া ও আযকার',u:'টি',big:5,lbl:'দোয়া'}
+    ];
+    var OT = [['tahajjud','তাহাজ্জুদ'],['ishraq','ইশরাক'],['chasht','চাশত (দোহা)'],['awwabin','আউয়াবিন'],
+      ['sunnah','সুন্নত ও নফল নামাজ'],['azkar','সকাল-সন্ধ্যার আযকার'],['mulk','সূরা মুলক (রাতে)'],['kahf','সূরা কাহফ (জুমার দিন)'],
+      ['roza','নফল রোজা'],['sadaqa','সদকা / দান'],['ilm','দ্বীনি ইলম অর্জন'],['parents','বাবা-মায়ের খেদমত']];
+
+    function nb(n) { return String(n).replace(/\d/g, function (d) { return DG[d]; }); }
+    function en(s) { return String(s).replace(/[০-৯]/g, function (d) { return DG.indexOf(d); }); }
+    function p2(n) { return n < 10 ? '0' + n : '' + n; }
+    function dkey(d) { return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()); }
+    function pdate(k) { var a = k.split('-'); return new Date(+a[0], +a[1] - 1, +a[2]); }
+    function today() { return dkey(new Date()); }
+    function addDays(k, n) { var d = pdate(k); d.setDate(d.getDate() + n); return dkey(d); }
+    function $(id) { return document.getElementById(id); }
+    function h(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+
+    function load() {
+      var o = {};
+      try { o = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { o = {}; }
+      return (o && typeof o === 'object') ? o : {};
+    }
+    var DB = load(), cur = today(), per = 'w', hmax = 30;
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+    function rec(k, create) {
+      var r = DB[k];
+      if (!r && create) r = DB[k] = { p: {}, c: {}, o: {} };
+      if (r) { r.p = r.p || {}; r.c = r.c || {}; r.o = r.o || {}; }
+      return r;
+    }
+    function prayed(r) { if (!r) return 0; var n = 0; PR.forEach(function (p) { if (r.p && r.p[p[0]] > 0) n++; }); return n; }
+    function otn(r) { if (!r) return 0; var n = 0; OT.forEach(function (o) { if (r.o && r.o[o[0]]) n++; }); return n; }
+    function score(r) { return Math.round(prayed(r) / 5 * 60 + otn(r) / OT.length * 40); }
+    function hasData(r) { if (!r) return false; if (prayed(r) || otn(r)) return true; return CN.some(function (c) { return r.c && r.c[c.k] > 0; }); }
+    function streak() {
+      var k = today(), n = 0;
+      if (prayed(DB[k]) < 5) k = addDays(k, -1);
+      while (prayed(DB[k]) === 5) { n++; k = addDays(k, -1); }
+      return n;
+    }
+    function rel(k) {
+      var t = today(), wd = DAYS[pdate(k).getDay()];
+      if (k === t) return 'আজ · ' + wd;
+      if (k === addDays(t, -1)) return 'গতকাল · ' + wd;
+      return wd;
+    }
+
+    /* ---- তারিখ বদল ---- */
+    function go(k) { cur = k; rDate(); rPray(); rCnt(); rOth(); stats(); }
+
+    function rDate() {
+      var b = $('trkDate'); b.innerHTML = '';
+      var prev = h('button', 'trk-nb', '‹'); prev.setAttribute('aria-label', 'আগের দিন');
+      prev.onclick = function () { go(addDays(cur, -1)); };
+      var mid = h('div', 'trk-dm'), d = pdate(cur);
+      mid.appendChild(h('b', '', nb(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ' ' + nb(d.getFullYear())));
+      mid.appendChild(h('small', '', rel(cur)));
+      var inp = document.createElement('input'); inp.type = 'date'; inp.value = cur; inp.max = today();
+      inp.setAttribute('aria-label', 'তারিখ বাছুন');
+      inp.onchange = function () { if (inp.value && inp.value <= today()) go(inp.value); };
+      inp.onclick = function () { try { if (inp.showPicker) inp.showPicker(); } catch (e) {} };
+      mid.appendChild(inp);
+      var next = h('button', 'trk-nb', '›'); next.setAttribute('aria-label', 'পরের দিন');
+      next.disabled = cur >= today();
+      next.onclick = function () { if (cur < today()) go(addDays(cur, 1)); };
+      b.appendChild(prev); b.appendChild(mid); b.appendChild(next);
+    }
+
+    function rSum() {
+      var r = rec(cur), b = $('trkSum'); b.innerHTML = '';
+      var sc = score(r);
+      var top = h('div', 'trk-s1');
+      top.appendChild(h('b', '', cur === today() ? 'আজকের অগ্রগতি' : 'এই দিনের অগ্রগতি'));
+      top.appendChild(h('span', '', nb(sc) + '%'));
+      var bar = h('div', 'trk-bar'), f = h('i', ''); f.style.width = sc + '%'; bar.appendChild(f);
+      var g = h('div', 'trk-mini');
+      [['নামাজ', nb(prayed(r)) + '/' + nb(5)], ['নফল আমল', nb(otn(r)) + '/' + nb(OT.length)], ['পূর্ণ ৫ ওয়াক্তের ধারা', nb(streak()) + ' দিন']].forEach(function (x) {
+        var c = h('div'); c.appendChild(h('b', '', x[1])); c.appendChild(h('small', '', x[0])); g.appendChild(c);
+      });
+      b.appendChild(top); b.appendChild(bar); b.appendChild(g);
+    }
+
+    /* ভবিষ্যতের আমলে টিক বন্ধ: আজকের তারিখে ওয়াক্ত শুরুর আগে নামাজ/সংশ্লিষ্ট নফল চিহ্নিত করা যায় না */
+    var LK = { fajr: ['fajr', 0], dhuhr: ['dhuhr', 0], asr: ['asr', 0], maghrib: ['maghrib', 0], isha: ['isha', 0],
+               ishraq: ['sunrise', 15], chasht: ['sunrise', 15], awwabin: ['maghrib', 0] };
+    function lockMin(key) {
+      if (cur !== today() || !LK[key]) return 0;
+      try { return hrsToMin(getTimes(dhakaNow())[LK[key][0]]) + LK[key][1]; } catch (e) { return 0; }
+    }
+    function nowMin() { var d = dhakaNow(); return d.getUTCHours() * 60 + d.getUTCMinutes(); }
+    function isLocked(key) { var u = lockMin(key); return u > 0 && nowMin() < u; }
+    function startTxt(key) {
+      var u = lockMin(key);
+      try { return bnTime12(Math.floor(u / 60), u % 60) + '-এ শুরু'; } catch (e) { return 'এখনো শুরু হয়নি'; }
+    }
+
+    function rPray() {
+      var b = $('trkPray'); b.innerHTML = '';
+      var r = rec(cur);
+      PR.forEach(function (p) {
+        var v = (r && r.p[p[0]]) || 0, lk = isLocked(p[0]);
+        var row = h('div', 'trk-pr' + (lk ? ' lock' : ''));
+        var nm = h('div', 'trk-pn', p[1]);
+        if (lk) nm.appendChild(h('small', '', startTxt(p[0])));
+        row.appendChild(nm);
+        var ch = h('div', 'trk-chips');
+        PST.forEach(function (s) {
+          var c = h('button', 'trk-chip' + (v === s[0] ? ' on' : ''), s[1]);
+          if (lk && v !== s[0]) c.disabled = true;
+          c.onclick = function () {
+            if (isLocked(p[0]) && v !== s[0]) return;
+            var rr = rec(cur, true);
+            if (rr.p[p[0]] === s[0]) delete rr.p[p[0]]; else rr.p[p[0]] = s[0];
+            save(); rPray(); stats();
+          };
+          ch.appendChild(c);
+        });
+        row.appendChild(ch); b.appendChild(row);
+      });
+    }
+
+    function rCnt() {
+      var b = $('trkCnt'); b.innerHTML = '';
+      CN.forEach(function (c) {
+        var row = h('div', 'trk-cn'), l = h('div', 'trk-cl');
+        l.appendChild(h('b', '', c.t)); l.appendChild(h('small', '', c.u));
+        var st = h('div', 'trk-st');
+        var r0 = rec(cur), v0 = (r0 && r0.c[c.k]) || 0;
+        var inp = h('input', 'trk-in'); inp.type = 'text'; inp.setAttribute('inputmode', 'numeric'); inp.value = nb(v0);
+        inp.setAttribute('aria-label', c.t);
+        function get() { var r = rec(cur); return (r && r.c[c.k]) || 0; }
+        function set(v) {
+          v = Math.max(0, Math.min(999999, Math.floor(v) || 0));
+          var r = rec(cur, true);
+          if (v) r.c[c.k] = v; else delete r.c[c.k];
+          save(); inp.value = nb(v); stats();
+        }
+        var mi = h('button', 'trk-sb', '−'); mi.setAttribute('aria-label', 'কমান'); mi.onclick = function () { set(get() - 1); };
+        var pl = h('button', 'trk-sb', '+'); pl.setAttribute('aria-label', 'বাড়ান'); pl.onclick = function () { set(get() + 1); };
+        var bg = h('button', 'trk-big', '+' + nb(c.big)); bg.onclick = function () { set(get() + c.big); };
+        inp.onfocus = function () { try { inp.select(); } catch (e) {} };
+        inp.oninput = function () { var s = en(inp.value).replace(/\D/g, ''); inp.value = nb(s); };
+        inp.onchange = function () { set(parseInt(en(inp.value).replace(/\D/g, ''), 10) || 0); };
+        inp.onkeydown = function (e) { if (e.key === 'Enter') inp.blur(); };
+        st.appendChild(mi); st.appendChild(inp); st.appendChild(pl); st.appendChild(bg);
+        row.appendChild(l); row.appendChild(st); b.appendChild(row);
+      });
+    }
+
+    function rOth() {
+      var b = $('trkOth'); b.innerHTML = '';
+      var r = rec(cur);
+      OT.forEach(function (o) {
+        var on = !!(r && r.o[o[0]]), lk = isLocked(o[0]);
+        var t = h('button', 'trk-ot' + (on ? ' on' : '') + (lk && !on ? ' lock' : ''));
+        if (lk && !on) t.disabled = true;
+        t.appendChild(h('i', '', '✓'));
+        var sp = h('span', '', o[1]);
+        if (lk && !on) sp.appendChild(h('small', '', startTxt(o[0])));
+        t.appendChild(sp);
+        t.onclick = function () {
+          if (isLocked(o[0]) && !(rec(cur) && rec(cur).o[o[0]])) return;
+          var rr = rec(cur, true);
+          if (rr.o[o[0]]) delete rr.o[o[0]]; else rr.o[o[0]] = 1;
+          save(); rOth(); stats();
+        };
+        b.appendChild(t);
+      });
+    }
+
+    function rWeek() {
+      var b = $('trkWeek'); b.innerHTML = '';
+      for (var i = 6; i >= 0; i--) {
+        (function (k) {
+          var r = rec(k), sc = score(r);
+          var bt = h('button', 'trk-wb' + (hasData(r) ? ' has' : '') + (k === cur ? ' cur' : ''));
+          bt.setAttribute('aria-label', rel(k));
+          bt.appendChild(h('span', '', nb(sc) + '%'));
+          var area = h('div', 'trk-wa'), bar = h('i'); bar.style.height = Math.max(4, sc) + '%'; area.appendChild(bar);
+          bt.appendChild(area);
+          bt.appendChild(h('span', '', DSH[pdate(k).getDay()]));
+          bt.onclick = function () { go(k); };
+          b.appendChild(bt);
+        })(addDays(today(), -i));
+      }
+    }
+
+    function sums() {
+      var t = { pr: 0, jam: 0, ot: 0, days: 0 }, t0 = today();
+      CN.forEach(function (c) { t[c.k] = 0; });
+      var from = per === 'w' ? addDays(t0, -6) : per === 'm' ? addDays(t0, -29) : '';
+      Object.keys(DB).forEach(function (k) {
+        if ((from && k < from) || k > t0) return;
+        var r = rec(k); if (!hasData(r)) return;
+        t.days++; t.pr += prayed(r); t.ot += otn(r);
+        PR.forEach(function (p) { if (r.p[p[0]] === 2) t.jam++; });
+        CN.forEach(function (c) { t[c.k] += r.c[c.k] || 0; });
+      });
+      return t;
+    }
+    function rTot() {
+      var b = $('trkTot'); b.innerHTML = '';
+      var tabs = h('div', 'trk-tabs');
+      [['w', 'গত ৭ দিন'], ['m', 'গত ৩০ দিন'], ['a', 'সব সময়']].forEach(function (x) {
+        var c = h('button', 'trk-chip' + (per === x[0] ? ' on' : ''), x[1]);
+        c.onclick = function () { per = x[0]; rTot(); };
+        tabs.appendChild(c);
+      });
+      var t = sums(), g = h('div', 'trk-tg');
+      var tiles = [
+        [t.pr, 'ওয়াক্ত নামাজ', 'জামাতে ' + nb(t.jam) + ' ওয়াক্ত'],
+        [t.ayah, 'আয়াত তিলাওয়াত', ''],
+        [t.hadith, 'হাদিস পাঠ', ''],
+        [t.tasbih, 'তাসবিহ', ''],
+        [t.durud, 'দরুদ শরীফ', ''],
+        [t.istighfar, 'ইস্তিগফার', ''],
+        [t.dua, 'দোয়া ও আযকার', ''],
+        [t.ot, 'নফল ও অন্যান্য আমল', 'আমলের দিন ' + nb(t.days)]
+      ];
+      tiles.forEach(function (x) {
+        var c = h('div', 'trk-tl'); c.appendChild(h('b', '', nb(x[0]))); c.appendChild(h('span', '', x[1]));
+        if (x[2]) c.appendChild(h('small', '', x[2]));
+        g.appendChild(c);
+      });
+      b.appendChild(tabs); b.appendChild(g);
+    }
+
+    function rHist() {
+      var b = $('trkHist'); b.innerHTML = '';
+      var keys = Object.keys(DB).filter(function (k) { return hasData(rec(k)); }).sort().reverse();
+      var card = h('div', 'trk-card');
+      if (!keys.length) {
+        card.appendChild(h('div', 'trk-empty', 'এখনো কোনো হিসাব নেই। উপরে আজকের আমল লিখলেই এখানে তারিখ অনুযায়ী জমা হবে।'));
+      }
+      keys.slice(0, hmax).forEach(function (k) {
+        var r = rec(k), d = pdate(k);
+        var row = h('button', 'trk-hi' + (k === cur ? ' cur' : ''));
+        var dd = h('div', 'trk-hd'); dd.appendChild(h('b', '', nb(d.getDate()))); dd.appendChild(h('small', '', MONTHS[d.getMonth()]));
+        var mm = h('div', 'trk-hm');
+        mm.appendChild(h('b', '', rel(k) + ' · ' + nb(d.getFullYear())));
+        var parts = ['নামাজ ' + nb(prayed(r)) + '/' + nb(5)];
+        CN.forEach(function (c) { if (r.c[c.k] > 0) parts.push(c.lbl + ' ' + nb(r.c[c.k])); });
+        if (otn(r)) parts.push('নফল ' + nb(otn(r)));
+        mm.appendChild(h('span', '', parts.join(' · ')));
+        row.appendChild(dd); row.appendChild(mm); row.appendChild(h('div', 'trk-hp', nb(score(r)) + '%'));
+        row.onclick = function () { go(k); window.scrollTo(0, 0); };
+        card.appendChild(row);
+      });
+      b.appendChild(card);
+      if (keys.length > hmax) {
+        var more = h('button', 'trk-more', 'আরও দেখুন (' + nb(keys.length - hmax) + 'টি দিন বাকি)');
+        more.onclick = function () { hmax += 30; rHist(); };
+        b.appendChild(more);
+      }
+    }
+
+    function stats() { rSum(); rWeek(); rTot(); rHist(); }
+
+    function build(box) {
+      box.innerHTML = '';
+      var mk = function (id, cls) { var e = h('div', cls || ''); e.id = id; return e; };
+      var hd = function (t, s) { var e = h('div', 'trk-h'); e.appendChild(h('b', '', t)); if (s) e.appendChild(h('span', '', s)); return e; };
+      box.appendChild(mk('trkDate', 'trk-date'));
+      box.appendChild(mk('trkSum', 'trk-sum'));
+      box.appendChild(hd('পাঁচ ওয়াক্ত নামাজ', 'জামাতে / একা / কাযা'));
+      box.appendChild(mk('trkPray', 'trk-card'));
+      box.appendChild(hd('তিলাওয়াত ও যিকির', 'সংখ্যা লিখুন'));
+      box.appendChild(mk('trkCnt', 'trk-card'));
+      box.appendChild(hd('নফল ও অন্যান্য আমল', 'ট্যাপ করে চিহ্নিত করুন'));
+      box.appendChild(mk('trkOth', 'trk-card trk-og'));
+      box.appendChild(hd('গত ৭ দিন', 'দিনের অগ্রগতি'));
+      box.appendChild(mk('trkWeek', 'trk-card trk-wk'));
+      box.appendChild(hd('মোট হিসাব'));
+      box.appendChild(mk('trkTot'));
+      box.appendChild(hd('তারিখ অনুযায়ী ইতিহাস', 'ট্যাপ করে সেই দিন দেখুন'));
+      box.appendChild(mk('trkHist'));
+      var del = h('button', 'trk-del', 'এই দিনের হিসাব মুছুন');
+      del.onclick = function () {
+        if (!rec(cur) || !window.confirm('এই দিনের সব হিসাব মুছে ফেলবেন?')) return;
+        delete DB[cur]; save(); go(cur);
+      };
+      box.appendChild(del);
+    }
+
+    setInterval(function () {
+      var v = $('trk-view');
+      if (v && v.classList.contains('active') && $('trkPray') && cur === today()) { rPray(); rOth(); }
+    }, 30000);
+
+    window.trkRender = function (reset) {
+      var box = $('trkBody'); if (!box) return;
+      DB = load();
+      if (reset) { cur = today(); hmax = 30; }
+      if (!$('trkDate')) build(box);
+      rDate(); rPray(); rCnt(); rOth(); stats();
+      window.scrollTo(0, 0);
+    };
+
+    /* কুরআনের আয়াত / হাদিস পড়লে আজকের হিসাবে নিজে নিজে যোগ হয় (প্রতিদিন একই আয়াত/হাদিস একবারই গোনা হয়) */
+    window.trkAuto = function (kind, id) {
+      try {
+        var k = today(), sn = null;
+        try { sn = JSON.parse(localStorage.getItem('lodTrkSeen') || 'null'); } catch (e) {}
+        if (!sn || sn.d !== k) sn = { d: k, ayah: [], hadith: [] };
+        var a = sn[kind]; if (!a || a.indexOf(id) > -1) return;
+        a.push(id);
+        try { localStorage.setItem('lodTrkSeen', JSON.stringify(sn)); } catch (e) {}
+        var r = load();
+        r[k] = r[k] || { p: {}, c: {}, o: {} }; r[k].c = r[k].c || {};
+        r[k].c[kind] = (r[k].c[kind] || 0) + 1;
+        DB = r; save();
+      } catch (e) {}
+    };
+
+    /* ডিজিটাল তাসবিহে প্রতি ট্যাপে আজকের তাসবিহ গণনায় ১ যোগ হয় */
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t && t.closest && t.closest('#tasbihBtn')) {
+        var r = load(), k = today();
+        r[k] = r[k] || { p: {}, c: {}, o: {} };
+        r[k].c = r[k].c || {};
+        r[k].c.tasbih = (r[k].c.tasbih || 0) + 1;
+        DB = r; save();
+      }
+    }, true);
+  })();
+  </script>
 
   <!-- হিজরি ক্যালেন্ডার ভিউ -->
   <div id="hijri-view" class="view-section">
@@ -2045,7 +2470,7 @@ let LANG='bn';try{LANG=localStorage.getItem('lang')||'bn'}catch(e){}
 if(!['bn','en','ar'].includes(LANG))LANG='bn';
 const DIG={bn:'০১২৩৪৫৬৭৮৯',en:'0123456789',ar:'٠١٢٣٤٥٦٧٨٩'};
 const bn=n=>String(n).replace(/\d/g,d=>DIG[LANG][d]);
-const D={"হানাফি মাজহাব":["Hanafi","الحنفي"],"মালিকি, শাফি'ই, হাম্বলি":["Maliki, Shafi'i, Hanbali","المالكي والشافعي والحنبلي"],"হানাফি আসর":["Hanafi Asr","عصر حنفي"],"শাফি'ই/মালিকি/হাম্বলি আসর":["Shafi'i/Maliki/Hanbali Asr","عصر (شافعي/مالكي/حنبلي)"],"আসর":["Asr","العصر"],"বর্তমান নামাজ":["Current prayer","الصلاة الحالية"],"শেষ হতে বাকি":["Ends in","ينتهي بعد"],"শুরু হতে বাকি":["Starts in","يبدأ بعد"],"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। সূচটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the needle lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما يتطابق المؤشر مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "প্রোফাইল": ["Profile", "الملف الشخصي"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "শুরু হয়েছে": ["Started", "بدأ"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে সবুজ সূচ উপরের দিকে আনুন": ["Turn your phone until the needle points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
+const D={"আমল ট্র্যাকার":["Amal Tracker","متتبع الأعمال"],"হানাফি মাজহাব":["Hanafi","الحنفي"],"মালিকি, শাফি'ই, হাম্বলি":["Maliki, Shafi'i, Hanbali","المالكي والشافعي والحنبلي"],"হানাফি আসর":["Hanafi Asr","عصر حنفي"],"শাফি'ই/মালিকি/হাম্বলি আসর":["Shafi'i/Maliki/Hanbali Asr","عصر (شافعي/مالكي/حنبلي)"],"আসর":["Asr","العصر"],"বর্তমান নামাজ":["Current prayer","الصلاة الحالية"],"শেষ হতে বাকি":["Ends in","ينتهي بعد"],"শুরু হতে বাকি":["Starts in","يبدأ بعد"],"ঈমানের আলোয় আলোকিত জীবন": ["A life illuminated by the light of faith", "حياة مضيئة بنور الإيمان"], "Light of Deen": ["Light of Deen", "نور الدين"], "আসসালামু আলাইকুম": ["Assalamu Alaikum", "السلام عليكم"], "নোটিফিকেশন": ["Notifications", "الإشعارات"], "এলাকা পরিবর্তন করুন": ["Change location", "تغيير المنطقة"], "নামাজের সময়": ["Prayer times", "مواقيت الصلاة"], "প্রধান মেনু": ["Main menu", "القائمة الرئيسية"], "নিচের নেভিগেশন": ["Bottom navigation", "التنقل السفلي"], "এলাকা নির্বাচন": ["Select location", "اختيار المنطقة"], "বন্ধ করুন": ["Close", "إغلاق"], "গণনা করুন": ["Count", "عدّ"], "ফিরে যান": ["Go back", "رجوع"], "পরবর্তী নামাজ": ["Next prayer", "الصلاة القادمة"], "ফজর": ["Fajr", "الفجر"], "যোহর": ["Dhuhr", "الظهر"], "আসর": ["Asr", "العصر"], "মাগরিব": ["Maghrib", "المغرب"], "ইশা": ["Isha", "العشاء"], "· হানাফি আসর · ১৮° · সূর্যোদয়": ["· Hanafi Asr · 18° · Sunrise", "· عصر حنفي · ١٨° · الشروق"], "সব সেবা": ["All Services", "جميع الخدمات"], "Services": ["Services", "الخدمات"], "আল-কুরআন": ["Al-Quran", "القرآن الكريم"], "হাদিস": ["Hadith", "الحديث"], "দোয়া": ["Dua", "الدعاء"], "দৈনন্দিন আমল": ["Daily Amal", "الأعمال اليومية"], "ইসলামিক ইতিহাস": ["Islamic History", "التاريخ الإسلامي"], "ক্বিবলা": ["Qibla", "القبلة"], "তাসবিহ": ["Tasbih", "التسبيح"], "হিজরি ক্যালেন্ডার": ["Hijri Calendar", "التقويم الهجري"], "আজকের আমল": ["Today's Amal", "أعمال اليوم"], "সূরা কাহফ তিলাওয়াত": ["Recite Surah Al-Kahf", "قراءة سورة الكهف"], "জুমার দিনের বিশেষ আমল": ["A special deed of Friday", "من أعمال يوم الجمعة"], "নবীজি ﷺ-এর উপর দরুদ পাঠ": ["Send salawat upon the Prophet ﷺ", "الصلاة على النبي ﷺ"], "জুমার দিনে বেশি বেশি দরুদ পড়ুন": ["Send abundant salawat on Fridays", "أكثروا من الصلاة عليه يوم الجمعة"], "সকাল-সন্ধ্যার আযকার": ["Morning & evening adhkar", "أذكار الصباح والمساء"], "আয়াতুল কুরসি ও তিন কুল": ["Ayat al-Kursi and the three Quls", "آية الكرسي والمعوذات"], "ইস্তিগফার ১০০ বার": ["Istighfar 100 times", "الاستغفار ١٠٠ مرة"], "আস্তাগফিরুল্লাহ": ["Astaghfirullah", "أستغفر الله"], "দৈনন্দিন দোয়া": ["Daily Duas", "الأدعية اليومية"], "সব দোয়া দেখুন →": ["View all duas →", "عرض كل الأدعية →"], "রব্বানা আতিনা ফিদ্দুনইয়া হাসানাতাঁও ওয়া ফিল আখিরাতি হাসানাতাঁও ওয়াক্বিনা আযাবান নার.": ["Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina adhaban-nar.", ""], "“হে আমাদের রব! আমাদের দুনিয়াতে কল্যাণ দিন, আখিরাতেও কল্যাণ দিন এবং আমাদের জাহান্নামের আযাব থেকে রক্ষা করুন।”": ["“Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”", ""], "সূরা আল-বাকারা, আয়াত ২০১": ["Surah Al-Baqarah, verse 201", "سورة البقرة، الآية ٢٠١"], "ডিজিটাল তাসবিহ": ["Digital Tasbih", "المسبحة الرقمية"], "সুবহানাল্লাহ": ["Subhanallah", "سبحان الله"], "লক্ষ্য: ৩৩ বার। বৃত্তে ট্যাপ করে গুনুন।": ["Goal: 33 times. Tap the circle to count.", "الهدف: ٣٣ مرة. اضغط على الدائرة للعدّ."], "রিসেট করুন": ["Reset", "إعادة ضبط"], "রিসেট": ["Reset", "إعادة ضبط"], "← হোম পেজে ফিরুন": ["← Back to Home", "← العودة للرئيسية"], "Al-Quran (১১৪ সূরা)": ["Al-Quran (114 Surahs)", "القرآن الكريم (١١٤ سورة)"], "যেকোনো সূরার নামের ওপর ক্লিক করে বিস্তারিত দেখুন": ["Tap any Surah to read it", "اضغط على أي سورة لقراءتها"], "← হোম": ["← Home", "← الرئيسية"], "তাসবিহ নির্বাচন করুন": ["Choose a tasbih", "اختر التسبيح"], "সুবহানাল্লাহ (৩৩ বার)": ["Subhanallah (33 times)", "سبحان الله (٣٣ مرة)"], "আলহামদুলিল্লাহ (৩৩ বার)": ["Alhamdulillah (33 times)", "الحمد لله (٣٣ مرة)"], "আল্লাহু আকবার (৩৪ বার)": ["Allahu Akbar (34 times)", "الله أكبر (٣٤ مرة)"], "আস্তাগফিরুল্লাহ (১০০ বার)": ["Astaghfirullah (100 times)", "أستغفر الله (١٠٠ مرة)"], "লা ইলাহা ইল্লাল্লাহ (১০০ বার)": ["La ilaha illallah (100 times)", "لا إله إلا الله (١٠٠ مرة)"], "লক্ষ্য:": ["Goal:", "الهدف:"], "বার": ["times", "مرة"], "🔄 আবার শুরু": ["🔄 Restart", "🔄 البدء من جديد"], "ক্বিবলা কম্পাস": ["Qibla Compass", "بوصلة القبلة"], "ক্বিবলার দিক": ["Qibla direction", "اتجاه القبلة"], "আপনার মুখ": ["You are facing", "اتجاهك"], "ক্বিবলা খুঁজতে নিচের বাটনে চাপ দিন": ["Press the button below to find the Qibla", "اضغط الزر أدناه للعثور على القبلة"], "📍 ক্বিবলা খুঁজুন": ["📍 Find Qibla", "📍 ابحث عن القبلة"], "ফোনটি সমতলভাবে ধরুন। সূচটি উপরের চিহ্নের সাথে মিলে গেলে সেটাই ক্বিবলার দিক। কম্পাস ঠিকমতো কাজ না করলে ফোন ৮ (∞) আকারে ঘুরিয়ে ক্যালিব্রেট করুন।": ["Hold your phone flat. When the needle lines up with the mark at the top, that is the Qibla. If the compass is off, calibrate by moving your phone in a figure-8 (∞).", "أمسك الهاتف بشكل مسطح. عندما يتطابق المؤشر مع العلامة في الأعلى فهذا اتجاه القبلة. إن لم تعمل البوصلة جيدًا فحرّك الهاتف على شكل ٨ (∞) لمعايرتها."], "দোয়া খুঁজুন... (যেমন: খাওয়া, ঘুম)": ["Search duas... (e.g. eating, sleep)", "ابحث عن دعاء... (مثل: الطعام، النوم)"], "← ফিরুন": ["← Back", "← رجوع"], "আরও হাদিস দেখুন": ["Show more hadith", "عرض المزيد من الأحاديث"], "আরও আয়াত দেখুন": ["Show more verses", "عرض المزيد من الآيات"], "নামাজের সময়ের এলাকা": ["Prayer time location", "منطقة مواقيت الصلاة"], "আমার বর্তমান লোকেশন ব্যবহার করুন": ["Use my current location", "استخدم موقعي الحالي"], "জেলার নাম লিখে খুঁজুন...": ["Search by district name...", "ابحث باسم المحافظة..."], "হোম": ["Home", "الرئيسية"], "কুরআন": ["Quran", "القرآن"], "আরও": ["More", "المزيد"], "প্রোফাইল": ["Profile", "الملف الشخصي"], "সম্পন্ন": ["done", "مكتمل"], "আগামীকাল": ["tomorrow", "غدًا"], "(আপনার অবস্থান)": ["(your location)", "(موقعك)"], "ঘ": ["h", "س"], "মি": ["m", "د"], "পর": ["later", "بعد"], "শেষ": ["Passed", "انتهى"], "শুরু হয়েছে": ["Started", "بدأ"], "বাকি আছে": ["Remaining", "متبقي"], "মিনিট": ["min", "دقيقة"], "বঙ্গাব্দ": ["BS", "بنغالي"], "হিজরি": ["AH", "هـ"], "পাওয়া যায়নি": ["Unavailable", "غير متاح"], "এই ব্রাউজারে লোকেশন সুবিধা নেই। নিচ থেকে জেলা বেছে নিন।": ["Location isn't available in this browser. Choose a district below.", "الموقع غير متاح في هذا المتصفح. اختر المحافظة من الأسفل."], "আপনার লোকেশন খোঁজা হচ্ছে...": ["Finding your location...", "جارٍ تحديد موقعك..."], "আপনার লোকেশন বাংলাদেশের বাইরে দেখাচ্ছে। নিচ থেকে জেলা বেছে নিন।": ["Your location appears to be outside Bangladesh. Choose a district below.", "يبدو أن موقعك خارج بنغلاديش. اختر المحافظة من الأسفل."], "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন, অথবা নিচ থেকে জেলা বেছে নিন।": ["Location permission was denied. Allow it in browser settings, or choose a district below.", "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح أو اختر المحافظة من الأسفل."], "লোকেশন পাওয়া যায়নি (HTTPS ও GPS চালু আছে কিনা দেখুন)। আবার চেষ্টা করুন বা জেলা বেছে নিন।": ["Couldn't get your location (check HTTPS and GPS). Try again or choose a district.", "تعذّر تحديد الموقع (تحقق من HTTPS وGPS). أعد المحاولة أو اختر المحافظة."], "আপনার ব্রাউজার লোকেশন সাপোর্ট করে না": ["Your browser doesn't support location", "متصفحك لا يدعم تحديد الموقع"], "লোকেশন নেওয়া হচ্ছে...": ["Getting location...", "جارٍ جلب الموقع..."], "কম্পাস সেন্সরের অনুমতি দেওয়া হয়নি": ["Compass sensor permission denied", "لم يُسمح باستخدام مستشعر البوصلة"], "সেন্সরের অনুমতি পাওয়া যায়নি": ["Couldn't get sensor permission", "تعذّر الحصول على إذن المستشعر"], "লোকেশনের অনুমতি দিন (ব্রাউজার সেটিংস থেকে)": ["Allow location (in browser settings)", "اسمح بالوصول إلى الموقع (من إعدادات المتصفح)"], "ফোন ঘুরিয়ে সবুজ সূচ উপরের দিকে আনুন": ["Turn your phone until the needle points up", "أدر هاتفك حتى يتجه 🕋 للأعلى"], "✅ আপনি ক্বিবলার দিকে মুখ করে আছেন": ["✅ You are facing the Qibla", "✅ أنت تواجه القبلة"], "কম্পাস সেন্সর পাওয়া যায়নি। ক্বিবলার দিক: উত্তর থেকে ": ["No compass sensor found. Qibla is ", "لم يتم العثور على مستشعر البوصلة. القبلة "], "° ডানে": ["° east of north", "° يمين الشمال"], "লোড হচ্ছে...": ["Loading...", "جارٍ التحميل..."], "ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।": ["Check your internet connection and try again.", "تحقق من اتصال الإنترنت وأعد المحاولة."], "আবার চেষ্টা করুন": ["Try again", "أعد المحاولة"], "শীঘ্রই আসছে": ["Coming soon", "قريبًا"], "← কিতাবের তালিকায় ফিরুন": ["← Back to the list of books", "← العودة إلى قائمة الكتب"], "🔄 আবার চেষ্টা করুন": ["🔄 Try again", "🔄 أعد المحاولة"], "কোনো দোয়া পাওয়া যায়নি।": ["No duas found.", "لم يتم العثور على أدعية."], "এই পরিচ্ছেদে কোনো হাদিস পাওয়া যায়নি।": ["No hadith found in this chapter.", "لا توجد أحاديث في هذا الباب."], "লোড হচ্ছে... (প্রথমবার কিছুটা সময় লাগতে পারে)": ["Loading... (the first time may take a moment)", "جارٍ التحميل... (قد يستغرق المرة الأولى بعض الوقت)"], "হাদিস গ্রন্থসমূহ": ["Hadith Books", "كتب الحديث"], "কোনো জেলা পাওয়া যায়নি": ["No district found", "لا توجد محافظة"], "অর্থ:": ["Meaning:", "المعنى:"], "সূত্র:": ["Source:", "المصدر:"], "রাউন্ড:": ["Round:", "الجولة:"], "আয়াত:": ["Verse:", "الآية:"], "শুনুন": ["Listen", "استمع"], "বুকমার্ক": ["Bookmark", "إشارة مرجعية"], "সূরা": ["Surah", "سورة"], "মোট": ["Total", "المجموع"], "টি": ["", ""], "পরিচ্ছেদ": ["Chapter", "الباب"], "হাদিস নং": ["Hadith No.", "حديث رقم"], "ডেটা এখনো যোগ করা হয়নি।": ["data has not been added yet.", "لم تتم إضافة البيانات بعد."], "মাক্কী": ["Makki", "مكية"], "মাদানী": ["Madani", "مدنية"], "আয়াত": ["verses", "آية"]};
 Object.assign(D,{
 'বিশেষ বিভাগসমূহ':['Special Sections','أقسام مميزة'],
 'বিষয়ভিত্তিক আয়াত':['Topical Verses','الآيات الموضوعية'],'কুরআনের আয়াত বিষয় অনুযায়ী':['Quranic verses by topic','آيات القرآن حسب الموضوع'],
@@ -2632,6 +3057,7 @@ function switchView(viewName) {
   if (viewName === 'quiz' && typeof quizShow === 'function') quizShow();
   if (viewName === 'hijri') showHijri(true);
   if (viewName === 'amal') renderAmal();
+  if (viewName === 'trk' && window.trkRender) trkRender(true);
   if (viewName === 'dua') { document.getElementById('duaSearch').value=''; renderDuas(''); }
   if (viewName === 'qibla') startQibla(); else stopQibla();
   if (viewName !== 'surah' && typeof player !== 'undefined') player.pause();
@@ -4496,7 +4922,7 @@ function resetTasbih() {
 
 // ===== ভাষা পরিবর্তন (বাংলা / English / العربية) =====
 const TITLES={bn:'Light of Deen – ঈমানের আলোয় আলোকিত জীবন',en:'Light of Deen – A life illuminated by faith',ar:'نور الدين – حياة مضيئة بنور الإيمان'};
-const I18N_SKIP='#qibla-view,#live-date,#live-clock,#locName,#noteLoc,#noteMadhab,#madhabRow,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
+const I18N_SKIP='#trk-view,#qibla-view,#live-date,#live-clock,#locName,#noteLoc,#noteMadhab,#madhabRow,#bn-date,#hj-date,#sunriseT,#nextLbl,#nextName,#cdText,#cdMin,#topicTitle,#topicBody,#langMenu,#hdBody,#duaList,#homeDua,#rdAyahs,#locList,#surahListContainer,#audRoot,#auMini,.lang-wrap,script,style';
 function i18nWalk(){
   const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];let x;
   while((x=tw.nextNode()))nodes.push(x);
