@@ -1241,6 +1241,9 @@ background:radial-gradient(1.3px 1.3px at 7% 10%,#fff,transparent 70%),radial-gr
 #snList .as-ar{font-size:21px;max-width:44%;line-height:1.4;text-align:right}
 #snList .as-row.sn-cur{border-color:var(--blue)}
 @media (prefers-reduced-motion:reduce){.sn-ring{transition:none}}
+/* নিচের নেভিগেশন শুধু হোমপেজে দেখাবে; অন্য কোনো পেজে ঢুকলে লুকিয়ে যাবে */
+body:has(#home-view:not(.active)) nav.nav{display:none!important}
+body:has(#home-view:not(.active)){--nav-gap:0px}
 /* ===== সিরাতুন্নবী: বংশতালিকা (আদম আঃ → মুহাম্মাদ ﷺ) ===== */
 .ns{position:relative;border:1px solid rgba(227,185,63,.38);border-radius:22px;padding:16px 14px 10px;margin-bottom:14px;color:#fff;box-shadow:var(--shadow);overflow:hidden;
 background:radial-gradient(1.2px 1.2px at 8% 4%,#fff,transparent 70%),radial-gradient(1px 1px at 91% 9%,rgba(255,255,255,.8),transparent 70%),radial-gradient(1.4px 1.4px at 22% 18%,rgba(255,255,255,.8),transparent 70%),radial-gradient(1px 1px at 76% 26%,rgba(255,255,255,.7),transparent 70%),radial-gradient(1.3px 1.3px at 12% 44%,rgba(255,255,255,.8),transparent 70%),radial-gradient(1px 1px at 88% 58%,rgba(255,255,255,.7),transparent 70%),radial-gradient(1.2px 1.2px at 30% 76%,rgba(255,255,255,.8),transparent 70%),radial-gradient(1px 1px at 82% 90%,rgba(255,255,255,.7),transparent 70%),linear-gradient(180deg,#070d24 0%,#0b1536 55%,#10122e 100%)}
