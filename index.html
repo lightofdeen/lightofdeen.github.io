@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <script>try{var _t=localStorage.getItem("lodTheme");if(!_t)_t="makkah";if(_t!=="auto")document.documentElement.setAttribute("data-theme",_t);}catch(e){document.documentElement.setAttribute("data-theme","makkah");}</script>
+<script>try{var _l=localStorage.getItem("lodLayout");if(_l&&/^(grid|list|cards|compact)$/.test(_l))document.documentElement.setAttribute("data-layout",_l);}catch(e){}</script>
 <meta name="theme-color" content="#b08419">
 <meta name="description" content="Light of Deen – ঈমানের আলোয় আলোকিত জীবন">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1226,7 +1227,7 @@ background:radial-gradient(1.3px 1.3px at 7% 10%,#fff,transparent 70%),radial-gr
 .sn-stage svg{width:100%;height:100%;display:block}
 .sn-stage text{cursor:pointer;fill:rgba(255,255,255,.82);font-size:7.9px;font-family:'Hind Siliguri',system-ui,sans-serif}
 .sn-stage text.on{fill:#e3b93f;font-weight:700}
-.sn-ring{transform-origin:200px 200px;transition:transform .9s cubic-bezier(.3,.7,.2,1)}
+.sn-ring{transform-origin:200px 200px;transition:transform .6s cubic-bezier(.3,.7,.2,1)}
 .sn-mid{position:absolute;left:26%;top:26%;width:48%;height:48%;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .sn-ar{font-family:'MuhammadiQuranic','Amiri',serif;color:#f0cf74;direction:rtl;text-align:center;line-height:1.45;text-shadow:0 0 18px rgba(227,185,63,.35);padding:0 6px}
 .sn-info{text-align:center;margin-top:2px;padding:0 6px}
@@ -1301,6 +1302,55 @@ background:radial-gradient(1.2px 1.2px at 8% 4%,#fff,transparent 70%),radial-gra
 .ns-mother{font-size:12.5px;line-height:1.55;margin-top:7px;color:rgba(255,255,255,.88)}
 @media (prefers-reduced-motion:reduce){.ns-fl,.ns-line::after{transition:none}.ns-row.lit .ns-fl path{animation:none}}
 
+</style>
+<style id="layoutCss">
+/* ===== লেআউট সুইচার: html[data-layout] = grid(ডিফল্ট) | list | cards | compact ===== */
+.sh-tools{display:flex;align-items:center;gap:8px}
+.lay-quick{display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--blue);cursor:pointer;padding:0;font-family:inherit}
+.lay-quick .i{font-size:17px}
+.lay-quick:active{background:var(--blue-l)}
+.lay-panel{display:none;padding:4px 2px 2px}
+.lay-panel.show{display:block}
+.lay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.lay-opt{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:10px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;text-align:center}
+.lay-opt.on{border-color:var(--blue);background:var(--blue-l)}
+.lay-opt svg{width:100%;height:46px;display:block;color:var(--blue)}
+.lay-opt b{font-weight:600;font-size:13.5px}
+.lay-opt small{display:block;color:var(--muted);font-size:11px}
+
+/* লিস্ট ভিউ — আইকন বামে, লেখা ডানে, শেষে তীর */
+html[data-layout="list"] :is(#menu,#libsec) .grid{grid-template-columns:1fr;gap:10px}
+html[data-layout="list"] :is(#menu,#libsec) .m{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;text-align:start;padding:10px 14px 10px 10px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);font-size:16px;font-weight:600}
+html[data-layout="list"] :is(#menu,#libsec) .m .ic{grid-area:1/1/3/2;width:50px;max-width:50px;aspect-ratio:1;border-radius:15px;font-size:24px}
+html[data-layout="list"] :is(#menu,#libsec) .m small{grid-column:2;grid-row:2;font-size:12px;text-align:start}
+html[data-layout="list"] :is(#menu,#libsec) .m::after{content:"›";grid-column:3;grid-row:1/3;font-size:26px;line-height:1;color:var(--muted);font-weight:400}
+html[data-layout="list"] #menu .m .ic{border-width:1.5px;box-shadow:none}
+html[data-layout="list"] #menu .m .ic[style]{font-size:22px!important}
+
+/* কার্ড ভিউ — ২ কলাম, বড় আইকন */
+html[data-layout="cards"] :is(#menu,#libsec) .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+html[data-layout="cards"] :is(#menu,#libsec) .m{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-content:center;align-items:center;text-align:start;padding:12px;min-width:0;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);font-size:14.5px;font-weight:600;position:relative}
+html[data-layout="cards"] :is(#menu,#libsec) .m .ic{grid-area:1/1/3/2;width:52px;max-width:52px;aspect-ratio:1;border-radius:16px;font-size:25px}
+html[data-layout="cards"] :is(#menu,#libsec) .m small{grid-column:2;grid-row:2;margin-top:2px;text-align:start}
+html[data-layout="cards"] #menu .m .ic{border-width:1.5px;box-shadow:none}
+html[data-layout="cards"] #menu .m .ic[style]{font-size:21px!important}
+
+/* কম্প্যাক্ট — ৫ কলাম, ছোট আইকন, ইংরেজি লেখা লুকানো */
+html[data-layout="compact"] :is(#menu,#libsec) .grid{grid-template-columns:repeat(5,1fr);gap:8px 4px}
+html[data-layout="compact"] :is(#menu,#libsec) .m{font-size:11px;gap:5px}
+html[data-layout="compact"] :is(#menu,#libsec) .m small{display:none}
+html[data-layout="compact"] :is(#menu,#libsec) .m .ic{max-width:56px;border-radius:16px;font-size:23px}
+html[data-layout="compact"] #menu .m .ic[style]{font-size:19px!important}
+html[data-layout="compact"] #libHome .m .ic{aspect-ratio:1}
+
+/* "বিশেষ বিভাগসমূহ" কার্ডেও প্রযোজ্য */
+html[data-layout="grid"] .pcards,html[data-layout="cards"] .pcards{grid-template-columns:1fr}
+html[data-layout="compact"] .pcards{gap:8px}
+html[data-layout="compact"] .pcard{padding:9px 12px;border-radius:16px}
+html[data-layout="compact"] .pcard .pi{width:40px;height:40px;font-size:20px;border-radius:12px}
+html[data-layout="compact"] .pcard .pt b{font-size:14.5px}
+html[data-layout="compact"] .pcard .pt span{display:none}
+@media (prefers-reduced-motion:no-preference){:is(#menu,#libsec) .grid,:is(#menu,#libsec) .m{transition:gap .2s}}
 </style>
 </head>
 <body>
@@ -1391,7 +1441,7 @@ background:radial-gradient(1.2px 1.2px at 8% 4%,#fff,transparent 70%),radial-gra
     </div>
 
     <section id="menu">
-      <div class="sh"><h2>সব সেবা</h2><span>Services</span></div>
+      <div class="sh"><h2>সব সেবা</h2><div class="sh-tools"><button class="lay-quick" id="layQuick" aria-label="লেআউট বদলান" title="লেআউট বদলান"><svg class="i" id="layQuickIc" viewBox="0 0 24 24"></svg></button><span>Services</span></div></div>
       <nav class="grid" aria-label="প্রধান মেনু">
         <button class="m" onclick="switchView('quran')"><div class="ic"><svg class="i"><use href="#quran"/></svg></div>আল-কুরআন<small>Al-Quran</small></button>
         <button class="m" onclick="switchView('audio')"><div class="ic"><svg class="i"><use href="#audioq"/></svg></div>অডিও কোরআন<small>Audio Quran</small></button>
@@ -2508,6 +2558,8 @@ background:radial-gradient(1.2px 1.2px at 8% 4%,#fff,transparent 70%),radial-gra
     <button class="mi" id="profileOpen"><svg class="i"><use href="#user"/></svg><span>প্রোফাইল</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
     <button class="mi" id="themeToggle" aria-expanded="false"><svg class="i"><use href="#palette"/></svg><span>থিম</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
     <div class="theme-panel" id="themePanel"><div class="theme-grid" id="themeGrid"></div></div>
+    <button class="mi" id="layToggle" aria-expanded="false"><svg class="i" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span>লেআউট</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
+    <div class="lay-panel" id="layPanel"><div class="lay-grid" id="layGrid"></div></div>
     <button class="mi" id="devToggle" aria-expanded="false"><svg class="i"><use href="#user"/></svg><span>ডেভলপার পরিচিতি</span><svg class="i mi-chev"><use href="#chev"/></svg></button>
     <div class="dev-panel" id="devPanel">
       <div class="dev-card">
@@ -17010,7 +17062,7 @@ quick();render();sync();
 'use strict';
 const SN=[["مُحَمَّد","Muhammad","মুহাম্মাদ","অতিশয় প্রশংসিত"],["أَحْمَد","Ahmad","আহমাদ","সর্বাধিক প্রশংসাকারী"],["حَامِد","Hamid","হামিদ","প্রশংসাকারী"],["مَحْمُود","Mahmud","মাহমূদ","প্রশংসিত"],["قَاسِم","Qasim","কাসিম","বণ্টনকারী"],["عَاقِب","Aqib","আকিব","সবার পরে আগমনকারী"],["فَاتِح","Fatih","ফাতিহ","কল্যাণের দ্বার উন্মোচনকারী"],["شَاهِد","Shahid","শাহিদ","সাক্ষী"],["حَاشِر","Hashir","হাশির","যাঁর পেছনে মানুষকে হাশরে একত্র করা হবে"],["رَاشِد","Rashid","রাশিদ","সঠিক পথের অনুসারী ও পথপ্রদর্শক"],["مَشْهُود","Mashhud","মাশহূদ","যাঁর সত্যতার সাক্ষ্য দেওয়া হয়"],["نَذِير","Nadhir","নাযীর","সতর্ককারী"],["بَشِير","Bashir","বাশীর","সুসংবাদদাতা"],["دَاعِي","Da'i","দাঈ","আল্লাহর পথে আহ্বানকারী"],["شَافِع","Shafi'","শাফি‘","সুপারিশকারী"],["مُشَفَّع","Mushaffa'","মুশাফফা‘","যাঁর সুপারিশ কবুল করা হবে"],["هَادِي","Hadi","হাদী","পথপ্রদর্শক"],["مَهْدِي","Mahdi","মাহদী","আল্লাহর পক্ষ থেকে হিদায়াতপ্রাপ্ত"],["مَاحِي","Mahi","মাহী","কুফর মুছে দেওয়ার মাধ্যম"],["مُنْجِي","Munji","মুনজী","মুক্তির পথ-প্রদর্শনকারী"],["نَاهِي","Nahi","নাহী","মন্দ কাজ থেকে নিষেধকারী"],["رَسُول","Rasul","রাসূল","আল্লাহর প্রেরিত বার্তাবাহক"],["نَبِي","Nabi","নবী","আল্লাহর সংবাদবাহী নবী"],["أُمِّي","Ummi","উম্মী","নিরক্ষর; যাঁর জ্ঞানের উৎস কেবল ওহী"],["تِهَامِي","Tihami","তিহামী","তিহামা (মক্কা অঞ্চল)-এর অধিবাসী"],["هَاشِمِي","Hashimi","হাশিমী","হাশিম বংশীয়"],["أَبْطَحِي","Abtahi","আবতাহী","মক্কার আবতাহ উপত্যকার অধিবাসী"],["عَزِيز","Aziz","আযীয","সম্মানিত ও প্রিয়"],["حَرِيصٌ عَلَيْكُمْ","Harisun 'Alaykum","হারীসুন আলাইকুম","তোমাদের কল্যাণে একান্ত আগ্রহী (সূরা তাওবা ৯:১২৮)"],["رَؤُوف","Ra'uf","রা’ঊফ","অতিশয় স্নেহশীল"],["رَحِيم","Rahim","রাহীম","পরম দয়ালু"],["طه","Ta Ha","ত্ব-হা","সূরা ত্ব-হা-র আরম্ভ-অক্ষর; নবীজির একটি নাম হিসেবেও পরিচিত"],["يس","Ya Sin","ইয়া-সীন","সূরা ইয়া-সীনের আরম্ভ-অক্ষর; নবীজির একটি নাম হিসেবেও পরিচিত"],["مُجْتَبَى","Mujtaba","মুজতাবা","আল্লাহর বাছাইকৃত"],["مُرْتَضَى","Murtada","মুরতাযা","আল্লাহর সন্তুষ্টিপ্রাপ্ত"],["مُصْطَفَى","Mustafa","মুস্তাফা","মনোনীত ও নির্বাচিত"],["أَوْلَى","Awla","আওলা","মুমিনদের নিজেদের চেয়েও নিকটতম (সূরা আহযাব ৩৩:৬)"],["مُزَّمِّل","Muzzammil","মুযযাম্মিল","বস্ত্রাবৃত (সূরা মুযযাম্মিল ৭৩:১)"],["مُدَّثِّر","Muddaththir","মুদ্দাসসির","চাদরাবৃত (সূরা মুদ্দাসসির ৭৪:১)"],["وَلِي","Wali","ওয়ালী","অভিভাবক ও বন্ধু"],["مُبَشِّر","Mubashshir","মুবাশশির","সুসংবাদ প্রদানকারী"],["مُذَكِّر","Mudhakkir","মুযাক্কির","উপদেশদাতা"],["مُتَوَكِّل","Mutawakkil","মুতাওয়াক্কিল","আল্লাহর ওপর পূর্ণ ভরসাকারী"],["مُخْتَار","Mukhtar","মুখতার","আল্লাহর বাছাইকৃত"],["مُنِير","Munir","মুনীর","আলো বিতরণকারী"],["سِرَاج","Siraj","সিরাজ","উজ্জ্বল প্রদীপ (সূরা আহযাব ৩৩:৪৬)"],["مُبِين","Mubin","মুবীন","সুস্পষ্ট সত্যের বর্ণনাকারী"],["كَرِيم","Karim","কারীম","মহান ও মর্যাদাবান"],["حَكِيم","Hakim","হাকীম","প্রজ্ঞাবান"],["سَيِّد","Sayyid","সাইয়্যিদ","নেতা"],["قُرَشِي","Qurayshi","কুরাইশী","কুরাইশ বংশীয়"],["نَبِيُّ التَّوْبَة","Nabiyy al-Tawbah","নাবিয়্যুত তাওবাহ","তাওবার নবী"],["حَافِظ","Hafiz","হাফিয","সংরক্ষণকারী"],["كَامِل","Kamil","কামিল","পূর্ণতাপ্রাপ্ত"],["صَادِق","Sadiq","সাদিক","সত্যবাদী"],["أَمِين","Amin","আমীন","পরম বিশ্বস্ত"],["عَبْدُ اللّٰه","Abdullah","আব্দুল্লাহ","আল্লাহর বান্দা"],["خَلِيلُ اللّٰه","Khalilullah","খালীলুল্লাহ","আল্লাহর অন্তরঙ্গ বন্ধু"],["حَبِيبُ اللّٰه","Habibullah","হাবীবুল্লাহ","আল্লাহর প্রিয়তম"],["خَاتَمُ النَّبِيِّين","Khatam al-Nabiyyin","খাতামুন নাবিয়্যীন","নবীগণের সমাপ্তিকারী (সূরা আহযাব ৩৩:৪০)"],["رَسُولُ الرَّحْمَة","Rasul al-Rahmah","রাসূলুর রাহমাহ","রহমতের রাসূল"],["نَبِيُّ الرَّحْمَة","Nabiyy al-Rahmah","নাবিয়্যুর রাহমাহ","রহমতের নবী"],["رَحْمَةٌ لِلْعَالَمِين","Rahmatun lil-'Alamin","রাহমাতুল লিল আলামীন","সমগ্র জগতের জন্য রহমত (সূরা আম্বিয়া ২১:১০৭)"],["مُقَفِّي","Muqaffi","মুকাফফী","নবীগণের পরে আগমনকারী"],["مُعَلِّم","Mu'allim","মুআল্লিম","শিক্ষক"],["مُبَيِّن","Mubayyin","মুবায়্যিন","ব্যাখ্যাকারী"],["مُبَلِّغ","Muballigh","মুবাল্লিগ","আল্লাহর বার্তা পৌঁছে দেওয়ার দায়িত্বশীল"],["مُزَكِّي","Muzakki","মুযাক্কী","আত্মশুদ্ধিকারী"],["مُطَهَّر","Mutahhar","মুতাহহার","পূতপবিত্র"],["مُكَرَّم","Mukarram","মুকাররাম","সম্মানিত"],["طَيِّب","Tayyib","ত্বইয়্যিব","পবিত্র"],["نَاصِر","Nasir","নাসির","সাহায্যকারী"],["مَنْصُور","Mansur","মানসূর","আল্লাহর সাহায্যপ্রাপ্ত"],["أَوَّل","Awwal","আওয়াল","অগ্রগামী"],["آخِر","Akhir","আখির","সর্বশেষ নবী"],["شَكُور","Shakur","শাকূর","অধিক কৃতজ্ঞ"],["نُور","Nur","নূর","আলো (সূরা মায়িদা ৫:১৫)"],["بُرْهَان","Burhan","বুরহান","সুস্পষ্ট প্রমাণ (সূরা নিসা ৪:১৭৪)"],["ذِكْر","Dhikr","যিকর","স্মরণ ও উপদেশ (সূরা তালাক ৬৫:১০–১১)"],["حَقّ","Haqq","হক","সত্য"],["نَبِيُّ الْمَلْحَمَة","Nabiyy al-Malhamah","নাবিয়্যুল মালহামাহ","সংগ্রামের নবী"],["نَاصِح","Nasih","নাসিহ","কল্যাণকামী উপদেষ্টা"],["صَالِح","Salih","সালিহ","সৎকর্মশীল"],["مُبَارَك","Mubarak","মুবারাক","বরকতময়"],["يَتِيم","Yatim","ইয়াতীম","শৈশবে পিতৃহারা"],["مَأْمُون","Ma'mun","মা’মূন","বিশ্বস্ত"],["مُطَاع","Muti'","মুতা‘","যাঁর আনুগত্য করা হয়"],["قَوِيّ","Qawi","কাওয়ী","শক্তিশালী"],["حَفِيّ","Hafi","হাফী","অতি স্নেহপরায়ণ ও সম্মানিত"],["صَاحِبُ الْحَوْض","Sahib al-Hawd","সাহিবুল হাওয","হাওযে কাউসারের অধিকারী"],["صَاحِبُ اللِّوَاء","Sahib al-Liwa'","সাহিবুল লিওয়া","প্রশংসার পতাকার অধিকারী"],["صَاحِبُ الشَّفَاعَة","Sahib al-Shafa'ah","সাহিবুশ শাফাআহ","সুপারিশের অধিকারী"],["صَاحِبُ الْوَسِيلَة","Sahib al-Wasilah","সাহিবুল ওয়াসীলাহ","জান্নাতের সর্বোচ্চ মর্যাদা ‘ওয়াসীলা’র অধিকারী"],["سَيِّدُ الْمُرْسَلِين","Sayyid al-Mursalin","সাইয়্যিদুল মুরসালীন","রাসূলগণের নেতা"],["إِمَامُ الْمُتَّقِين","Imam al-Muttaqin","ইমামুল মুত্তাকীন","মুত্তাকীদের ইমাম"],["خَيْرُ الْخَلْق","Khayr al-Khalq","খাইরুল খালক","সৃষ্টির শ্রেষ্ঠ"],["قَائِدُ الْغُرِّ الْمُحَجَّلِين","Qa'id al-Ghurr al-Muhajjalin","কায়িদুল গুর্রিল মুহাজ্জালীন","উযূর আলোয় উজ্জ্বলদের নেতা"],["صَاحِبُ الْمَقَامِ الْمَحْمُود","Sahib al-Maqam al-Mahmud","সাহিবুল মাকামিল মাহমূদ","প্রশংসিত স্থানের অধিকারী"],["رَسُولُ الْمَلَاحِم","Rasul al-Malahim","রাসূলুল মালাহিম","মহাসংগ্রামসমূহের রাসূল"]];
 const SHORT={"96": "Qa'id al-Ghurr", "97": "Sahib al-Maqam"};
-const R_IN=108,R_OUT=178,STEP=3200;
+const R_IN=108,R_OUT=178,STEP=2000;
 let idx=0,acc=0,timer=null,snd=false,
     play=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 try{snd=localStorage.getItem('lodSeeratSnd')==='1'}catch(e){}
@@ -17265,6 +17317,38 @@ window.showSeerat=function(keepScroll){
   if(keepScroll!==true)window.scrollTo(0,0);
 };
 window.addEventListener('resize',()=>{if($('snAr'))sizeAr(SN[idx][0])});
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var L=[
+    {id:'grid',n:'গ্রিড',d:'ডিফল্ট · ৪ কলাম',svg:'<rect x="4" y="4" width="10" height="10" rx="3"/><rect x="19" y="4" width="10" height="10" rx="3"/><rect x="34" y="4" width="10" height="10" rx="3"/><rect x="49" y="4" width="10" height="10" rx="3"/><rect x="4" y="24" width="10" height="10" rx="3"/><rect x="19" y="24" width="10" height="10" rx="3"/><rect x="34" y="24" width="10" height="10" rx="3"/><rect x="49" y="24" width="10" height="10" rx="3"/>',vb:'0 0 63 40',ic:'<rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/>'},
+    {id:'list',n:'লিস্ট',d:'আইকন বামে, তীর ডানে',svg:'<rect x="4" y="3" width="9" height="9" rx="3"/><rect x="18" y="5" width="34" height="3" rx="1.5"/><rect x="4" y="16" width="9" height="9" rx="3"/><rect x="18" y="18" width="34" height="3" rx="1.5"/><rect x="4" y="29" width="9" height="9" rx="3"/><rect x="18" y="31" width="34" height="3" rx="1.5"/>',vb:'0 0 63 40',ic:'<path d="M4 6h16M4 12h16M4 18h16"/>'},
+    {id:'cards',n:'কার্ড',d:'২ কলাম, বড় বাটন',svg:'<rect x="3" y="4" width="26" height="14" rx="4"/><rect x="34" y="4" width="26" height="14" rx="4"/><rect x="3" y="23" width="26" height="14" rx="4"/><rect x="34" y="23" width="26" height="14" rx="4"/>',vb:'0 0 63 40',ic:'<rect x="3.5" y="4.5" width="17" height="6" rx="2"/><rect x="3.5" y="13.5" width="17" height="6" rx="2"/>'},
+    {id:'compact',n:'কম্প্যাক্ট',d:'৫ কলাম, ছোট আইকন',svg:'<g><rect x="3" y="5" width="8" height="8" rx="2.5"/><rect x="14" y="5" width="8" height="8" rx="2.5"/><rect x="25" y="5" width="8" height="8" rx="2.5"/><rect x="36" y="5" width="8" height="8" rx="2.5"/><rect x="47" y="5" width="8" height="8" rx="2.5"/><rect x="3" y="18" width="8" height="8" rx="2.5"/><rect x="14" y="18" width="8" height="8" rx="2.5"/><rect x="25" y="18" width="8" height="8" rx="2.5"/><rect x="36" y="18" width="8" height="8" rx="2.5"/><rect x="47" y="18" width="8" height="8" rx="2.5"/><rect x="3" y="31" width="8" height="8" rx="2.5"/><rect x="14" y="31" width="8" height="8" rx="2.5"/></g>',vb:'0 0 63 44',ic:'<rect x="3" y="3" width="4.5" height="4.5" rx="1.4"/><rect x="9.7" y="3" width="4.5" height="4.5" rx="1.4"/><rect x="16.5" y="3" width="4.5" height="4.5" rx="1.4"/><rect x="3" y="9.7" width="4.5" height="4.5" rx="1.4"/><rect x="9.7" y="9.7" width="4.5" height="4.5" rx="1.4"/><rect x="16.5" y="9.7" width="4.5" height="4.5" rx="1.4"/><rect x="3" y="16.5" width="4.5" height="4.5" rx="1.4"/><rect x="9.7" y="16.5" width="4.5" height="4.5" rx="1.4"/><rect x="16.5" y="16.5" width="4.5" height="4.5" rx="1.4"/>'}
+  ];
+  var g=document.getElementById('layGrid'),panel=document.getElementById('layPanel'),tog=document.getElementById('layToggle'),qb=document.getElementById('layQuick'),qi=document.getElementById('layQuickIc');
+  if(!g||!tog)return;
+  function cur(){var v='grid';try{v=localStorage.getItem('lodLayout')||'grid';}catch(e){}return L.some(function(x){return x.id===v;})?v:'grid';}
+  function apply(id,save){
+    root.setAttribute('data-layout',id);
+    if(save){try{localStorage.setItem('lodLayout',id);}catch(e){}}
+    g.querySelectorAll('.lay-opt').forEach(function(b){b.classList.toggle('on',b.dataset.l===id);});
+    var o=L.filter(function(x){return x.id===id;})[0];
+    if(qi&&o){qi.innerHTML=o.ic;qi.setAttribute('fill','none');qi.setAttribute('stroke','currentColor');qi.setAttribute('stroke-width','1.8');qi.setAttribute('stroke-linecap','round');qi.setAttribute('stroke-linejoin','round');}
+  }
+  L.forEach(function(o){
+    var b=document.createElement('button');b.className='lay-opt';b.dataset.l=o.id;
+    b.innerHTML='<svg viewBox="'+o.vb+'" fill="currentColor" aria-hidden="true">'+o.svg+'</svg><b>'+o.n+'</b><small>'+o.d+'</small>';
+    b.addEventListener('click',function(){apply(o.id,true);});
+    g.appendChild(b);
+  });
+  tog.addEventListener('click',function(){var o=panel.classList.toggle('show');tog.setAttribute('aria-expanded',o);});
+  // দ্রুত বদল: "সব সেবা"-র পাশের বাটনে চাপলে পরের লেআউটে যাবে
+  if(qb)qb.addEventListener('click',function(){var i=L.findIndex(function(x){return x.id===cur();});apply(L[(i+1)%L.length].id,true);});
+  apply(cur(),false);
+  try{Object.assign(D,{'লেআউট':['Layout','التخطيط'],'লেআউট বদলান':['Change layout','تغيير التخطيط'],'গ্রিড':['Grid','شبكة'],'লিস্ট':['List','قائمة'],'কার্ড':['Cards','بطاقات'],'কম্প্যাক্ট':['Compact','مضغوط'],'ডিফল্ট · ৪ কলাম':['Default · 4 columns','افتراضي · 4 أعمدة'],'আইকন বামে, তীর ডানে':['Icon left, arrow right','أيقونة يسارًا'],'২ কলাম, বড় বাটন':['2 columns, big buttons','عمودان'],'৫ কলাম, ছোট আইকন':['5 columns, small icons','5 أعمدة']});if(typeof i18nWalk==='function'&&root.lang!=='bn')i18nWalk();}catch(e){}
 })();
 </script>
 </body>
