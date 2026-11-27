@@ -1356,7 +1356,7 @@ html[data-layout="compact"] .pcard .pt span{display:none}
 /* ===== শুধু তেলাওয়াত (অর্থ ছাড়া মুসহাফ) ===== */
 .mk-box{margin-bottom:14px}
 .mk-box h3{font-size:15px;font-weight:600;margin-bottom:10px}
-.mk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .mk-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;text-align:center;cursor:pointer;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
 .mk-card:active{background:var(--blue-l)}
 .mk-card svg{width:30px;height:30px;fill:none;stroke:var(--blue);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -1367,14 +1367,12 @@ body.mk-on .nav{display:none !important}
 #mushaf-view.active{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;background:var(--card);color:var(--text);padding-bottom:env(safe-area-inset-bottom,0px)}
 .mk-bar{display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px;border-bottom:1px solid var(--line)}
 .mk-bar h2{flex:1;min-width:0;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mk-bar a,.mk-page{font:inherit;font-size:13px;color:var(--blue);background:none;text-decoration:none;padding:7px 12px;border:1px solid var(--line);border-radius:999px;white-space:nowrap;cursor:pointer}
-.mk-page[hidden]{display:none}
+.mk-bar a{font-size:13px;color:var(--blue);text-decoration:none;padding:8px 10px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
 .mk-bar a.mk-ic{width:34px;height:34px;padding:0;flex:none;display:grid;place-items:center}
 .mk-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mk-msg{font-size:12.5px;color:var(--muted);text-align:center;padding:6px 12px}
-#mkStage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.mk-pg{position:relative;width:100%;max-width:760px;margin:0 auto 8px;background:#fff}
-.mk-pg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#mkStage{flex:1;min-height:0}
+#mkStage iframe{width:100%;height:100%;border:0;display:block}
 </style>
 </head>
 <body>
@@ -1560,6 +1558,7 @@ body.mk-on .nav{display:none !important}
           <div class="mk-grid" id="mkGrid">
             <button class="mk-card" type="button" data-mk="hafezi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>হাফেজী কুরআন</b><small>এমদাদিয়া</small></button>
             <button class="mk-card" type="button" data-mk="nurani"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>নূরানী কুরআন</b><small>হাফেজী, এমদাদিয়া</small></button>
+            <button class="mk-card" type="button" data-mk="line15"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>১৫ লাইন কুরআন</b><small>ইন্দো-পাক লিপি</small></button>
           </div>
         </div>
         <div class="qx-search" id="qxSearch"><input type="search" id="qxSearchIn" placeholder="সূরার নাম বা নম্বর লিখুন" autocomplete="off"></div>
@@ -2494,8 +2493,8 @@ body.mk-on .nav{display:none !important}
     <div class="mk-bar">
       <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
       <h2 id="mkTitle"></h2>
-      <a id="mkDl" class="mk-ic" download aria-label="ডাউনলোড" title="ডাউনলোড"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></a>
-      <button type="button" id="mkPage" class="mk-page" hidden></button>
+      <a id="mkDl" class="mk-ic" target="_blank" rel="noopener" download aria-label="ডাউনলোড" title="ডাউনলোড"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></a>
+      <a id="mkOpen" target="_blank" rel="noopener">বড় করে খুলুন</a>
     </div>
     <div class="mk-msg" id="mkMsg" role="status"></div>
     <div id="mkStage"></div>
@@ -17103,121 +17102,49 @@ quick();render();sync();
 </script>
 
 <script id="mushaf-js">
-/* ===== শুধু তেলাওয়াত: নিজের রিপোজিটরিতে রাখা PDF থেকে পড়া =====
-   index.html-এর পাশে "quran" ফোল্ডারে নিচের নামে PDF রাখুন। নাম বদলালে file বদলান। */
+/* ===== শুধু তেলাওয়াত: হাফেজী / নূরানী / ১৫ লাইন মুসহাফ =====
+   অন্য ছাপা ব্যবহার করতে চাইলে নিচের id (archive.org/details/<id>), pdf লিংক বদলান। */
 (function(){
 'use strict';
 var BOOKS={
-  hafezi:{t:'হাফেজী কুরআন',file:'quran/hafezi.pdf',save:'Hafezi-Quran.pdf'},
-  nurani:{t:'নূরানী কুরআন',file:'quran/nurani.pdf',save:'Nurani-Quran.pdf'}
+  hafezi:{t:'হাফেজী কুরআন',id:'Emdadia-hafezi-quran',pdf:'https://archive.org/download/Emdadia-hafezi-quran/imdadia-hafezi-quran3_text.pdf'},
+  nurani:{t:'নূরানী কুরআন',id:'nurani-hafizi-quran-sharif-15-lines-pdf',pdf:'https://archive.org/download/nurani-hafizi-quran-sharif-15-lines-pdf/Nurani%20Hafizi%20Quran%20Sharif%2015%20Lines%20PDF.pdf'},
+  line15:{t:'১৫ লাইন কুরআন',id:'quran-indo-pak-15-lines',pdf:'https://archive.org/download/quran-indo-pak-15-lines/QuranIndoPak15Lines.pdf'}
 };
-/* PDF দেখানোর লাইব্রেরি (pdf.js) */
-var LIB='https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/';
 var $=function(i){return document.getElementById(i)};
 function TT(x){return typeof T==='function'?T(x):x}
-function B(n){return typeof bn==='function'?bn(n):String(n)}
 try{Object.assign(D,{
   'শুধু তেলাওয়াত (অর্থ ছাড়া)':['Recitation only (no translation)','التلاوة فقط (دون ترجمة)'],
   'হাফেজী কুরআন':['Hafizi Quran','مصحف الحفاظ'],
   'নূরানী কুরআন':['Noorani Quran','المصحف النوراني'],
+  '১৫ লাইন কুরআন':['15-line Quran','مصحف ١٥ سطرًا'],
   'এমদাদিয়া':['Emdadia','إمدادية'],
   'হাফেজী, এমদাদিয়া':['Hafizi, Emdadia','للحفاظ، إمدادية'],
-  'ডাউনলোড':['Download','تحميل'],
+  'ইন্দো-পাক লিপি':['Indo-Pak script','الخط الهندي'],
+  'বড় করে খুলুন':['Open full page','فتح في صفحة كاملة'],
   'পাতা লোড হচ্ছে... একটু অপেক্ষা করুন':['Loading pages... please wait','جارٍ تحميل الصفحات...'],
-  'কুরআন খোলা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।':['Could not open the Quran. Check your connection and try again.','تعذّر فتح المصحف. تحقق من الاتصال وحاول مرة أخرى.'],
-  'ফাইলটি পাওয়া যায়নি:':['File not found:','الملف غير موجود:'],
-  'কত নম্বর পাতায় যাবেন?':['Go to which page?','إلى أي صفحة؟']
+  'ইন্টারনেট সংযোগ নেই। সংযোগ চালু করে আবার খুলুন।':['No internet connection. Connect and open again.','لا يوجد اتصال بالإنترنت.']
 })}catch(e){}
-
-var lib=null,cur=null,seq=0;
-function loadLib(){
-  return lib||(lib=import(LIB+'legacy/build/pdf.min.mjs').then(function(m){
-    m.GlobalWorkerOptions.workerSrc=LIB+'legacy/build/pdf.worker.min.mjs';return m;
-  }).catch(function(e){lib=null;throw e}));
-}
-function pageKey(k){return 'lodMkPage_'+k}
-
-/* কাছের পাতাগুলো আঁকা, দূরের পাতা মেমোরি থেকে সরানো */
-function draw(c,i){
-  var el=c.els[i];if(el.firstChild||c!==cur)return;
-  var cv=document.createElement('canvas');el.appendChild(cv);
-  c.doc.getPage(i+1).then(function(pg){
-    if(c!==cur||cv.parentNode!==el)return;
-    var base=pg.getViewport({scale:1});
-    el.style.aspectRatio=base.width+'/'+base.height;
-    var w=Math.min(1600,el.clientWidth*Math.min(window.devicePixelRatio||1,2.5));
-    var vp=pg.getViewport({scale:w/base.width});
-    cv.width=Math.floor(vp.width);cv.height=Math.floor(vp.height);
-    return pg.render({canvas:cv,viewport:vp}).promise;
-  }).catch(function(e){console.warn(e);if(cv.parentNode===el)el.removeChild(cv)});
-}
-function current(){
-  var st=$('mkStage'),mid=st.scrollTop+st.clientHeight/3,a=0,z=cur.els.length-1;
-  while(a<z){var m=(a+z+1)>>1;if(cur.els[m].offsetTop-st.offsetTop<=mid)a=m;else z=m-1}
-  return a;
-}
-function update(){
-  if(!cur||!cur.els)return;
-  var i=current(),n=cur.els.length;
-  cur.els.forEach(function(el,k){
-    if(Math.abs(k-i)<=2)draw(cur,k);
-    else if(el.firstChild){el.firstChild.width=0;el.innerHTML=''}
-  });
-  $('mkPage').textContent=B(i+1)+' / '+B(n);
-  try{localStorage.setItem(pageKey(cur.k),i+1)}catch(e){}
-}
-function go(i){var st=$('mkStage');st.scrollTop=cur.els[i].offsetTop-st.offsetTop;update()}
-
 window.mkCur='hafezi';
-window.mkStop=function(){
-  seq++;
-  if(cur&&cur.task)cur.task.destroy();
-  cur=null;
-  document.body.classList.remove('mk-on');$('mkStage').innerHTML='';$('mkPage').hidden=true;
-};
 window.mkShow=function(){
-  mkStop();
-  var k=BOOKS[window.mkCur]?window.mkCur:'hafezi',b=BOOKS[k],msg=$('mkMsg'),my=seq,c={k:k};
-  cur=c;
+  var b=BOOKS[window.mkCur]||BOOKS.hafezi,stage=$('mkStage'),msg=$('mkMsg');
   document.body.classList.add('mk-on');
   $('mkTitle').textContent=TT(b.t);
-  var dl=$('mkDl');dl.href=b.file;dl.setAttribute('download',b.save);
-  dl.title=TT('ডাউনলোড');dl.setAttribute('aria-label',TT('ডাউনলোড'));
+  $('mkOpen').textContent=TT('বড় করে খুলুন');
+  $('mkDl').title=TT('ডাউনলোড');$('mkDl').setAttribute('aria-label',TT('ডাউনলোড'));
+  $('mkDl').href=b.pdf;
+  $('mkOpen').href='https://archive.org/details/'+b.id+'/mode/1up';
+  stage.innerHTML='';
+  if(navigator.onLine===false){msg.textContent=TT('ইন্টারনেট সংযোগ নেই। সংযোগ চালু করে আবার খুলুন।');return}
   msg.textContent=TT('পাতা লোড হচ্ছে... একটু অপেক্ষা করুন');
-  loadLib().then(function(m){
-    if(my!==seq)return;
-    /* পুরো ফাইল একসাথে না নামিয়ে, দরকারি অংশটুকু আনা হয় */
-    c.task=m.getDocument({url:new URL(b.file,location.href).href,disableAutoFetch:true,disableStream:true,rangeChunkSize:262144,
-      wasmUrl:LIB+'wasm/',cMapUrl:LIB+'cmaps/',standardFontDataUrl:LIB+'standard_fonts/',iccUrl:LIB+'iccs/'});
-    return c.task.promise.then(function(doc){
-      return doc.getPage(1).then(function(first){
-        if(my!==seq)return;
-        var v=first.getViewport({scale:1}),st=$('mkStage');
-        c.doc=doc;c.els=[];
-        for(var i=0;i<doc.numPages;i++){
-          var el=document.createElement('div');el.className='mk-pg';el.style.aspectRatio=v.width+'/'+v.height;
-          st.appendChild(el);c.els.push(el);
-        }
-        var last=1;try{last=+localStorage.getItem(pageKey(k))||1}catch(e){}
-        msg.textContent='';$('mkPage').hidden=false;
-        go(Math.min(Math.max(last,1),doc.numPages)-1);
-      });
-    });
-  }).catch(function(e){
-    if(my!==seq)return;
-    console.warn(e);
-    msg.textContent=e&&(e.status===404||e.name==='MissingPDFException')?TT('ফাইলটি পাওয়া যায়নি:')+' '+b.file:TT('কুরআন খোলা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।');
-  });
+  /* src আগে বসিয়ে তারপর যোগ করা হয়, যাতে ব্যাক বাটনের history নষ্ট না হয় */
+  var f=document.createElement('iframe');
+  f.title=b.t;f.allowFullscreen=true;
+  f.onload=function(){msg.textContent=''};
+  f.src='https://archive.org/embed/'+b.id+'#mode/1up';
+  stage.appendChild(f);
 };
-var tick=0;
-$('mkStage').addEventListener('scroll',function(){if(tick)return;tick=setTimeout(function(){tick=0;update()},120)},{passive:true});
-$('mkPage').addEventListener('click',function(){
-  if(!cur||!cur.els)return;
-  var v=prompt(TT('কত নম্বর পাতায় যাবেন?')+' (1 - '+cur.els.length+')');
-  if(v===null)return;
-  var n=parseInt(String(v).replace(/[০-৯]/g,function(d){return '০১২৩৪৫৬৭৮৯'.indexOf(d)}),10);
-  if(n>=1&&n<=cur.els.length)go(n-1);
-});
+window.mkStop=function(){document.body.classList.remove('mk-on');$('mkStage').innerHTML=''};
 $('mkGrid').addEventListener('click',function(e){
   var c=e.target.closest('.mk-card');if(!c)return;
   window.mkCur=c.dataset.mk;switchView('mushaf');
