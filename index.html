@@ -1352,6 +1352,28 @@ html[data-layout="compact"] .pcard .pt b{font-size:14.5px}
 html[data-layout="compact"] .pcard .pt span{display:none}
 @media (prefers-reduced-motion:no-preference){:is(#menu,#libsec) .grid,:is(#menu,#libsec) .m{transition:gap .2s}}
 </style>
+<style id="mushafCss">
+/* ===== শুধু তেলাওয়াত (অর্থ ছাড়া মুসহাফ) ===== */
+.mk-box{margin-bottom:14px}
+.mk-box h3{font-size:15px;font-weight:600;margin-bottom:10px}
+.mk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mk-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;text-align:center;cursor:pointer;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.mk-card:active{background:var(--blue-l)}
+.mk-card svg{width:30px;height:30px;fill:none;stroke:var(--blue);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mk-card b{font-size:14px;font-weight:600;line-height:1.35}
+.mk-card small{font-size:11.5px;color:var(--muted);line-height:1.35}
+body.mk-on{overflow:hidden}
+body.mk-on .nav{display:none !important}
+#mushaf-view.active{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;background:var(--card);color:var(--text);padding-bottom:env(safe-area-inset-bottom,0px)}
+.mk-bar{display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px;border-bottom:1px solid var(--line)}
+.mk-bar h2{flex:1;min-width:0;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-bar a{font-size:13px;color:var(--blue);text-decoration:none;padding:8px 10px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+.mk-bar a.mk-ic{width:34px;height:34px;padding:0;flex:none;display:grid;place-items:center}
+.mk-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mk-msg{font-size:12.5px;color:var(--muted);text-align:center;padding:6px 12px}
+#mkStage{flex:1;min-height:0}
+#mkStage iframe{width:100%;height:100%;border:0;display:block}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1530,6 +1552,14 @@ html[data-layout="compact"] .pcard .pt span{display:none}
           <button class="qx-ib" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
           <h2>আল কুরআন</h2>
           <button class="qx-ib" id="qxSearchBtn" aria-label="খুঁজুন"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+        </div>
+        <div class="mk-box">
+          <h3>শুধু তেলাওয়াত (অর্থ ছাড়া)</h3>
+          <div class="mk-grid" id="mkGrid">
+            <button class="mk-card" type="button" data-mk="hafezi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>হাফেজী কুরআন</b><small>এমদাদিয়া</small></button>
+            <button class="mk-card" type="button" data-mk="nurani"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>নূরানী কুরআন</b><small>হাফেজী, এমদাদিয়া</small></button>
+            <button class="mk-card" type="button" data-mk="line15"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.500-.500 6.500 0 8.500 1.500 2-1.500 5-2 8.500-1.500V5C17 4.500 14 5 12 6.500zM12 6.500v13"/></svg><b>১৫ লাইন কুরআন</b><small>ইন্দো-পাক লিপি</small></button>
+          </div>
         </div>
         <div class="qx-search" id="qxSearch"><input type="search" id="qxSearchIn" placeholder="সূরার নাম বা নম্বর লিখুন" autocomplete="off"></div>
         <div class="qx-chips">
@@ -2458,6 +2488,18 @@ html[data-layout="compact"] .pcard .pt span{display:none}
     <div class="hd-wrap" id="topicBody"></div>
   </div>
 
+  <!-- মুসহাফ পড়ার ভিউ (অর্থ ছাড়া, স্ক্যান করা পাতা) -->
+  <div id="mushaf-view" class="view-section">
+    <div class="mk-bar">
+      <button class="rd-back" onclick="navBack()" aria-label="ফিরে যান"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
+      <h2 id="mkTitle"></h2>
+      <a id="mkDl" class="mk-ic" target="_blank" rel="noopener" download aria-label="ডাউনলোড" title="ডাউনলোড"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></a>
+      <a id="mkOpen" target="_blank" rel="noopener">বড় করে খুলুন</a>
+    </div>
+    <div class="mk-msg" id="mkMsg" role="status"></div>
+    <div id="mkStage"></div>
+  </div>
+
   <!-- সূরা পড়ার ভিউ (ক্যালিগ্রাফি বিসমিল্লাহ + শব্দে শব্দে অর্থ + তাফসীর) -->
   <div id="surah-view" class="view-section">
     <div class="rd-bar">
@@ -3202,6 +3244,7 @@ function switchView(viewName) {
   const target = document.getElementById(viewName + '-view');
   (target || document.getElementById('home-view')).classList.add('active');
   if (viewName === 'quran') window.rdFrom = 'quran';
+  if (viewName === 'mushaf') { if (window.mkShow) mkShow(); } else if (window.mkStop) mkStop();
   if (viewName === 'audio' && typeof auShow === 'function') auShow();
   if (viewName === 'tafsir') tfvRender();
   if (viewName === 'hadith') showHadithBooks();
@@ -13910,6 +13953,7 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
       else if (v === 'hadith') { d.l = hd.level; if (hd.level !== 'books' && hd.book) d.b = hd.book.id; if (hd.level === 'list') d.c = hd.chapter; }
       else if (v === 'topic') { d.t = curTopic; if (curSub) d.s = curSub; if (curTopic === 3 && bioPerson) d.p = bioPerson; }
       else if (v === 'asma') { d.a = asmaCur; }
+      else if (v === 'mushaf') { d.k = window.mkCur; }
       else if (v === 'audio') { var ar_ = window.auDesc ? window.auDesc() : ''; if (ar_) d.r = ar_; }
       else if (v === 'tafsir') { d.m = tfvMode; }
       else if (v === 'quiz') { var qz = window.quizDesc && window.quizDesc(); if (qz) d.z = qz; }
@@ -14008,6 +14052,7 @@ BIO_DATA['শাইখ হামজা ইউসুফ']=`জন্ম ও ই�
         case 'hadith': ret = rHadith(d); break;
         case 'topic': rTopic(d); break;
         case 'asma': O.switchView('asma'); if (d.a) O.openAsma(d.a); break;
+        case 'mushaf': window.mkCur = d.k; O.switchView('mushaf'); break;
         case 'audio': O.switchView('audio'); if (d.r && window.auGo) window.auGo(d.r); break;
         case 'tafsir': tfvMode = d.m || 'editions'; O.switchView('tafsir'); break;
         case 'quiz': O.switchView('quiz'); if (window.quizRestore) window.quizRestore(d.z); break;
@@ -17053,6 +17098,57 @@ new MutationObserver(sync).observe(qv,{attributes:true,attributeFilter:['class']
 var _rs=window.renderSurahList;
 if(_rs)window.renderSurahList=function(){_rs.apply(this,arguments);quick();render()};
 quick();render();sync();
+})();
+</script>
+
+<script id="mushaf-js">
+/* ===== শুধু তেলাওয়াত: হাফেজী / নূরানী / ১৫ লাইন মুসহাফ =====
+   অন্য ছাপা ব্যবহার করতে চাইলে নিচের id (archive.org/details/<id>), pdf লিংক বদলান। */
+(function(){
+'use strict';
+var BOOKS={
+  hafezi:{t:'হাফেজী কুরআন',id:'Emdadia-hafezi-quran',pdf:'https://archive.org/download/Emdadia-hafezi-quran/imdadia-hafezi-quran3_text.pdf'},
+  nurani:{t:'নূরানী কুরআন',id:'nurani-hafizi-quran-sharif-15-lines-pdf',pdf:'https://archive.org/download/nurani-hafizi-quran-sharif-15-lines-pdf/Nurani%20Hafizi%20Quran%20Sharif%2015%20Lines%20PDF.pdf'},
+  line15:{t:'১৫ লাইন কুরআন',id:'quran-indo-pak-15-lines',pdf:'https://archive.org/download/quran-indo-pak-15-lines/QuranIndoPak15Lines.pdf'}
+};
+var $=function(i){return document.getElementById(i)};
+function TT(x){return typeof T==='function'?T(x):x}
+try{Object.assign(D,{
+  'শুধু তেলাওয়াত (অর্থ ছাড়া)':['Recitation only (no translation)','التلاوة فقط (دون ترجمة)'],
+  'হাফেজী কুরআন':['Hafizi Quran','مصحف الحفاظ'],
+  'নূরানী কুরআন':['Noorani Quran','المصحف النوراني'],
+  '১৫ লাইন কুরআন':['15-line Quran','مصحف ١٥ سطرًا'],
+  'এমদাদিয়া':['Emdadia','إمدادية'],
+  'হাফেজী, এমদাদিয়া':['Hafizi, Emdadia','للحفاظ، إمدادية'],
+  'ইন্দো-পাক লিপি':['Indo-Pak script','الخط الهندي'],
+  'বড় করে খুলুন':['Open full page','فتح في صفحة كاملة'],
+  'পাতা লোড হচ্ছে... একটু অপেক্ষা করুন':['Loading pages... please wait','جارٍ تحميل الصفحات...'],
+  'ইন্টারনেট সংযোগ নেই। সংযোগ চালু করে আবার খুলুন।':['No internet connection. Connect and open again.','لا يوجد اتصال بالإنترنت.']
+})}catch(e){}
+window.mkCur='hafezi';
+window.mkShow=function(){
+  var b=BOOKS[window.mkCur]||BOOKS.hafezi,stage=$('mkStage'),msg=$('mkMsg');
+  document.body.classList.add('mk-on');
+  $('mkTitle').textContent=TT(b.t);
+  $('mkOpen').textContent=TT('বড় করে খুলুন');
+  $('mkDl').title=TT('ডাউনলোড');$('mkDl').setAttribute('aria-label',TT('ডাউনলোড'));
+  $('mkDl').href=b.pdf;
+  $('mkOpen').href='https://archive.org/details/'+b.id+'/mode/1up';
+  stage.innerHTML='';
+  if(navigator.onLine===false){msg.textContent=TT('ইন্টারনেট সংযোগ নেই। সংযোগ চালু করে আবার খুলুন।');return}
+  msg.textContent=TT('পাতা লোড হচ্ছে... একটু অপেক্ষা করুন');
+  /* src আগে বসিয়ে তারপর যোগ করা হয়, যাতে ব্যাক বাটনের history নষ্ট না হয় */
+  var f=document.createElement('iframe');
+  f.title=b.t;f.allowFullscreen=true;
+  f.onload=function(){msg.textContent=''};
+  f.src='https://archive.org/embed/'+b.id+'#mode/1up';
+  stage.appendChild(f);
+};
+window.mkStop=function(){document.body.classList.remove('mk-on');$('mkStage').innerHTML=''};
+$('mkGrid').addEventListener('click',function(e){
+  var c=e.target.closest('.mk-card');if(!c)return;
+  window.mkCur=c.dataset.mk;switchView('mushaf');
+});
 })();
 </script>
 
